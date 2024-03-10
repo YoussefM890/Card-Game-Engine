@@ -1,0 +1,17 @@
+<!-- HTML: Displaying the grid and allowing position selection -->
+<!--<mat-grid-list cols="10" rowHeight="100px">-->
+<!--  @for(position of grid; track position.id)-->
+<!--  {-->
+<!--    <mat-grid-tile-->
+<!--      [style.background]="'red'"-->
+<!--      [class.selected]="position.isSelected"-->
+<!--      (click)="selectPosition(position)">-->
+<!--      <app-card [value]="position.id"></app-card>-->
+<!--    </mat-grid-tile>-->
+<!--  }-->
+<!--</mat-grid-list>-->
+<div class="grid-container">
+  @for(position of grid; track position.id){
+  <app-card [value]="position.id"></app-card>
+  }
+</div>
