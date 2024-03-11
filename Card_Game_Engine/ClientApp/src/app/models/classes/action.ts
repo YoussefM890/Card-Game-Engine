@@ -1,18 +1,16 @@
 import {Parameter} from "./parameter";
 import {ActionEnum} from "../enums/action.enum";
-import {ActionDisplayEnum} from "../enums/action-display-enum";
 import {actionParameters} from "../constants/action-parameters";
 import {parameters} from "../constants/parameters";
 
 export class Action {
-  id : number;
-  name: string;
+  id: ActionEnum;
   display : string;
   parameters: Parameter[];
-  constructor(name:string) {
-    this.name = name;
-    this.id = ActionEnum[name];
-    this.display = ActionDisplayEnum[name];
+
+  constructor(id: number, display: string) {
+    this.id = id;
+    this.display = display;
     const relevantActionParameters = actionParameters.filter(ap => ap.actionId === this.id);
     this.parameters = relevantActionParameters.map(ap => {
       const matchedParameter = parameters.find(p => p.id === ap.parameterId);

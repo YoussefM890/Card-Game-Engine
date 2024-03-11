@@ -1,5 +1,6 @@
 export enum ActionEnum {
   'StartGame' = 1,
+  'MoveCard' = 2,
 //   'DealCards' = 2,
 //   'PlayCard' = 3,
 //   'EndTurn' = 4,

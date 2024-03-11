@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {MatCheckbox} from "@angular/material/checkbox";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit{
     });
   }
   ngOnInit() {
-    this.signalRService.startConnection();
+    // this.signalRService.startConnection();
   }
 
   submitForm() {

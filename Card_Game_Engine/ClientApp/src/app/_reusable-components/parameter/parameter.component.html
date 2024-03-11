@@ -1,0 +1,17 @@
+<div [formGroup]="parameterForm" class="row">
+  <mat-form-field appearance="fill" class="col-6">
+    <mat-label>Parameter</mat-label>
+    <mat-select formControlName="id">
+      @for (parameter of parameters; track parameter.id) {
+        <mat-option [value]="parameter.id">{{ parameter.display }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="col-5">
+    <mat-label>Value</mat-label>
+    <input matInput formControlName="value" placeholder="Value">
+  </mat-form-field>
+  <button mat-icon-button color="warn" (click)="removeParameter()" class="col-1">
+    <mat-icon>remove_circle_outline</mat-icon>
+  </button>
+</div>

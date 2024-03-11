@@ -1,5 +1,3 @@
-import {Parameter} from "./parameter";
-
 export class TriggerDTO {
   id: string;
   name: string;
@@ -21,7 +19,6 @@ export class TriggerDTO {
 }
 export interface Trigger {
   id : number;
-  name: string;
   display: string;
   // parameters?: Parameter[];
 }

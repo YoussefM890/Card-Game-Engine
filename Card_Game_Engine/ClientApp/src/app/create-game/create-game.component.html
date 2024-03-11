@@ -1,57 +1,34 @@
 <mat-grid-list cols="2" rowHeight="49.9%">
   <mat-grid-tile rowspan="2" class="overflow-y">
-    <div class="max">
-    <form [formGroup]="gameRuleForm" (ngSubmit)="onSubmit()">
-      <div formArrayName="rules">
-        @for(ruleCtrl of rules.controls; track ruleCtrl; let i = $index;){
-        <div class="rule" [formGroupName]="i">
-          <h3>Rule {{i + 1}}</h3>
-          <div>
-            <label>Trigger : </label>
-            <select formControlName="trigger">
-              @for (trigger of triggers ;track trigger.name){
-              <option [value]="trigger.name">{{trigger.name}}</option>
-              }
-            </select>
-          </div>
-          <div formArrayName="actions">
-            @for(actionCtrl of getActions(i).controls; track actionCtrl;let j = $index;){
-            <div class="action" [formGroupName]="j">
-              <h4>Action {{j + 1}}</h4>
-              <div>
-                <label>Action Name:</label>
-                <select formControlName="name">
-                  @for (action of actions ;track action.name){
-                  <option [value]="action.name">{{action.name}}</option>
+    <div class="form-container">
+      <form [formGroup]="gameRuleForm">
+        <div formArrayName="rules">
+          @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
+            <div [formGroup]="convertToFormGroup(ruleCtrl)" class="rule">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Trigger</mat-label>
+                <mat-select formControlName="trigger">
+                  @for (trigger of triggers; track trigger.id) {
+                    <mat-option [value]="trigger.id">{{ trigger.display }}</mat-option>
                   }
-                </select>
-              </div>
-              <div formArrayName="parameters">
-                @for(paramCtrl of getParameters(i,j).controls; track paramCtrl;let k = $index;){
-                <div class="parameter" [formGroupName]="k">
-                  <label>Parameter {{k + 1}}:</label>
-                  <select formControlName="name">
-                    @for (parameter of getActionParameters(actionCtrl.value.name) ;track parameter){
-                      <option [value]="parameter.key">{{parameter.display}}</option>
-                    }
-                  </select>
-                  <input type="text" formControlName="value" placeholder="Value">
-                  <button (click)="removeParameter(i, j, k)">Remove Parameter</button>
-                </div>
+                </mat-select>
+              </mat-form-field>
+              <div formArrayName="actions">
+                @for (actionCtrl of getActions(i).controls; track actionCtrl; let j = $index) {
+                  <app-action [ruleForm]="convertToFormGroup(ruleCtrl)"
+                              [actionForm]="convertToFormGroup(actionCtrl)"
+                              [actionIndex]="j"
+                  >
+                  </app-action>
                 }
               </div>
-              <button (click)="addParameter(j, i)">Add Parameter</button>
-              <button (click)="removeAction(i, j)">Remove Action</button>
+              <button mat-button (click)="addAction(i)">Add Action</button>
             </div>
-            }
-          </div>
-          <button (click)="addAction(i)">Add Action</button>
+          }
         </div>
-        }
-      </div>
-      <button (click)="addRule()">Add Rule</button>
-      <button type="submit">Submit</button>
-    </form>
+        <button mat-raised-button color="primary" (click)="addRule()">Add Rule</button>
+        <button mat-raised-button color="accent" (click)="onSubmit()">Submit</button>
+      </form>
     </div>
   </mat-grid-tile>
   <mat-grid-tile></mat-grid-tile>

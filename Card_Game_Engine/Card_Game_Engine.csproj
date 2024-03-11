@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ClientApp\src\app\_reusable-components\" />
       <Folder Include="Services\" />
     </ItemGroup>
 

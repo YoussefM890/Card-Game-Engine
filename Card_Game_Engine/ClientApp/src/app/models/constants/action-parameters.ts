@@ -9,6 +9,17 @@ export const actionParameters:ActionParameter[] = [
     isRequired: true
   },
   {
+    actionId: ActionEnum.MoveCard,
+    parameterId: ParameterEnum.FromPosition,
+    isRequired: true
+  },
+  {
+    actionId: ActionEnum.MoveCard,
+    parameterId: ParameterEnum.ToPosition,
+    isRequired: true
+
+  },
+  {
     actionId : ActionEnum.ShuffleDeck,
     parameterId: ParameterEnum.ShuffleCount,
     isRequired: true

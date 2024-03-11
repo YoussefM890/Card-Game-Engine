@@ -1,15 +1,13 @@
-import {ParameterDisplayEnum} from "../enums/parameter-display.enum";
 import {ParameterEnum} from "../enums/parameter.enum";
 
 export class Parameter {
   id : ParameterEnum;
-  key: string;
-  display: ParameterDisplayEnum;
+  display: string;
   value? : any;
-  constructor(key:string) {
-    this.key = key;
-    this.id = ParameterEnum[key];
-    this.display = ParameterDisplayEnum[key];
+
+  constructor(id: ParameterEnum, display: string) {
+    this.id = id;
+    this.display = display;
     this.value = null
   }
 }
