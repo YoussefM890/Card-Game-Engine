@@ -14,11 +14,17 @@ export class SignalRService {
 
     this.hubConnection
       .start()
-      .then(() => console.log('Connection started'))
+      .then(() => {
+        console.log('Connection started')
+        this.receiveMessageListener();
+
+      })
       .catch(err => console.log('Error while starting connection: ' + err))
   }
 
-  public addReceiveMessageListener = (methodName: string, callback: (...args: any[]) => void) => {
-    this.hubConnection.on(methodName, callback);
+  public receiveMessageListener = () => {
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
+      console.log(message);
+    });
   }
 }

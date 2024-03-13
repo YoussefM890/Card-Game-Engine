@@ -69,7 +69,7 @@ export class CreateGameComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.gameRuleForm.value);
+    console.log(JSON.stringify(this.gameRuleForm.value, null, 2));
     // Here you can handle the form submission, such as sending the data to your backend server
   }
 
