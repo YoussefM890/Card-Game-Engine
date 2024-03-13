@@ -14,6 +14,13 @@ public class CardContainer
         {
             Grid[positionId] = new GridItem(positionId);
         }
+
+        // Assuming you want to fill the G1 position with 52 cards
+        var g1Item = Grid["G1"]; // Get the G1 GridItem
+        for (int i = 1; i <= 52; i++) // Create and add 52 cards to the G1 position
+        {
+            g1Item.Cards.Add(new Card { Id = i });
+        }
     }
 
     public override string ToString()
@@ -25,22 +32,4 @@ public class CardContainer
             }
             return builder.ToString();
         }
-
-    // Method to move cards between grid items
-    public void MoveCards(string fromId, string toId, int numberOfCards)
-    {
-        if (!Grid.ContainsKey(fromId) || !Grid.ContainsKey(toId))
-        {
-            throw new ArgumentException("Invalid grid ID.");
-        }
-
-        var fromGridItem = Grid[fromId];
-        var toGridItem = Grid[toId];
-
-        var cardsToMove = fromGridItem.Cards.Take(numberOfCards).ToList();
-        fromGridItem.Cards.RemoveRange(0, numberOfCards);
-        toGridItem.Cards.AddRange(cardsToMove);
-    }
-
-    // Add additional methods for other actions as needed
 }

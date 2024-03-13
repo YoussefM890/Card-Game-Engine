@@ -1,4 +1,6 @@
 using Card_Game_Engine;
+using Card_Game_Engine.Models;
+using Card_Game_Engine.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 //cors
@@ -12,13 +14,14 @@ builder.Services.AddCors(options =>
 });
 // Add services to the container.
 // builder.Services.AddSingleton<GameService>();
+builder.Services.AddSingleton<CardContainer>();
+builder.Services.AddSingleton<RuleService>();
+builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(); // Add this line to add SignalR services
-// var bonjourAdvertiser = new BonjourServiceAdvertiser();
-// bonjourAdvertiser.RegisterService();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();

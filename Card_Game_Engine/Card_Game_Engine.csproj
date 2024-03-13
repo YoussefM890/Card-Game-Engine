@@ -27,7 +27,6 @@
 
     <ItemGroup>
       <Folder Include="ClientApp\src\app\_reusable-components\" />
-      <Folder Include="Models\Enums\" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

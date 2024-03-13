@@ -12,6 +12,8 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {ActionComponent} from "../_reusable-components/action/action.component";
 import {ParameterComponent} from "../_reusable-components/parameter/parameter.component";
+import {SignalrEmitterService} from "../services/signalr-emitter.service";
+import {SignalRService} from "../services/signalr.service";
 
 
 @Component({
@@ -42,7 +44,7 @@ export class CreateGameComponent implements OnInit {
   get rules(): FormArray {
     return this.gameRuleForm.get('rules') as FormArray;
   }
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private signalrService: SignalRService) {
   }
   ngOnInit() {
     this.gameRuleForm = this.fb.group({
@@ -70,7 +72,9 @@ export class CreateGameComponent implements OnInit {
 
   onSubmit() {
     console.log(JSON.stringify(this.gameRuleForm.value, null, 2));
-    // Here you can handle the form submission, such as sending the data to your backend server
+    console.log(this.gameRuleForm.value);
+    console.log(this.gameRuleForm.value.rules);
+    this.signalrService.ProcessRules(this.gameRuleForm.value.rules);
   }
 
   convertToFormGroup(control: AbstractControl): FormGroup {
