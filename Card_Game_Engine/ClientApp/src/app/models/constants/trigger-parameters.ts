@@ -4,13 +4,18 @@ import {ParameterEnum} from "../enums/parameter.enum";
 
 export const triggerParameters:TriggerParameter[] = [
   {
-    triggerId : TriggerEnum.CardMovedFromPosition,
+    triggerId: TriggerEnum.CardMoved,
     parameterId : ParameterEnum.FromPosition,
-    isRequired: true
+    isRequired: false
   },
   {
-    triggerId : TriggerEnum.CardMovedToPosition,
+    triggerId: TriggerEnum.CardMoved,
     parameterId : ParameterEnum.ToPosition,
-    isRequired: true
+    isRequired: false
+  },
+  {
+    triggerId: TriggerEnum.CardMoved,
+    parameterId: ParameterEnum.By,
+    isRequired: false
   }
 ]

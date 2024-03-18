@@ -10,24 +10,13 @@
   padding: 20px;
 }
 
-.rule, .action {
+.rule {
   margin-bottom: 20px;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 8px;
 }
 
-.parameters {
-  display: flex;
-  flex-direction: column;
-}
-
-.parameter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
 
 button {
   margin: 8px 0;

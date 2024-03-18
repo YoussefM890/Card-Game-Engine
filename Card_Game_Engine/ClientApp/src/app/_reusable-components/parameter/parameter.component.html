@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill" class="col-6">
     <mat-label>Parameter</mat-label>
     <mat-select formControlName="id">
-      @for (parameter of parameters; track parameter.id) {
+      @for (parameter of availableParameters; track parameter.id) {
         <mat-option [value]="parameter.id">{{ parameter.display }}</mat-option>
       }
     </mat-select>

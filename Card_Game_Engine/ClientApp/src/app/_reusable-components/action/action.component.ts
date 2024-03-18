@@ -6,6 +6,7 @@ import {MatButton} from "@angular/material/button";
 import {Action} from "../../models/classes/action";
 import {ParameterComponent} from "../parameter/parameter.component";
 import {actions} from "../../models/constants/actions";
+import {Parameter} from "../../models/classes/parameter";
 
 @Component({
   selector: 'app-action',
@@ -27,6 +28,7 @@ export class ActionComponent implements OnInit {
   @Input() actionForm: FormGroup;
   @Input() actionIndex: number;
   actions: Action[] = actions;
+  actionParameters: Parameter[] = [];
 
   get parameters(): FormArray {
     return this.actionForm.get('parameters') as FormArray;
@@ -50,6 +52,9 @@ export class ActionComponent implements OnInit {
     (this.ruleForm.get('actions') as FormArray).removeAt(this.actionIndex);
   }
 
+  updateActionParameters() {
+    this.actionParameters = actions.find(t => t.id === this.actionForm.value.id).parameters;
+  }
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }

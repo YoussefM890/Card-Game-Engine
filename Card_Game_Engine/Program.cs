@@ -1,4 +1,5 @@
 using Card_Game_Engine;
+using Card_Game_Engine.Functions;
 using Card_Game_Engine.Models;
 using Card_Game_Engine.Services;
 
@@ -15,7 +16,13 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 // builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<CardContainer>();
-builder.Services.AddSingleton<RuleService>();
+// builder.Services.AddSingleton<RuleService>();
+builder.Services.AddSingleton<TriggerService>();
+builder.Services.AddSingleton<TriggerFunctions>();
+builder.Services.AddSingleton<ActionService>();
+builder.Services.AddSingleton<ActionFunctions>();
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(); // Add this line to add SignalR services

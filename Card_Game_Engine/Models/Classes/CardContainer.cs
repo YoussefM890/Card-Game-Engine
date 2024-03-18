@@ -4,8 +4,6 @@ namespace Card_Game_Engine.Models;
 
 public class CardContainer
 {
-    public Dictionary<string, GridItem> Grid { get; set; } // Key is the grid ID
-
     public CardContainer()
     {
         Grid = new Dictionary<string, GridItem>();
@@ -23,13 +21,34 @@ public class CardContainer
         }
     }
 
-    public override string ToString()
+    public Dictionary<string, GridItem> Grid { get; set; } // Key is the grid ID
+
+    public CardContainer DeepCopy()
+    {
+        var newContainer = new CardContainer();
+
+        // Assuming Grid is a property you need to deep copy
+        newContainer.Grid = new Dictionary<string, GridItem>();
+        foreach (var entry in this.Grid)
         {
-            var builder = new StringBuilder();
-            foreach (var position in Grid)
-            {
-                builder.AppendLine($"{position.Key}: [{string.Join(", ", position.Value.Cards.Select(card => $"Id: {card.Id}"))}]");
-            }
-            return builder.ToString();
+            // This assumes GridItem also has a DeepCopy method or can be cloned appropriately
+            newContainer.Grid.Add(entry.Key, entry.Value.DeepCopy());
         }
+
+        // Copy other properties as needed...
+
+        return newContainer;
+    }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+        foreach (var position in Grid)
+        {
+            builder.AppendLine(
+                $"{position.Key}: [{string.Join(", ", position.Value.Cards.Select(card => $"Id: {card.Id}"))}]");
+        }
+
+        return builder.ToString();
+    }
 }

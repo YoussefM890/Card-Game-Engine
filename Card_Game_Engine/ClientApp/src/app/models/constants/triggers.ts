@@ -1,13 +1,15 @@
 import {Trigger} from "../classes/trigger";
 import {TriggerEnum} from "../enums/trigger.enum";
 
-export const triggers: Trigger[] = [
+const _triggers: Partial<Trigger>[] = [
   {
     id: TriggerEnum.GameStart,
     display: 'Game Start'
   },
   {
-    id: TriggerEnum.CardDrawn,
-    display: 'Card Drawn'
+    id: TriggerEnum.CardMoved,
+    display: 'Card Moved'
   },
 ];
+
+export const triggers: Trigger[] = _triggers.map(t => new Trigger(t.id, t.display));

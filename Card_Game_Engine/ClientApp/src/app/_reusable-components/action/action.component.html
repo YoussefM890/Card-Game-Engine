@@ -1,7 +1,7 @@
 <div [formGroup]="actionForm" class="action">
   <mat-form-field appearance="fill" class="w-100">
     <mat-label>Action</mat-label>
-    <mat-select formControlName="id">
+    <mat-select (selectionChange)="updateActionParameters()" formControlName="id">
       @for (action of actions; track action.id) {
         <mat-option [value]="action.id">{{ action.display }}</mat-option>
       }
@@ -9,8 +9,9 @@
   </mat-form-field>
   <div formArrayName="parameters" class="parameters">
     @for (paramCtrl of parameters.controls; track paramCtrl.value.id; let k = $index) {
-      <app-parameter [actionForm]="actionForm"
+      <app-parameter [parentForm]="actionForm"
                      [parameterForm]="convertToFormGroup(paramCtrl)"
+                     [availableParameters]="actionParameters"
       ></app-parameter>
     }
   </div>

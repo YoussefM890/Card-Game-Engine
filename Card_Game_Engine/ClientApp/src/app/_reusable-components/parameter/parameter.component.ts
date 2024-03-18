@@ -27,31 +27,22 @@ import {actions} from "../../models/constants/actions";
   styleUrl: './parameter.component.scss'
 })
 export class ParameterComponent implements OnInit {
-  @Input() actionForm: FormGroup;
+  @Input() parentForm: FormGroup;
   @Input() parameterForm: FormGroup;
   @Input() parameterIndex: number;
+  @Input() availableParameters: Parameter[] = [];
   allParameters: Parameter[] = parameters;
   actions: Action[] = actions;
-  parameters: Parameter[] = [];
 
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.getParameters();
-  }
-
-  getParameters() {
-    this.parameters = this.actions.find(a => a.id === this.actionForm.value.id)?.parameters ?? [];
-    // return allPossibleParameters
-    // return  allPossibleParameters.filter(possibleParam =>
-    //   !action.parameters.some(existingParam => existingParam.id === possibleParam.id)
-    // );
   }
 
   removeParameter() {
-    (this.actionForm.get('parameters') as FormArray).removeAt(this.parameterIndex);
+    (this.parentForm.get('parameters') as FormArray).removeAt(this.parameterIndex);
   }
 }
 
