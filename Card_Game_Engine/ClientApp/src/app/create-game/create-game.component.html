@@ -1,5 +1,5 @@
-<mat-grid-list cols="2" rowHeight="49.9%">
-  <mat-grid-tile class="overflow-auto" rowspan="2">
+<mat-grid-list cols="9" rowHeight="49.9%">
+  <mat-grid-tile class="overflow-auto" colspan="4" rowspan="2">
     <div class="form-container">
       <form [formGroup]="gameRuleForm">
         <div formArrayName="rules">
@@ -36,17 +36,35 @@
             </div>
           }
         </div>
-        <button mat-raised-button color="primary" (click)="addRule()">Add Rule</button>
-        <button mat-raised-button color="accent" (click)="onSubmit()">Submit</button>
+        <div class="d-flex justify-content-between w-100">
+          <div>
+            <button mat-raised-button color="primary" class="me-1" (click)="addRule()">Add Rule</button>
+            <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
+          </div>
+          <div>
+            <button mat-raised-button color="primary" class="me-1" (click)="importRules()"  >Import Rules</button>
+          </div>
+        </div>
       </form>
     </div>
   </mat-grid-tile>
-  <mat-grid-tile>
-    <div class="w-100 h-100">
-      <button (click)="importRules()" color="warn" mat-raised-button>Import Rules</button>
+  <mat-grid-tile colspan="2" rowspan="2"></mat-grid-tile>
+  <mat-grid-tile colspan="3" class="flex-column">
+    <div class="max d-flex flex-column">
+      <div class="h-50 w-100 d-flex flex-column">
+        <div class="h-50 w-100">
+          <app-card-line [overlap]="true"></app-card-line>
+        </div>
+        <div class="h-50 w-100">
+          @for(suit of suits;track suit){
+          <mat-checkbox>{{ suit.key }}</mat-checkbox>
+          }
+        </div>
+      </div>
+      <app-grid class="h-50 w-100" [rows]="2" [cols]="7" [cards]="distinctCards"></app-grid>
     </div>
   </mat-grid-tile>
-  <mat-grid-tile>
-    <app-grid class="center max ghost-cards"></app-grid>
+  <mat-grid-tile class="p-1" colspan="3">
+    <app-grid class="center max "></app-grid>
   </mat-grid-tile>
 </mat-grid-list>

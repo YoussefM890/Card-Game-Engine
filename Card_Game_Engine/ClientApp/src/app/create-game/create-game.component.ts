@@ -16,6 +16,12 @@ import {SignalRService} from "../services/signalr.service";
 import {Parameter} from "../models/classes/parameter";
 import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
+import {AllDistinctCards} from "../models/constants/cards";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {SuitEnum} from "../models/enums/suit.enum";
+import {enumToList} from "../models/functions";
+import {CardComponent} from "../card/card.component";
+import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
 
 
 @Component({
@@ -36,6 +42,9 @@ import {MatDialog} from "@angular/material/dialog";
     MatInput,
     ActionComponent,
     ParameterComponent,
+    MatCheckbox,
+    CardComponent,
+    CardLineComponent,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
@@ -118,4 +127,10 @@ export class CreateGameComponent implements OnInit {
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }
+  //region define the default deck
+  selectedCards = [1,2,3,4,5,6,7,8,9,10];
+  distinctCards = AllDistinctCards;
+  suits = enumToList(SuitEnum).slice(0,4);
+
+
 }

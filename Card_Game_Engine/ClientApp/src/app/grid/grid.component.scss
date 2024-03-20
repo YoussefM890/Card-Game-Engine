@@ -2,22 +2,29 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(7, 1fr);
   gap: 3px;
 }
 
 
 .grid-cell {
-  //width: 100px; /* Adjust based on your card size */
-  //height: 150px; /* Adjust based on your card size */
   border: 1px solid #ddd;
-  //display: flex;
-  //justify-content: center;
-  //align-items: center;
   background-color: #f9f9f9;
 }
-
+.card {
+  min-width: 50px; /* Set your desired min-width */
+  //flex: 1; /* Allows cards to grow and fill the container */
+  //margin: 0 2px; /* Adjust spacing between cards */
+}
 .selected {
-  border-color: #007bff; /* Highlight color for selected cells */
+  border-color: #007bff;
+}
+/* Add this to your existing styles */
+//.grid-container.overlap .grid-cell {
+//  position: absolute;
+//  left: 50%;
+//  transform: translateX(-50%);
+//}
+
+.grid-container.overlap .grid-cell:nth-child(n+2) {
+  margin-left: -100px; /* Adjust the negative margin to control overlap */
 }

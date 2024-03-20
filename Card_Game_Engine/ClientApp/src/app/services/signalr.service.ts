@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import {SignalrListenerService} from "./signalr-listener.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,6 @@ export class SignalRService {
       .start()
       .then(() => {
         console.log('Connection started')
-        console.log(this.hubConnection);
         this.receiveMessageListener();
 
       })

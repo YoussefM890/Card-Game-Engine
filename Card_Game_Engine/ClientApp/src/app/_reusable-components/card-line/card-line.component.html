@@ -1,0 +1,7 @@
+<div #cardContainer class="card-container">
+  @for (card of cards;track card){
+    <div class="card" [ngStyle]="calculateCardStyles()[$index]">
+      {{card}}
+    </div>
+  }
+</div>
