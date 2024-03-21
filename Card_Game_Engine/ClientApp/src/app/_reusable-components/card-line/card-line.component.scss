@@ -1,13 +1,20 @@
-.card-container {
+.cards-container {
   position: relative;
   height: 100%;
   //overflow-x: auto; /* Allows scrolling on x-axis if cards overflow */
   width: 100%; /* Assuming you want it to take the full width of its parent */
 }
 
-.card {
+.card-container {
+  box-sizing: border-box;
   position: absolute;
   height: 100%; /* Set your desired height */
-  //min-width: 10px; /* Set your desired min-width */
-  //margin: 0 2px; /* Adjust spacing between cards */
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
 }

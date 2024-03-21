@@ -1,7 +1,8 @@
-<div #cardContainer class="card-container">
+<div #cardContainer class="cards-container">
   @for (card of cards;track card){
-    <div class="card" [ngStyle]="calculateCardStyles()[$index]">
-      {{card}}
+    <div class="card-container disable-text-selection" [ngStyle]="cardStyles[$index]" (click)="selectCard(card)">
+      <app-card [card]="card"></app-card>
+<!--      {{card.name}}-->
     </div>
   }
 </div>

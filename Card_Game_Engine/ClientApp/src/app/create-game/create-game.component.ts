@@ -2,7 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {GridComponent} from "../grid/grid.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
@@ -16,12 +24,12 @@ import {SignalRService} from "../services/signalr.service";
 import {Parameter} from "../models/classes/parameter";
 import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
-import {AllDistinctCards} from "../models/constants/cards";
 import {MatCheckbox} from "@angular/material/checkbox";
-import {SuitEnum} from "../models/enums/suit.enum";
-import {enumToList} from "../models/functions";
+import {SuitEnum, suitsList} from "../models/enums/suit.enum";
 import {CardComponent} from "../card/card.component";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
+import {Card} from "../models/classes/card";
+import {distinctCardsList} from "../models/constants/cards";
 
 
 @Component({
@@ -67,6 +75,7 @@ export class CreateGameComponent implements OnInit {
     this.gameRuleForm = this.fb.group({
       rules: this.fb.array([])
     });
+    this.createSuitsForm()
   }
 
   importRules() {
@@ -128,9 +137,38 @@ export class CreateGameComponent implements OnInit {
     return control as FormGroup;
   }
   //region define the default deck
-  selectedCards = [1,2,3,4,5,6,7,8,9,10];
-  distinctCards = AllDistinctCards;
-  suits = enumToList(SuitEnum).slice(0,4);
+  selectedCards : Card[] = [];
+  distinctCards = distinctCardsList;
+  suits = suitsList.slice(0,4);
+  suitsForm : FormGroup;
+  get suitsFormArray() {
+    return this.suitsForm.get('suits') as FormArray;
+  }
 
+  createSuitsForm() {
+    this.suitsForm = this.fb.group({
+      suits: this.fb.array( this.suits.map(() => new FormControl(true)))
+    });
+    console.log(this.suitsForm.value);
+  }
+  onCardSelected(card : Card) {
+    let currentCard : Card
+    if (card.suit === SuitEnum.OTHER) {
+      this.selectedCards.push(card)
+    }
+    else {
+      this.suitsFormArray.value.forEach((selected: boolean, index: number) => {
+        if (selected) {
+          currentCard = {...card, suit: this.suits[index].value as SuitEnum};
+          this.selectedCards.push(currentCard);
+        }
+      });
+    }
+    this.selectedCards = [...this.selectedCards];
+  }
+  onCardSelectedFromLine(card: Card) {
+    this.selectedCards = this.selectedCards.filter(c => c !== card);
+    this.selectedCards = [...this.selectedCards];
+  }
 
 }

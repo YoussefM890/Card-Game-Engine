@@ -53,15 +53,17 @@
     <div class="max d-flex flex-column">
       <div class="h-50 w-100 d-flex flex-column">
         <div class="h-50 w-100">
-          <app-card-line [overlap]="true"></app-card-line>
+          <app-card-line (cardSelected)="onCardSelectedFromLine($event)" [cards]="selectedCards"></app-card-line>
         </div>
-        <div class="h-50 w-100">
-          @for(suit of suits;track suit){
-          <mat-checkbox>{{ suit.key }}</mat-checkbox>
-          }
+        <div [formGroup]="suitsForm"  class="h-50 w-100">
+          <div formArrayName="suits">
+            @for(suitControl of suitsFormArray.controls;track suitControl.value){
+            <mat-checkbox [formControlName]="$index">{{ suits[$index].display }}</mat-checkbox>
+            }
+          </div>
         </div>
       </div>
-      <app-grid class="h-50 w-100" [rows]="2" [cols]="7" [cards]="distinctCards"></app-grid>
+      <app-grid (cardSelected)="onCardSelected($event)" class="h-50 w-100" [rows]="2" [cols]="7" [cards]="distinctCards"></app-grid>
     </div>
   </mat-grid-tile>
   <mat-grid-tile class="p-1" colspan="3">

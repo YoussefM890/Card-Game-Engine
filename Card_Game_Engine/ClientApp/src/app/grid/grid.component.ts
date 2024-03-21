@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {CardComponent} from "../card/card.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {NgStyle} from "@angular/common";
@@ -21,25 +21,13 @@ export class GridComponent implements OnInit {
   @Input() cols: number = 10;
   @Input() cards : Card[] = [];
   @Input() overlap: boolean = false;
+  @Output() cardSelected : EventEmitter<Card> = new EventEmitter<Card>();
   grid = [];
 
   constructor() { }
 
   ngOnInit(): void {
     this.initializeGrid();
-  }
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.adjustGridBasedOnWidth();
-  }
-  adjustGridBasedOnWidth() {
-    const containerWidth = document.querySelector('.grid-container').clientWidth;
-    const minCardWidth = 10; // Minimum card width before cards start to stack
-    const cardCount = this.grid.length;
-    const optimalWidth = containerWidth / cardCount;
-
-    // Dynamically adjust the min-card-width based on the number of cards and the container width
-    document.documentElement.style.setProperty('--min-card-width', `${Math.max(minCardWidth, optimalWidth)}px`);
   }
   initializeGrid() {
     if (this.cards.length > 0) {
@@ -53,7 +41,7 @@ export class GridComponent implements OnInit {
       }
     }
   }
-  selectPosition(position) {
-    position.isSelected = !position.isSelected;
+  selectCard(card: Card) {
+    this.cardSelected.emit(card); // Emit the selected card data
   }
 }

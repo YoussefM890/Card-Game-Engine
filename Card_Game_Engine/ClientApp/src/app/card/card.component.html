@@ -1,3 +1,19 @@
-<div class="card">
-  <div class="card-title">{{ value }}</div>
+<div class="front" [style.color]="suits[card.suit].color">
+  @if (card.imageUrl){
+    <img  class="face" [src]="card.imageUrl" alt="{{card.imageUrl}}">
+  }
+  <div class="index">
+    <span class="indexValue">{{ card.value }}</span>
+    <span class="indexSuit">{{ suits[card.suit].symbol }}</span>
+  </div>
+  @for (spot of rankSpots[card.value]; track card.value) {
+    <div class="spot{{spot}}">
+      <span
+        [class.ace]="card.value === 1"
+        [class.hearts]="card.suit === suitEnum.HEARTS"
+      >
+        {{ suits[card.suit].symbol }}
+      </span>
+    </div>
+  }
 </div>

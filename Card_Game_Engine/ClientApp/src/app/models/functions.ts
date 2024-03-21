@@ -23,6 +23,13 @@ export function enumToList<T>(enumVariable: T): { key: string; value: string | n
 
   return list;
 }
+export function ListToObject(list : any[],attr: string) {
+  return list.reduce((acc, cur) => {
+    acc[cur[attr]] = cur;
+    return acc;
+  }, {});
+}
+
 function isStringOrNumber(value: any): value is string | number {
   return typeof value === 'string' || typeof value === 'number';
 }

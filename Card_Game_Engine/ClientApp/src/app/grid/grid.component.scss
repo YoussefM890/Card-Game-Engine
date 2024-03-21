@@ -10,11 +10,19 @@
   border: 1px solid #ddd;
   background-color: #f9f9f9;
 }
-.card {
-  min-width: 50px; /* Set your desired min-width */
-  //flex: 1; /* Allows cards to grow and fill the container */
-  //margin: 0 2px; /* Adjust spacing between cards */
+.card-container {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100% ;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
 }
+
 .selected {
   border-color: #007bff;
 }

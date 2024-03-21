@@ -1,7 +1,6 @@
 export enum ImageUrlEnum {
-  HEARTS = 'assets/images/hearts.png',
-  DIAMONDS = 'assets/images/diamonds.png',
-  CLUBS = 'assets/images/clubs.png',
-  SPADES = 'assets/images/spades.png',
-  JOKER = 'assets/images/joker.png',
+  JACK = 'assets/images/faces/Jack.gif',
+  QUEEN = 'assets/images/faces/Queen.gif',
+  KING = 'assets/images/faces/King.gif',
+  JOKER = 'assets/images/faces/Joker.gif',
 }

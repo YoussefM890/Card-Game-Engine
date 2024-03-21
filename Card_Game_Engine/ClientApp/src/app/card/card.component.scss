@@ -1,24 +1,46 @@
-.card {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100% ;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #fff;
+.front{
 }
 
-.card-image {
-  width: 80%;
-  height: auto;
-  margin-bottom: 10px;
+.spotA1 { position: absolute; left: 0.60em; top: 0.5em; }
+.spotA2 { position: absolute; left: 0.60em; top: 1.5em; }
+.spotA3 { position: absolute; left: 0.60em; top: 2.0em; }
+.spotA4 { position: absolute; left: 0.60em; top: 2.5em; }
+.spotA5 { position: absolute; left: 0.60em; top: 3.5em; }
+.spotB1 { position: absolute; left: 1.55em; top: 0.5em; }
+.spotB2 { position: absolute; left: 1.55em; top: 1.0em; }
+.spotB3 { position: absolute; left: 1.55em; top: 2.0em; }
+.spotB4 { position: absolute; left: 1.55em; top: 3.0em; }
+.spotB5 { position: absolute; left: 1.55em; top: 3.5em; }
+.spotC1 { position: absolute; left: 2.50em; top: 0.5em; }
+.spotC2 { position: absolute; left: 2.50em; top: 1.5em; }
+.spotC3 { position: absolute; left: 2.50em; top: 2.0em; }
+.spotC4 { position: absolute; left: 2.50em; top: 2.5em; }
+.spotC5 { position: absolute; left: 2.50em; top: 3.5em; }
+.indexValue { position: absolute; left: 0.3em; top: 0.25em; }
+.indexSuit { position: absolute; left: 0.25em; top: 1.2em; }
+.ace {
+  font-size: 300%;
+  position: absolute;
+  left: -0.25em;
+  top:  -0.5em;
 }
-
-.card-title {
-  font-size: 12px;
+.hearts{
+  font-size: 90%;
+}
+.ace.hearts {
+  font-size: 230%;
+  top: -0.4em;
+  left: -0.35em;
+}
+.index {
+  font-size: 60%;
   font-weight: bold;
+}
+.face {
+  //border: 1px solid #000000;
+  position: absolute;
+  left: 18%;
+  top:  12%;
+  width:  64%;
+  height: 76%;
 }

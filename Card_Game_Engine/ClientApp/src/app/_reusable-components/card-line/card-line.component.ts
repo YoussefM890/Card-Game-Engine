@@ -1,27 +1,53 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef, EventEmitter,
+  HostListener,
+  Input, OnChanges,
+  OnInit, Output, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {NgStyle} from "@angular/common";
+import {Card} from "../../models/classes/card";
+import {CardComponent} from "../../card/card.component";
 
 @Component({
   selector: 'app-card-line',
   standalone: true,
   imports: [
-    NgStyle
+    NgStyle,
+    CardComponent
   ],
   templateUrl: './card-line.component.html',
   styleUrl: './card-line.component.scss'
 })
-export class CardLineComponent implements AfterViewInit, OnInit{
-  @Input() cards: any[] = [1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-  @Input() overlap: boolean = false;
+export class CardLineComponent implements AfterViewInit, OnInit,OnChanges{
   @ViewChild('cardContainer') cardContainerRef: ElementRef;
+  @Input() cards: Card[] = [];
   containerWidth: number = 0;
   cardStyles: any[] = [];
+  @Output() cardSelected : EventEmitter<Card> = new EventEmitter<Card>();
+
+  constructor(private cdr: ChangeDetectorRef) {
+  }
   ngOnInit() {
   }
   ngAfterViewInit() {
-    // Ensure the view has been initialized before trying to access the element
     this.calculateContainerWidth();
-    this.calculateCardStyles()
+    this.calculateCardStyles();
+    this.cdr.detectChanges(); // Trigger change detection here if necessary
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("detection changes")
+    if (changes["cards"]) {
+      this.calculateCardStyles();
+      this.cdr.detectChanges();
+    }
+  }
+  private onCardsChanged() {
+    // Execute the methods you need when the cards input changes
+    console.log('Cards have changed', this.cards);
   }
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -31,18 +57,16 @@ export class CardLineComponent implements AfterViewInit, OnInit{
 
   calculateContainerWidth() {
     const containerElement = this.cardContainerRef.nativeElement;
-    this.containerWidth = containerElement.clientWidth; // Uses the clientWidth of the element
-    // Optionally, you can subtract any known padding/margin if necessary
+    this.containerWidth = containerElement.clientWidth;
   }
 
   calculateCardStyles() {
     const len = this.cards.length;
     const gap = 1; // Define the gap between cards
-    const minWidth = 40; // Define the minimum width of each card
-    const preferredWidth = 50; // Define the preferred width of each card
-    const maxWidth = 70; // Define the preferred width of each card
-
-    // const totalPreferredWidth =  (preferredWidth + gap) * this.cards.length - gap; // Calculate the total width of all cards (including gaps
+    const minWidth = 60; // Define the minimum width of each card
+    const preferredWidth = 60; // Define the preferred width of each card
+    const maxWidth = 60; // Define the preferred width of each card
+    const widthHeightRatio = 1.5; // Define the preferred width of each card
     let styles = [];
     const availableCardWidth = (this.containerWidth - (len - 1) * (gap))/len;
     let chosenWidth = Math.min(maxWidth, availableCardWidth);
@@ -51,8 +75,8 @@ export class CardLineComponent implements AfterViewInit, OnInit{
       let accumulatedLeft = 0;
       styles = this.cards.map(card => {
         const style = {
-          width: `${chosenWidth}px`,
-          left: `${accumulatedLeft}px`
+          width: chosenWidth,
+          left: accumulatedLeft
         };
         accumulatedLeft += chosenWidth + gap;
         return style;
@@ -66,61 +90,24 @@ export class CardLineComponent implements AfterViewInit, OnInit{
       let accumulatedLeft = 0;
       styles = this.cards.map((card, index) => {
         const style = {
-          width: `${preferredWidth}px`,
-          left: `${accumulatedLeft}px`
+          width: preferredWidth,
+          left: accumulatedLeft
         };
         accumulatedLeft += preferredWidth - overlap ;
         return style;
       });
     }
-    // if (totalPreferredWidth <= this.containerWidth) {
-    //   // All cards can fit with their preferred width.
-    //   styles = this.cards.map(card => ({
-    //     width: `${preferredWidth}px`,
-    //     left: `${0}px` // Initially set to 0, will adjust below
-    //   }));
-    // } else {
-    //   // Need to adjust card widths or calculate overlap
-    //   const totalMinWidth = (minWidth + gap) * this.cards.length - gap; // Calculate the total width of all cards (including gaps
-    //   if (totalMinWidth <= this.containerWidth) {
-    //     // Cards can fit with reduced widths, adjust proportionally
-    //     const availableWidth = this.containerWidth - ((this.cards.length - 1) * gap);
-    //     let accumulatedLeft = 0;
-    //     styles = this.cards.map(card => {
-    //       const proportion = minWidth / totalMinWidth;
-    //       const cardWidth = proportion * availableWidth;
-    //       const style = {
-    //         width: `${cardWidth}px`,
-    //         left: `${accumulatedLeft}px`
-    //       };
-    //       accumulatedLeft += cardWidth + gap;
-    //       return style;
-    //     });
-    //   } else {
-    //     // Calculate overlap for a fanned-out effect
-    //     const overlap = (totalMinWidth + ((this.cards.length - 1) * gap) - this.containerWidth) / (this.cards.length - 1);
-    //     let accumulatedLeft = 0;
-    //     styles = this.cards.map((card, index) => {
-    //       const cardWidth = card.minWidth;
-    //       const style = {
-    //         width: `${cardWidth}px`,
-    //         left: `${accumulatedLeft}px`
-    //       };
-    //       accumulatedLeft += index < this.cards.length - 1 ? cardWidth - overlap : 0; // Don't add to the last card
-    //       return style;
-    //     });
-    //   }
-    // }
-    // Adjust left positions based on calculated widths
-    // let currentPosition = parseFloat(styles[0].width + gap);
-    // for (let i = 0; i < styles.length; i++) {
-    //   if (i > 0) {
-    //     styles[i].left += `${currentPosition}px`;
-    //     currentPosition += parseFloat(styles[i].width) + gap;
-    //   }
-    // }
-    console.log(styles);
-    // this.cardStyles = styles;
-    return styles;
+    //generate styles
+    this.cardStyles = styles.map(style => {
+      return {
+        width : style.width+'px',
+        height: style.width * widthHeightRatio+'px',
+        left: style.left+'px',
+        "font-size": style.width * 0.275+'px',
+      };
+    });
+  }
+  selectCard(card: Card) {
+    this.cardSelected.emit(card); // Emit the selected card data
   }
 }
