@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {GridComponent} from "../grid/grid.component";
+import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {
@@ -26,10 +26,13 @@ import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {SuitEnum, suitsList} from "../models/enums/suit.enum";
-import {CardComponent} from "../card/card.component";
+import {CardComponent} from "../_reusable-components/card/card.component";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
 import {Card} from "../models/classes/card";
-import {distinctCardsList} from "../models/constants/cards";
+import {distinctCardsNameObject} from "../models/constants/cards";
+import {RouterLink, RouterLinkActive} from "@angular/router";
+import {CardNameEnum} from "../models/enums/card-name.enum";
+import {getEnumValues} from "../models/functions";
 
 
 @Component({
@@ -53,6 +56,8 @@ import {distinctCardsList} from "../models/constants/cards";
     MatCheckbox,
     CardComponent,
     CardLineComponent,
+    RouterLinkActive,
+    RouterLink,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
@@ -127,20 +132,22 @@ export class CreateGameComponent implements OnInit {
     this.triggerParameters = triggers.find(t => t.id === rule.get('trigger').value).parameters;
   }
 
-  onSubmit() {
-    console.log(JSON.stringify(this.gameRuleForm.value, null, 2));
-    console.log(this.gameRuleForm.value.rules);
-    this.signalrService.ProcessRules(this.gameRuleForm.value);
-  }
+  distinctCardsValues = getEnumValues(CardNameEnum);
 
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }
   //region define the default deck
   selectedCards : Card[] = [];
-  distinctCards = distinctCardsList;
+
+  onSubmit() {
+    console.log(JSON.stringify(this.gameRuleForm.value, null, 2));
+    console.log(this.gameRuleForm.value.rules);
+    this.signalrService.submitRules(this.gameRuleForm.value);
+  }
   suits = suitsList.slice(0,4);
   suitsForm : FormGroup;
+
   get suitsFormArray() {
     return this.suitsForm.get('suits') as FormArray;
   }
@@ -151,16 +158,16 @@ export class CreateGameComponent implements OnInit {
     });
     console.log(this.suitsForm.value);
   }
-  onCardSelected(card : Card) {
+
+  onValueSelected(value: string) {
     let currentCard : Card
-    if (card.suit === SuitEnum.OTHER) {
-      this.selectedCards.push(card)
+    if (value === CardNameEnum.JOKER) {
+      this.selectedCards.push(new Card(0, distinctCardsNameObject[value].value, SuitEnum.OTHER, 'Joker'));
     }
     else {
       this.suitsFormArray.value.forEach((selected: boolean, index: number) => {
         if (selected) {
-          currentCard = {...card, suit: this.suits[index].value as SuitEnum};
-          this.selectedCards.push(currentCard);
+          this.selectedCards.push(new Card(0, distinctCardsNameObject[value].value, this.suits[index].value as SuitEnum, value));
         }
       });
     }

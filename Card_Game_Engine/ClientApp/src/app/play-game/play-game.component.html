@@ -1,0 +1,6 @@
+<button [routerLink]="['/create']" color="primary" mat-raised-button>navigate to create</button>
+<button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+<div [style.width]="gridWidthStyle" class="grid">
+  <app-grid [cols]="12" [grid]="grid" [rows]="7" class="center max "></app-grid>
+</div>
+

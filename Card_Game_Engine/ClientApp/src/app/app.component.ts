@@ -7,9 +7,8 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {SignalRService} from "./services/signalr.service";
-import {GridComponent} from "./grid/grid.component";
+import {GridComponent} from "./_reusable-components/grid/grid.component";
 import {CreateGameComponent} from "./create-game/create-game.component";
-import {SignalrEmitterService} from "./services/signalr-emitter.service";
 
 @Component({
   selector: 'app-root',

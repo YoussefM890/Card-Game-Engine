@@ -2,15 +2,19 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef, EventEmitter,
+  ElementRef,
+  EventEmitter,
   HostListener,
-  Input, OnChanges,
-  OnInit, Output, SimpleChanges,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {NgStyle} from "@angular/common";
 import {Card} from "../../models/classes/card";
-import {CardComponent} from "../../card/card.component";
+import {CardComponent} from "../card/card.component";
 
 @Component({
   selector: 'app-card-line',

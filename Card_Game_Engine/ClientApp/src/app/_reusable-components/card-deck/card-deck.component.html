@@ -1,0 +1,8 @@
+<div class="max position-relative">
+  <!--  @for (card of cards;track card.id){-->
+  <!--    <app-card class="position-absolute" [card]=card></app-card>-->
+  <!--  }-->
+  @if (cards.length > 0) {
+    <app-card class="position-absolute max" [card]=cards[0]></app-card>
+  }
+</div>

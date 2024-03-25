@@ -7,13 +7,18 @@ namespace Card_Game_Engine.Services;
 public class RuleService
 {
     private readonly ActionService _actionService;
-    private readonly List<Rule> _rules;
     private readonly TriggerService _triggerService;
+    private List<Rule> _rules;
 
-    public RuleService(List<Rule> rules)
+    public RuleService()
     {
         _actionService = new ActionService();
         _triggerService = new TriggerService();
+    }
+
+    //setter for rules
+    public void SetRules(List<Rule> rules)
+    {
         _rules = rules;
     }
 

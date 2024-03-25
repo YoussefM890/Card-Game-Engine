@@ -5,17 +5,20 @@ namespace Card_Game_Engine.Functions;
 public class ActionFunctions
 {
     private readonly CardContainer _cardContainer;
+
     public ActionFunctions()
     {
         _cardContainer = new CardContainer();
     }
+
     public CardContainer GetCardContainer()
     {
         return _cardContainer;
     }
-    public void MoveCards(string fromId, string toId, int numberOfCards)
+
+    public void MoveCards(int fromId, int toId, int numberOfCards)
     {
-        if (!_cardContainer.Grid.ContainsKey(fromId) || !_cardContainer.Grid.ContainsKey(toId))
+        if (_cardContainer.Grid.Count() < fromId || _cardContainer.Grid.Count() < toId)
         {
             throw new ArgumentException("Invalid grid ID.");
         }
@@ -25,7 +28,12 @@ public class ActionFunctions
 
         var cardsToMove = fromGridItem.Cards.Take(numberOfCards).ToList();
         fromGridItem.Cards.RemoveRange(0, numberOfCards);
-        toGridItem.Cards.AddRange(cardsToMove);
+        // adds the cards to the bottom of the destination grid item
+        // toGridItem.Cards.AddRange(cardsToMove);
+        cardsToMove.Reverse();
+        foreach (var card in cardsToMove)
+        {
+            toGridItem.Cards.Insert(0, card);
+        }
     }
-    
 }

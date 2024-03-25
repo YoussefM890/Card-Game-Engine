@@ -1,0 +1,13 @@
+.container {
+  padding: 10vh 20vw;
+}
+
+.grid {
+  //width: 60vw;
+  height: 80vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}

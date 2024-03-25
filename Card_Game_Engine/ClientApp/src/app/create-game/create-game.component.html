@@ -43,6 +43,8 @@
           </div>
           <div>
             <button mat-raised-button color="primary" class="me-1" (click)="importRules()"  >Import Rules</button>
+            <button [routerLink]="['/play']" color="primary" mat-raised-button>navigate to play</button>
+
           </div>
         </div>
       </form>
@@ -63,10 +65,16 @@
           </div>
         </div>
       </div>
-      <app-grid (cardSelected)="onCardSelected($event)" class="h-50 w-100" [rows]="2" [cols]="7" [cards]="distinctCards"></app-grid>
+      <app-grid
+        (cardSelected)="onValueSelected($event)"
+        [cols]="7" [displayCellIndex]="true"
+        [rows]="2"
+        [values]="distinctCardsValues"
+        class="h-50 w-100"
+      ></app-grid>
     </div>
   </mat-grid-tile>
   <mat-grid-tile class="p-1" colspan="3">
-    <app-grid class="center max "></app-grid>
+    <app-grid [displayCellIndex]="true" class="center max "></app-grid>
   </mat-grid-tile>
 </mat-grid-list>

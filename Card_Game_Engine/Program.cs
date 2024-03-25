@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 // builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<CardContainer>();
-// builder.Services.AddSingleton<RuleService>();
+builder.Services.AddSingleton<RuleService>();
 builder.Services.AddSingleton<TriggerService>();
 builder.Services.AddSingleton<TriggerFunctions>();
 builder.Services.AddSingleton<ActionService>();

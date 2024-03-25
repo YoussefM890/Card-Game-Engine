@@ -8,11 +8,11 @@ export const rules = "{\n" +
   "          \"parameters\": [\n" +
   "            {\n" +
   "              \"id\": 3,\n" +
-  "              \"value\": \"G1\"\n" +
+  "              \"value\": \"1\"\n" +
   "            },\n" +
   "            {\n" +
   "              \"id\": 4,\n" +
-  "              \"value\": \"A1\"\n" +
+  "              \"value\": \"2\"\n" +
   "            }\n" +
   "          ]\n" +
   "        }\n" +
@@ -27,11 +27,11 @@ export const rules = "{\n" +
   "          \"parameters\": [\n" +
   "            {\n" +
   "              \"id\": 3,\n" +
-  "              \"value\": \"A1\"\n" +
+  "              \"value\": \"2\"\n" +
   "            },\n" +
   "            {\n" +
   "              \"id\": 4,\n" +
-  "              \"value\": \"B1\"\n" +
+  "              \"value\": \"3\"\n" +
   "            }\n" +
   "          ]\n" +
   "        }\n" +
@@ -39,11 +39,11 @@ export const rules = "{\n" +
   "      \"parameters\": [\n" +
   "        {\n" +
   "          \"id\": 3,\n" +
-  "          \"value\": \"G1\"\n" +
+  "          \"value\": \"1\"\n" +
   "        },\n" +
   "        {\n" +
   "          \"id\": 4,\n" +
-  "          \"value\": \"A1\"\n" +
+  "          \"value\": \"2\"\n" +
   "        }\n" +
   "      ]\n" +
   "    }\n" +

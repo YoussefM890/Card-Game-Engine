@@ -1,0 +1,27 @@
+<div [ngStyle]="{'grid-template-columns': 'repeat(' + cols + ', 1fr)', 'grid-template-rows': 'repeat(' + rows + ', 1fr)'}"
+     class="grid-container">
+  @if (mode === GridDisplayMode.DECK) {
+    @for (gridItem of grid; track gridItem.id) {
+      <div class="card-container disable-text-selection">
+        <app-card-deck class="max" [cards]="gridItem.cards"></app-card-deck>
+      </div>
+    }
+  } @else if (mode === GridDisplayMode.TEXT) {
+    @for (value of values; track value) {
+      <div (click)="selectCell(value)" class="card-container disable-text-selection">
+        <span>{{ value }}</span>
+      </div>
+    }
+  } @else if (mode === GridDisplayMode.INDEX) {
+    @for (value of values; track value) {
+      <div (click)="selectCell(value)" class="card-container disable-text-selection">
+        <span>{{ $index }}</span>
+      </div>
+    }
+  } @else if (mode === GridDisplayMode.DEFAULT) {
+    @for (value of values; track value) {
+      <div class="card-container disable-text-selection"></div>
+    }
+  }
+</div>
+<!--    <p class="card-container disable-text-selection" (click)="selectCard(card)">{{displayCellIndex? card.name :''}}</p>-->

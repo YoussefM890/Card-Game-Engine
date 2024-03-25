@@ -5,11 +5,6 @@ using Action = Card_Game_Engine.Models.Action;
 
 namespace Card_Game_Engine.Services;
 
-// public interface IActionService
-// {
-//     void MoveCards(string fromId, string toId, int numberOfCards);
-//     // Other actions...
-// }
 public class ActionService
 {
     private readonly ActionFunctions _actionFunctions;
@@ -32,7 +27,9 @@ public class ActionService
 
         if (fromPosition != null && toPosition != null && int.TryParse(cardCount, out int count))
         {
-            _actionFunctions.MoveCards(fromPosition, toPosition, count);
+            int.TryParse(fromPosition, out int from);
+            int.TryParse(toPosition, out int to);
+            _actionFunctions.MoveCards(from, to, count);
         }
         else
         {

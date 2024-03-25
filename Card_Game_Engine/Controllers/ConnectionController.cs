@@ -8,6 +8,13 @@ namespace Card_Game_Engine;
 
 public class ConnectionController : Hub
 {
+    private RuleService _ruleService;
+
+    public ConnectionController(RuleService ruleService)
+    {
+        _ruleService = ruleService;
+    }
+
     public override async Task OnConnectedAsync()
     {
         await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
@@ -20,12 +27,16 @@ public class ConnectionController : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task ProcessRules(GameObject gameObject)
+    public async Task SubmitRules(GameObject gameObject)
     {
-        Console.WriteLine("ProcessRules called!");
-        RuleService ruleService = new RuleService(gameObject.Rules);
-        CardContainer cardContainer = ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
-        // CardContainer cardContainer = ruleService.ProcessRules();
-        await Clients.All.SendAsync("ReceiveMessage", cardContainer);
+        Console.WriteLine("SubmitRules called!");
+        _ruleService.SetRules(gameObject.Rules);
+    }
+
+    public async Task StartGame()
+    {
+        Console.WriteLine("StartGame called!");
+        CardContainer cardContainer = _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
+        await Clients.All.SendAsync("ReceiveGameObject", cardContainer);
     }
 }

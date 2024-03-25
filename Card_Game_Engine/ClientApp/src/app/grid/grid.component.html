@@ -1,5 +1,0 @@
-<div class="grid-container" [ngStyle]="{'grid-template-columns': 'repeat(' + cols + ', 1fr)', 'grid-template-rows': 'repeat(' + rows + ', 1fr)'}">
-  @for(card of grid; track card.id) {
-    <p class="card-container disable-text-selection" (click)="selectCard(card)">{{ card.name }}</p>
-  }
-</div>

@@ -14,7 +14,9 @@ public class TriggerService
 
         if ((fromPosition != null || toPosition != null) && int.TryParse(cardCount, out int count))
         {
-            return TriggerFunctions.IsCardMoved(before, after, fromPosition, toPosition, count);
+            int.TryParse(fromPosition, out int from);
+            int.TryParse(toPosition, out int to);
+            return TriggerFunctions.IsCardMoved(before, after, from, to, count);
         }
         else
         {

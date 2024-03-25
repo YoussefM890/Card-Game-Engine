@@ -20,4 +20,6 @@ export const distinctCardsList : Card[] = [
   { id: 13, value: 13, suit: SuitEnum.HEARTS, name: CardNameEnum.KING, imageUrl: ImageUrlEnum.KING },
   { id: 14, value: 14, suit: SuitEnum.OTHER, name: CardNameEnum.JOKER, imageUrl: ImageUrlEnum.JOKER },
 ];
-export const distinctCardsObject = ListToObject(distinctCardsList, 'id');
+export const distinctCardsIdObject = ListToObject(distinctCardsList, 'id');
+export const distinctCardsNameObject = ListToObject(distinctCardsList, 'name');
+export const distinctCardsValueObject = ListToObject(distinctCardsList, 'value');
