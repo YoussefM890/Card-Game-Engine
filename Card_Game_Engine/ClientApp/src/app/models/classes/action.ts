@@ -1,4 +1,4 @@
-import {Parameter} from "./parameter";
+import {Parameter, ParameterDTO} from "./parameter";
 import {ActionEnum} from "../enums/action.enum";
 import {actionParameters} from "../constants/action-parameters";
 import {parameters} from "../constants/parameters";
@@ -19,5 +19,19 @@ export class Action {
       }
       throw new Error(`Parameter with ID ${ap.parameterId} not found`); // Handle missing parameters
     });
+  }
+}
+
+export class ActionDTO {
+  id: ActionEnum;
+  parameters: ParameterDTO[];
+
+  constructor(id: number) {
+    this.id = id;
+    this.parameters = []
+  }
+
+  addParameter(parameter: ParameterDTO) {
+    this.parameters.push(parameter);
   }
 }

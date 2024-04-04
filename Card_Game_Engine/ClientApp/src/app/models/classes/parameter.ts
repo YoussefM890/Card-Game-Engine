@@ -11,3 +11,13 @@ export class Parameter {
     this.value = null
   }
 }
+
+export class ParameterDTO {
+  id: ParameterEnum;
+  value: any;
+
+  constructor(id: ParameterEnum, value: any) {
+    this.id = id;
+    this.value = value;
+  }
+}

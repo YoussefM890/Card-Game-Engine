@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {BehaviorSubject} from "rxjs";
 import {GameObject} from "../models/classes/game-object";
+import {ActionDTO} from "../models/classes/action";
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +48,10 @@ export class SignalRService {
 
   startGame() {
     this.hubConnection.invoke("StartGame");
+  }
+
+  invokeExplicitAction(action: ActionDTO) {
+    console.log(action)
+    this.hubConnection.invoke("InvokeExplicitAction", action);
   }
 }

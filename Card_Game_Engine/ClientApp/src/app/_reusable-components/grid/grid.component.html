@@ -1,9 +1,17 @@
-<div [ngStyle]="{'grid-template-columns': 'repeat(' + cols + ', 1fr)', 'grid-template-rows': 'repeat(' + rows + ', 1fr)'}"
-     class="grid-container">
+<div
+  [ngStyle]="{'grid-template-columns': 'repeat(' + cols + ', 1fr)', 'grid-template-rows': 'repeat(' + rows + ', 1fr)'}"
+  class="grid-container"
+>
   @if (mode === GridDisplayMode.DECK) {
     @for (gridItem of grid; track gridItem.id) {
       <div class="card-container disable-text-selection">
-        <app-card-deck class="max" [cards]="gridItem.cards"></app-card-deck>
+        <app-card-deck
+          class="max"
+          [ngClass]="moveCardFrom === $index ? 'red-shadow' : moveCardTo === $index ? 'green-shadow' : ''"
+          [cards]="gridItem.cards"
+          (click)="moveCard($index)"
+        >
+        </app-card-deck>
       </div>
     }
   } @else if (mode === GridDisplayMode.TEXT) {

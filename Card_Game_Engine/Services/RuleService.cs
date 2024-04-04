@@ -6,17 +6,15 @@ namespace Card_Game_Engine.Services;
 
 public class RuleService
 {
-    private readonly ActionService _actionService;
-    private readonly TriggerService _triggerService;
-    private List<Rule> _rules;
+    private readonly ActionService _actionService = new();
+    private readonly TriggerService _triggerService = new();
+    private List<Rule> _rules = new();
 
-    public RuleService()
+    public CardContainer GetCardContainer()
     {
-        _actionService = new ActionService();
-        _triggerService = new TriggerService();
+        return _actionService.GetCardContainer();
     }
 
-    //setter for rules
     public void SetRules(List<Rule> rules)
     {
         _rules = rules;
@@ -27,7 +25,7 @@ public class RuleService
         var rule = _rules.FirstOrDefault(r => r.Trigger == (int)trigger);
         if (rule != null)
         {
-            ProcessRule(rule);
+            ProcessActions(rule.Actions);
         }
         else
         {
@@ -37,10 +35,10 @@ public class RuleService
         return _actionService.GetCardContainer();
     }
 
-    private void ProcessRule(Rule rule)
+    public void ProcessActions(List<Action> actions)
     {
         Queue<Action> actionQueue = new Queue<Action>();
-        foreach (var action in rule.Actions)
+        foreach (var action in actions)
         {
             actionQueue.Enqueue(action);
         }
@@ -77,16 +75,15 @@ public class RuleService
         foreach (var rule in _rules)
         {
             Console.WriteLine("checking trigger : " + rule.Trigger);
-            bool isTriggered = false;
+            bool isTriggered;
             switch (rule.Trigger)
             {
                 // case (int)TriggerEnum.GameStart:
                 // isTriggered = isGameStartTriggered();
                 case (int)TriggerEnum.CardMoved:
                     Console.WriteLine("checking card moved trigger");
-                    isTriggered =
-                        _triggerService.ExecuteCardMovedTrigger(rule, beforeActionCardContainer,
-                            afterActionCardContainer);
+                    isTriggered = _triggerService.ExecuteCardMovedTrigger(rule, beforeActionCardContainer,
+                        afterActionCardContainer);
                     Console.WriteLine(isTriggered ? "Fired" : "Dit not Fire");
                     if (isTriggered) triggeredActions.AddRange(rule.Actions);
                     break;

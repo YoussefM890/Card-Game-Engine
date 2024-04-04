@@ -1,4 +1,7 @@
-<div #cardElm [style.color]="suits[card.suit].color" class="front">
+<div #cardElm
+     [style.color]="suits[card.suit].color"
+     class="front"
+>
   @if (distinctCardValueObject[card.value].imageUrl) {
     <img class="face" [src]="distinctCardValueObject[card.value].imageUrl" alt="{{card.value}}">
   }

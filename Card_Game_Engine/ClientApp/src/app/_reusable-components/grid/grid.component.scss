@@ -15,8 +15,7 @@
   width: 100%;
   //height: 100%;
   aspect-ratio: 0.8;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 1px solid whitesmoke;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
@@ -36,4 +35,12 @@
 
 .grid-container.overlap .grid-cell:nth-child(n+2) {
   margin-left: -100px; /* Adjust the negative margin to control overlap */
+}
+
+.red-shadow {
+  box-shadow: 0 2px 12px rgba(255, 0, 0, 0.5);
+}
+
+.green-shadow {
+  box-shadow: 0 2px 4px rgba(0, 255, 0, 0.1);
 }

@@ -3,6 +3,7 @@ using Card_Game_Engine.Models.Classes;
 using Card_Game_Engine.Models.Enums;
 using Card_Game_Engine.Services;
 using Microsoft.AspNetCore.SignalR;
+using Action = Card_Game_Engine.Models.Action;
 
 namespace Card_Game_Engine;
 
@@ -37,6 +38,14 @@ public class ConnectionController : Hub
     {
         Console.WriteLine("StartGame called!");
         CardContainer cardContainer = _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
+        await Clients.All.SendAsync("ReceiveGameObject", cardContainer);
+    }
+
+    public async Task InvokeExplicitAction(Action action)
+    {
+        Console.WriteLine("InvokeExplicitAction called!");
+        _ruleService.ProcessActions(new List<Action> { action });
+        CardContainer cardContainer = _ruleService.GetCardContainer();
         await Clients.All.SendAsync("ReceiveGameObject", cardContainer);
     }
 }
