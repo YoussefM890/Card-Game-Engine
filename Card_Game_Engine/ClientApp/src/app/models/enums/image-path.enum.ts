@@ -1,4 +1,4 @@
-export enum ImageUrlEnum {
+export enum ImagePathEnum {
   JACK = 'assets/images/faces/Jack.gif',
   QUEEN = 'assets/images/faces/Queen.gif',
   KING = 'assets/images/faces/King.gif',

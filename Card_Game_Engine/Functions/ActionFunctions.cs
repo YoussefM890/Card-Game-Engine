@@ -6,14 +6,9 @@ public class ActionFunctions
 {
     private readonly CardContainer _cardContainer;
 
-    public ActionFunctions()
+    public ActionFunctions(CardContainer cardContainer)
     {
-        _cardContainer = new CardContainer();
-    }
-
-    public CardContainer GetCardContainer()
-    {
-        return _cardContainer;
+        _cardContainer = cardContainer;
     }
 
     public void MoveCards(int fromId, int toId, int numberOfCards)

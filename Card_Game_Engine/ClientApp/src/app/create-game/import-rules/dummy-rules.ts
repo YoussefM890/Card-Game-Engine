@@ -1,4 +1,5 @@
-export const rules = "{\n" +
+export const rules =
+  "{\n" +
   "  \"rules\": [\n" +
   "    {\n" +
   "      \"trigger\": 1,\n" +
@@ -8,7 +9,7 @@ export const rules = "{\n" +
   "          \"parameters\": [\n" +
   "            {\n" +
   "              \"id\": 3,\n" +
-  "              \"value\": \"1\"\n" +
+  "              \"value\": \"0\"\n" +
   "            },\n" +
   "            {\n" +
   "              \"id\": 4,\n" +
@@ -39,7 +40,7 @@ export const rules = "{\n" +
   "      \"parameters\": [\n" +
   "        {\n" +
   "          \"id\": 3,\n" +
-  "          \"value\": \"1\"\n" +
+  "          \"value\": \"0\"\n" +
   "        },\n" +
   "        {\n" +
   "          \"id\": 4,\n" +

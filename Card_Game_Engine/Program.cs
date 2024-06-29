@@ -1,10 +1,8 @@
 using Card_Game_Engine;
-using Card_Game_Engine.Functions;
 using Card_Game_Engine.Models;
 using Card_Game_Engine.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-//cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -13,17 +11,13 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowCredentials());
 });
-// Add services to the container.
-// builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<CardContainer>();
 builder.Services.AddSingleton<RuleService>();
-builder.Services.AddSingleton<TriggerService>();
-builder.Services.AddSingleton<TriggerFunctions>();
-builder.Services.AddSingleton<ActionService>();
-builder.Services.AddSingleton<ActionFunctions>();
+// builder.Services.AddSingleton<TriggerService>();
+// builder.Services.AddSingleton<TriggerFunctions>();
+// builder.Services.AddSingleton<ActionService>();
+// builder.Services.AddSingleton<ActionFunctions>();
 
-
-builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(); // Add this line to add SignalR services
 

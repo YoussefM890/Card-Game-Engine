@@ -1,5 +1,5 @@
 import {SuitEnum} from "../enums/suit.enum";
-import {ImageUrlEnum} from "../enums/image-url.enum";
+import {ImagePathEnum} from "../enums/image-path.enum";
 import {CardNameEnum} from "../enums/card-name.enum";
 
 export class Card {
@@ -7,12 +7,15 @@ export class Card {
   value: number;
   suit: SuitEnum;
   name: CardNameEnum | string;
-  imageUrl?: ImageUrlEnum;
-  constructor(id: number, value: number, suit: SuitEnum,name: string, imageUrl?: ImageUrlEnum) {
+  imagePath?: ImagePathEnum;
+  isFaceUp: boolean = false;
+  isPlayable: boolean = false;
+
+  constructor(id: number, value: number, suit: SuitEnum, name: string, imageUrl?: ImagePathEnum) {
     this.id = id;
     this.value = value;
     this.suit = suit;
     this.name = name;
-    this.imageUrl = imageUrl?? null;
+    this.imagePath = imageUrl ?? null;
   }
 }

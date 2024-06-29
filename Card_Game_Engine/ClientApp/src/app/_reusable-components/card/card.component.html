@@ -2,8 +2,8 @@
      [style.color]="suits[card.suit].color"
      class="front"
 >
-  @if (distinctCardValueObject[card.value].imageUrl) {
-    <img class="face" [src]="distinctCardValueObject[card.value].imageUrl" alt="{{card.value}}">
+  @if (distinctCardValueObject[card.value].imagePath) {
+    <img class="face" [src]="distinctCardValueObject[card.value].imagePath" alt="{{card.value}}">
   }
   <div class="index">
     <span class="indexValue">{{ card.value }}</span>

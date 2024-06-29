@@ -17,7 +17,7 @@
                 @for (paramCtrl of getParameters(i).controls; track paramCtrl.value.id; let k = $index) {
                   <app-parameter [parentForm]="convertToFormGroup(ruleCtrl)"
                                  [parameterForm]="convertToFormGroup(paramCtrl)"
-                                 [availableParameters]="triggerParameters"
+                                 [availableParameters]="updateTriggerParameters(ruleCtrl)"
                   ></app-parameter>
                 }
               </div>
@@ -42,7 +42,7 @@
             <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
           </div>
           <div>
-            <button mat-raised-button color="primary" class="me-1" (click)="importRules()"  >Import Rules</button>
+            <button (click)="importRules()" class="me-1" color="primary" mat-raised-button>Import Rules</button>
             <button [routerLink]="['/play']" color="primary" mat-raised-button>navigate to play</button>
 
           </div>
@@ -50,17 +50,31 @@
       </form>
     </div>
   </mat-grid-tile>
-  <mat-grid-tile colspan="2" rowspan="2"></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="2">
+    <mat-grid-list class="max" cols="1" rowHeight="49.9%">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div class="p-4">
+          Select the cards deck that you will play with -->
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div class="p-4">
+          This is a grid reference for the card places that could be used to play.
+          You can use the numbers as a reference to the cards' position in the rules -->
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-grid-tile>
   <mat-grid-tile colspan="3" class="flex-column">
     <div class="max d-flex flex-column">
       <div class="h-50 w-100 d-flex flex-column">
         <div class="h-50 w-100">
           <app-card-line (cardSelected)="onCardSelectedFromLine($event)" [cards]="selectedCards"></app-card-line>
         </div>
-        <div [formGroup]="suitsForm"  class="h-50 w-100">
+        <div [formGroup]="suitsForm" class="h-50 w-100">
           <div formArrayName="suits">
-            @for(suitControl of suitsFormArray.controls;track suitControl.value){
-            <mat-checkbox [formControlName]="$index">{{ suits[$index].display }}</mat-checkbox>
+            @for (suitControl of suitsFormArray.controls; track suitControl.value) {
+              <mat-checkbox [formControlName]="$index">{{ suits[$index].display }}</mat-checkbox>
             }
           </div>
         </div>
@@ -69,7 +83,7 @@
         (cellSelected)="onValueSelected($event)"
         [cols]="7" [displayCellIndex]="true"
         [rows]="2"
-        [values]="distinctCardsValues"
+        [list]="distinctCardsValues"
         class="h-50 w-100"
       ></app-grid>
     </div>

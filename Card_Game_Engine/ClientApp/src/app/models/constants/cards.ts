@@ -1,25 +1,26 @@
-import {ImageUrlEnum} from "../enums/image-url.enum";
 import {Card} from "../classes/card";
 import {CardNameEnum} from "../enums/card-name.enum";
 import {SuitEnum} from "../enums/suit.enum";
 import {ListToObject} from "../functions";
+import {ImagePathEnum} from "../enums/image-path.enum";
 
-export const distinctCardsList : Card[] = [
-  { id: 1, value: 1, suit: SuitEnum.HEARTS, name: CardNameEnum.ACE},
-  { id: 2, value: 2, suit: SuitEnum.HEARTS, name: CardNameEnum.TWO},
-  { id: 3, value: 3, suit: SuitEnum.HEARTS, name: CardNameEnum.THREE},
-  { id: 4, value: 4, suit: SuitEnum.HEARTS, name: CardNameEnum.FOUR},
-  { id: 5, value: 5, suit: SuitEnum.HEARTS, name: CardNameEnum.FIVE},
-  { id: 6, value: 6, suit: SuitEnum.HEARTS, name: CardNameEnum.SIX},
-  { id: 7, value: 7, suit: SuitEnum.HEARTS, name: CardNameEnum.SEVEN},
-  { id: 8, value: 8, suit: SuitEnum.HEARTS, name: CardNameEnum.EIGHT},
-  { id: 9, value: 9, suit: SuitEnum.HEARTS, name: CardNameEnum.NINE},
-  { id: 10, value: 10, suit: SuitEnum.HEARTS, name: CardNameEnum.TEN},
-  { id: 11, value: 11, suit: SuitEnum.HEARTS, name: CardNameEnum.JACK, imageUrl: ImageUrlEnum.JACK },
-  { id: 12, value: 12, suit: SuitEnum.HEARTS, name: CardNameEnum.QUEEN, imageUrl: ImageUrlEnum.QUEEN },
-  { id: 13, value: 13, suit: SuitEnum.HEARTS, name: CardNameEnum.KING, imageUrl: ImageUrlEnum.KING },
-  { id: 14, value: 14, suit: SuitEnum.OTHER, name: CardNameEnum.JOKER, imageUrl: ImageUrlEnum.JOKER },
+export const distinctCardsList: Card[] = [
+  new Card(1, 1, SuitEnum.HEARTS, CardNameEnum.ACE),
+  new Card(2, 2, SuitEnum.HEARTS, CardNameEnum.TWO),
+  new Card(3, 3, SuitEnum.HEARTS, CardNameEnum.THREE),
+  new Card(4, 4, SuitEnum.HEARTS, CardNameEnum.FOUR),
+  new Card(5, 5, SuitEnum.HEARTS, CardNameEnum.FIVE),
+  new Card(6, 6, SuitEnum.HEARTS, CardNameEnum.SIX),
+  new Card(7, 7, SuitEnum.HEARTS, CardNameEnum.SEVEN),
+  new Card(8, 8, SuitEnum.HEARTS, CardNameEnum.EIGHT),
+  new Card(9, 9, SuitEnum.HEARTS, CardNameEnum.NINE),
+  new Card(10, 10, SuitEnum.HEARTS, CardNameEnum.TEN),
+  new Card(11, 11, SuitEnum.HEARTS, CardNameEnum.JACK, ImagePathEnum.JACK),
+  new Card(12, 12, SuitEnum.HEARTS, CardNameEnum.QUEEN, ImagePathEnum.QUEEN),
+  new Card(13, 13, SuitEnum.HEARTS, CardNameEnum.KING, ImagePathEnum.KING),
+  new Card(14, 14, SuitEnum.OTHER, CardNameEnum.JOKER, ImagePathEnum.JOKER),
 ];
+
 export const distinctCardsIdObject = ListToObject(distinctCardsList, 'id');
 export const distinctCardsNameObject = ListToObject(distinctCardsList, 'name');
 export const distinctCardsValueObject = ListToObject(distinctCardsList, 'value');

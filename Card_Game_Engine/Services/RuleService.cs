@@ -6,13 +6,15 @@ namespace Card_Game_Engine.Services;
 
 public class RuleService
 {
-    private readonly ActionService _actionService = new();
+    private readonly ActionService _actionService;
     private readonly TriggerService _triggerService = new();
+    private CardContainer _cardContainer;
     private List<Rule> _rules = new();
 
-    public CardContainer GetCardContainer()
+    public RuleService(CardContainer cardContainer)
     {
-        return _actionService.GetCardContainer();
+        _cardContainer = cardContainer;
+        _actionService = new ActionService(cardContainer);
     }
 
     public void SetRules(List<Rule> rules)
@@ -20,7 +22,7 @@ public class RuleService
         _rules = rules;
     }
 
-    public CardContainer FireTriggerIfFound(TriggerEnum trigger)
+    public void FireTriggerIfFound(TriggerEnum trigger)
     {
         var rule = _rules.FirstOrDefault(r => r.Trigger == (int)trigger);
         if (rule != null)
@@ -31,8 +33,6 @@ public class RuleService
         {
             Console.WriteLine($"Trigger {trigger} not found.");
         }
-
-        return _actionService.GetCardContainer();
     }
 
     public void ProcessActions(List<Action> actions)
@@ -45,11 +45,11 @@ public class RuleService
 
         while (actionQueue.Count > 0)
         {
-            CardContainer cardContainerBeforeAction = _actionService.GetCardContainer().DeepCopy();
+            CardContainer cardContainerBeforeAction = _cardContainer.DeepCopy();
             var actionToExecute = actionQueue.Dequeue();
             ExecuteAction(actionToExecute);
             var triggeredActions =
-                GetTriggeredActions(cardContainerBeforeAction, _actionService.GetCardContainer());
+                GetTriggeredActions(cardContainerBeforeAction, _cardContainer);
             foreach (var triggeredAction in triggeredActions)
             {
                 actionQueue.Enqueue(triggeredAction);

@@ -9,15 +9,11 @@ public class ActionService
 {
     private readonly ActionFunctions _actionFunctions;
 
-    public ActionService()
+    public ActionService(CardContainer cardContainer)
     {
-        _actionFunctions = new ActionFunctions();
+        _actionFunctions = new ActionFunctions(cardContainer);
     }
 
-    public CardContainer GetCardContainer()
-    {
-        return _actionFunctions.GetCardContainer();
-    }
 
     public void ExecuteMoveCardAction(Action action)
     {

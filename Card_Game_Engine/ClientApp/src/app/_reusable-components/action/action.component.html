@@ -11,7 +11,7 @@
     @for (paramCtrl of parameters.controls; track paramCtrl.value.id; let k = $index) {
       <app-parameter [parentForm]="actionForm"
                      [parameterForm]="convertToFormGroup(paramCtrl)"
-                     [availableParameters]="actionParameters"
+                     [availableParameters]="updateActionParameters()"
       ></app-parameter>
     }
   </div>

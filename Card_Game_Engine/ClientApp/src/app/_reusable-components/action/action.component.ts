@@ -53,8 +53,9 @@ export class ActionComponent implements OnInit {
   }
 
   updateActionParameters() {
-    this.actionParameters = actions.find(t => t.id === this.actionForm.value.id).parameters;
+    return actions.find(t => t.id === this.actionForm.value.id).parameters;
   }
+
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }

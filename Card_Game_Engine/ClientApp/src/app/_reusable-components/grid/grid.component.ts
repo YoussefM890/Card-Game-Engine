@@ -34,7 +34,7 @@ export class GridComponent implements OnInit {
   @Input() rows: number = 7;
   @Input() cols: number = 12;
   @Input() displayCellIndex: boolean = false;
-  @Input() values: string[] = null;
+  @Input() list: string[] = null;
   @Input() grid: GridItem[] = null;
   @Input() overlap: boolean = false;
   @Output() cellSelected: EventEmitter<string> = new EventEmitter<string>();
@@ -61,15 +61,16 @@ export class GridComponent implements OnInit {
       this.mode = GridDisplayMode.DECK;
       return;
     }
-    if (this.values !== null) {
+    if (this.list !== null) {
       this.mode = GridDisplayMode.TEXT;
       return;
     }
-    this.values = Array(this.rows * this.cols).fill('');
+    this.list = Array(this.rows * this.cols).fill('');
     if (this.displayCellIndex) {
       this.mode = GridDisplayMode.INDEX;
     }
   }
+
   selectCell(value: string) {
     this.cellSelected.emit(value); // Emit the selected card data
   }

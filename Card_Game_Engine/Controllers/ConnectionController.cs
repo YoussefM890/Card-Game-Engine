@@ -9,11 +9,13 @@ namespace Card_Game_Engine;
 
 public class ConnectionController : Hub
 {
+    private CardContainer _cardContainer;
     private RuleService _ruleService;
 
-    public ConnectionController(RuleService ruleService)
+    public ConnectionController(RuleService ruleService, CardContainer cardContainer)
     {
         _ruleService = ruleService;
+        _cardContainer = cardContainer;
     }
 
     public override async Task OnConnectedAsync()
@@ -28,24 +30,24 @@ public class ConnectionController : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task SubmitRules(GameObject gameObject)
+    public async Task CreateGame(CreateGame createGame)
     {
-        Console.WriteLine("SubmitRules called!");
-        _ruleService.SetRules(gameObject.Rules);
+        Console.WriteLine("Create called!");
+        _ruleService.SetRules(createGame.Rules);
+        _cardContainer.SetStartingDeck(createGame.StartingDeck, createGame.StartingPosition);
     }
 
     public async Task StartGame()
     {
         Console.WriteLine("StartGame called!");
-        CardContainer cardContainer = _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
-        await Clients.All.SendAsync("ReceiveGameObject", cardContainer);
+        _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
+        await Clients.All.SendAsync("ReceiveGameObject", _cardContainer);
     }
 
     public async Task InvokeExplicitAction(Action action)
     {
         Console.WriteLine("InvokeExplicitAction called!");
         _ruleService.ProcessActions(new List<Action> { action });
-        CardContainer cardContainer = _ruleService.GetCardContainer();
-        await Clients.All.SendAsync("ReceiveGameObject", cardContainer);
+        await Clients.All.SendAsync("ReceiveGameObject", _cardContainer);
     }
 }

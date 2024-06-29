@@ -10,13 +10,12 @@
   border: 1px solid #ddd;
   background-color: #f9f9f9;
 }
-.card-container {
+
+.grid-item {
   box-sizing: border-box;
   width: 100%;
-  //height: 100%;
-  aspect-ratio: 0.8;
   border: 1px solid whitesmoke;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,12 +25,6 @@
 .selected {
   border-color: #007bff;
 }
-/* Add this to your existing styles */
-//.grid-container.overlap .grid-cell {
-//  position: absolute;
-//  left: 50%;
-//  transform: translateX(-50%);
-//}
 
 .grid-container.overlap .grid-cell:nth-child(n+2) {
   margin-left: -100px; /* Adjust the negative margin to control overlap */
