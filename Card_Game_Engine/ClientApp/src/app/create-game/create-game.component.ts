@@ -2,15 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
@@ -21,7 +13,6 @@ import {MatInput} from "@angular/material/input";
 import {ActionComponent} from "../_reusable-components/action/action.component";
 import {ParameterComponent} from "../_reusable-components/parameter/parameter.component";
 import {SignalRService} from "../services/signalr.service";
-import {Parameter} from "../models/classes/parameter";
 import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatCheckbox} from "@angular/material/checkbox";
@@ -34,6 +25,7 @@ import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {CardNameEnum} from "../models/enums/card-name.enum";
 import {getEnumValues} from "../models/functions";
 import {CreateGame} from "../models/classes/create-game";
+import {RuleComponent} from "../_reusable-components/rule/rule.component";
 
 @Component({
   selector: 'app-create-game',
@@ -58,26 +50,32 @@ import {CreateGame} from "../models/classes/create-game";
     CardLineComponent,
     RouterLinkActive,
     RouterLink,
+    RuleComponent,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
 })
 export class CreateGameComponent implements OnInit {
-  gameRuleForm: FormGroup;
+  gameForm: FormGroup;
   triggers: Trigger[] = triggers;
-  triggerParameters: Parameter[] = [];
+
 
   get rules(): FormArray {
-    return this.gameRuleForm.get('rules') as FormArray;
+    return this.gameForm.get('rules') as FormArray;
   }
+
   //region define the default deck
   selectedCards: Card[] = [];
 
   ngOnInit() {
-    this.gameRuleForm = this.fb.group({
+    this.createGameForm()
+    this.createSuitsForm()
+  }
+
+  createGameForm() {
+    this.gameForm = this.fb.group({
       rules: this.fb.array([])
     });
-    this.createSuitsForm()
   }
 
   importRules() {
@@ -86,46 +84,22 @@ export class CreateGameComponent implements OnInit {
       height: '700px',
     }).afterClosed().subscribe((result) => {
       if (result) {
-        this.gameRuleForm = result;
+        this.gameForm = result;
       }
     });
   }
 
   addRule() {
     const ruleForm = this.fb.group({
-      trigger: ['', Validators.required],
+      triggers: this.fb.array([]),
       actions: this.fb.array([]),
-      parameters: this.fb.array([])
+      rules: this.fb.array([])
     });
     this.rules.push(ruleForm);
   }
 
-  addParameter(ruleIndex: number) {
-    const parameterForm = this.fb.group({
-      id: [null, Validators.required],
-      value: [null, Validators.required]
-    });
-    ((this.gameRuleForm.get('rules') as FormArray).at(ruleIndex).get('parameters') as FormArray).push(parameterForm);
-  }
-
-  addAction(ruleIndex: number) {
-    const actionForm = this.fb.group({
-      id: [null, Validators.required],
-      parameters: this.fb.array([])
-    });
-    this.getActions(ruleIndex).push(actionForm);
-  }
-
   removeRule(index: number) {
     this.rules.removeAt(index);
-  }
-
-  getParameters(ruleIndex: number): FormArray {
-    return (this.rules.at(ruleIndex) as FormGroup).get('parameters') as FormArray;
-  }
-
-  getActions(ruleIndex: number): FormArray {
-    return (this.rules.at(ruleIndex) as FormGroup).get('actions') as FormArray;
   }
   suits = suitsList.slice(0, 4);
 
@@ -143,14 +117,10 @@ export class CreateGameComponent implements OnInit {
   ) {
   }
 
-  updateTriggerParameters(rule: AbstractControl) {
-    return triggers.find(t => t.id === rule.get('trigger').value).parameters;
-  }
-
   onSubmit() {
-    console.log(JSON.stringify(this.gameRuleForm.value, null, 2));
-    console.log(this.gameRuleForm.value.rules);
-    const createGameObject = new CreateGame(this.gameRuleForm.value.rules, this.selectedCards);
+    console.log(JSON.stringify(this.gameForm.value, null, 2));
+    console.log(this.gameForm.value.rules);
+    const createGameObject = new CreateGame(this.gameForm.value.rules, this.selectedCards);
     this.signalrService.createGame(createGameObject);
     this.router.navigate(['/play-game']);
   }

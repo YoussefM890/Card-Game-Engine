@@ -9,12 +9,17 @@
   </mat-form-field>
   <div formArrayName="parameters" class="parameters">
     @for (paramCtrl of parameters.controls; track paramCtrl.value.id; let k = $index) {
-      <app-parameter [parentForm]="actionForm"
-                     [parameterForm]="convertToFormGroup(paramCtrl)"
-                     [availableParameters]="updateActionParameters()"
-      ></app-parameter>
+      <div class="d-flex">
+        <app-parameter class="flex-grow-1"
+                       [parameterForm]="convertToFormGroup(paramCtrl)"
+                       [availableParameters]="updateActionParameters()"
+        ></app-parameter>
+        <button mat-icon-button color="warn" (click)="removeParameter(k)" class="col-1">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+      </div>
     }
   </div>
   <button mat-button (click)="addParameter()">Add Parameter</button>
-  <button mat-button color="warn" (click)="removeAction()">Remove Action</button>
+  <!--  <button mat-button color="warn" (click)="removeAction()">Remove Action</button>-->
 </div>

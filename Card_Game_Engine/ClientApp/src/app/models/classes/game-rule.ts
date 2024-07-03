@@ -2,6 +2,7 @@ import {Trigger} from "./trigger";
 import {Action} from "./action";
 
 export interface GameRule {
-  trigger: Trigger;
+  triggers: Trigger[];
   actions: Action[];
+  rules: GameRule[];
 }

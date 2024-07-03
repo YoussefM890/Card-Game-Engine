@@ -24,16 +24,27 @@ public class RuleService
 
     public void FireTriggerIfFound(TriggerEnum trigger)
     {
-        var rule = _rules.FirstOrDefault(r => r.Trigger == (int)trigger);
-        if (rule != null)
+        var allActions = new List<Action>();
+
+        foreach (var rule in _rules)
         {
-            ProcessActions(rule.Actions);
+            var foundTriggers = rule.Triggers.Where(t => t.Id == (int)trigger).ToList();
+            if (foundTriggers.Any())
+            {
+                allActions.AddRange(rule.Actions);
+            }
+        }
+
+        if (allActions.Any())
+        {
+            ProcessActions(allActions);
         }
         else
         {
             Console.WriteLine($"Trigger {trigger} not found.");
         }
     }
+
 
     public void ProcessActions(List<Action> actions)
     {
@@ -49,7 +60,7 @@ public class RuleService
             var actionToExecute = actionQueue.Dequeue();
             ExecuteAction(actionToExecute);
             var triggeredActions =
-                GetTriggeredActions(cardContainerBeforeAction, _cardContainer);
+                GetTriggeredActions(_rules, cardContainerBeforeAction, _cardContainer);
             foreach (var triggeredAction in triggeredActions)
             {
                 actionQueue.Enqueue(triggeredAction);
@@ -68,28 +79,49 @@ public class RuleService
         }
     }
 
-    private List<Action> GetTriggeredActions(CardContainer beforeActionCardContainer,
+    private List<Action> GetTriggeredActions(List<Rule> rules, CardContainer beforeActionCardContainer,
         CardContainer afterActionCardContainer)
     {
         var triggeredActions = new List<Action>();
-        foreach (var rule in _rules)
+
+        foreach (var rule in rules)
         {
-            Console.WriteLine("checking trigger : " + rule.Trigger);
-            bool isTriggered;
-            switch (rule.Trigger)
+            // Check if the parent rule triggers are satisfied
+            if (AreTriggersSatisfied(rule.Triggers, beforeActionCardContainer, afterActionCardContainer))
             {
-                // case (int)TriggerEnum.GameStart:
-                // isTriggered = isGameStartTriggered();
-                case (int)TriggerEnum.CardMoved:
-                    Console.WriteLine("checking card moved trigger");
-                    isTriggered = _triggerService.ExecuteCardMovedTrigger(rule, beforeActionCardContainer,
-                        afterActionCardContainer);
-                    Console.WriteLine(isTriggered ? "Fired" : "Dit not Fire");
-                    if (isTriggered) triggeredActions.AddRange(rule.Actions);
-                    break;
+                // Add parent rule actions
+                triggeredActions.AddRange(rule.Actions);
+                triggeredActions.AddRange(GetTriggeredActions(rule.Rules, beforeActionCardContainer,
+                    afterActionCardContainer));
             }
         }
 
         return triggeredActions;
+    }
+
+    private bool AreTriggersSatisfied(List<Trigger> triggers, CardContainer beforeActionCardContainer,
+        CardContainer afterActionCardContainer)
+    {
+        foreach (var trigger in triggers)
+        {
+            bool isTriggered = false;
+            switch (trigger.Id)
+            {
+                // case (int)TriggerEnum.GameStart:
+                // isTriggered = isGameStartTriggered();
+                case (int)TriggerEnum.CardMoved:
+                    isTriggered = _triggerService.ExecuteCardMovedTrigger(trigger, beforeActionCardContainer,
+                        afterActionCardContainer);
+                    Console.WriteLine(isTriggered ? "Fired" : "Dit not Fire");
+                    break;
+            }
+
+            if (isTriggered)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

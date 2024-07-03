@@ -2,11 +2,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {Action} from "../../models/classes/action";
 import {ParameterComponent} from "../parameter/parameter.component";
 import {actions} from "../../models/constants/actions";
 import {Parameter} from "../../models/classes/parameter";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-action',
@@ -18,15 +19,15 @@ import {Parameter} from "../../models/classes/parameter";
     MatOption,
     MatLabel,
     MatButton,
-    ParameterComponent
+    ParameterComponent,
+    MatIcon,
+    MatIconButton
   ],
   templateUrl: './action.component.html',
   styleUrl: './action.component.scss'
 })
 export class ActionComponent implements OnInit {
-  @Input() ruleForm: FormGroup;
   @Input() actionForm: FormGroup;
-  @Input() actionIndex: number;
   actions: Action[] = actions;
   actionParameters: Parameter[] = [];
 
@@ -45,11 +46,7 @@ export class ActionComponent implements OnInit {
       id: [null, Validators.required],
       value: [null, Validators.required]
     });
-    (this.actionForm.get('parameters') as FormArray).push(parameterForm);
-  }
-
-  removeAction() {
-    (this.ruleForm.get('actions') as FormArray).removeAt(this.actionIndex);
+    this.parameters.push(parameterForm);
   }
 
   updateActionParameters() {
@@ -58,5 +55,9 @@ export class ActionComponent implements OnInit {
 
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
+  }
+
+  removeParameter(index: number) {
+    this.parameters.removeAt(index);
   }
 }

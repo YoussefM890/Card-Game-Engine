@@ -26,14 +26,15 @@ import {rules} from "./dummy-rules";
     MatLabel,
   ],
   templateUrl: './import-rules.component.html',
-  styleUrl: './import-rules.component.scss'
+  styleUrls: ['./import-rules.component.scss']
 })
 export class ImportRulesComponent {
   rules: string = rules;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-              public dialogRef: MatDialogRef<ImportRulesComponent>,
-              public fb: FormBuilder
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<ImportRulesComponent>,
+    public fb: FormBuilder
   ) {
   }
 
@@ -42,7 +43,6 @@ export class ImportRulesComponent {
     return this.fb.group({
       rules: this.fb.array(data.rules.map(rule => this.createRuleFormGroup(rule)))
     });
-
   }
 
   onSubmit() {
@@ -65,12 +65,20 @@ export class ImportRulesComponent {
     });
   }
 
-  // Step 3: Create a rule FormGroup
+  // Step 3: Create a trigger FormGroup
+  private createTriggerFormGroup(trigger: any): FormGroup {
+    return this.fb.group({
+      id: trigger.id,
+      parameters: this.fb.array(trigger.parameters.map(param => this.createParameterFormGroup(param)))
+    });
+  }
+
+  // Step 4: Create a rule FormGroup
   private createRuleFormGroup(rule: any): FormGroup {
     return this.fb.group({
-      trigger: rule.trigger,
+      triggers: this.fb.array(rule.triggers.map(trigger => this.createTriggerFormGroup(trigger))),
       actions: this.fb.array(rule.actions.map(action => this.createActionFormGroup(action))),
-      parameters: this.fb.array(rule.parameters.map(param => this.createParameterFormGroup(param)))
+      rules: this.fb.array(rule.rules.map(subRule => this.createRuleFormGroup(subRule)))
     });
   }
 }

@@ -1,52 +1,65 @@
-export const rules =
-  "{\n" +
-  "  \"rules\": [\n" +
-  "    {\n" +
-  "      \"trigger\": 1,\n" +
-  "      \"actions\": [\n" +
-  "        {\n" +
-  "          \"id\": 2,\n" +
-  "          \"parameters\": [\n" +
-  "            {\n" +
-  "              \"id\": 3,\n" +
-  "              \"value\": \"0\"\n" +
-  "            },\n" +
-  "            {\n" +
-  "              \"id\": 4,\n" +
-  "              \"value\": \"2\"\n" +
-  "            }\n" +
-  "          ]\n" +
-  "        }\n" +
-  "      ],\n" +
-  "      \"parameters\": []\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"trigger\": 2,\n" +
-  "      \"actions\": [\n" +
-  "        {\n" +
-  "          \"id\": 2,\n" +
-  "          \"parameters\": [\n" +
-  "            {\n" +
-  "              \"id\": 3,\n" +
-  "              \"value\": \"2\"\n" +
-  "            },\n" +
-  "            {\n" +
-  "              \"id\": 4,\n" +
-  "              \"value\": \"3\"\n" +
-  "            }\n" +
-  "          ]\n" +
-  "        }\n" +
-  "      ],\n" +
-  "      \"parameters\": [\n" +
-  "        {\n" +
-  "          \"id\": 3,\n" +
-  "          \"value\": \"0\"\n" +
-  "        },\n" +
-  "        {\n" +
-  "          \"id\": 4,\n" +
-  "          \"value\": \"2\"\n" +
-  "        }\n" +
-  "      ]\n" +
-  "    }\n" +
-  "  ]\n" +
-  "}"
+const _rules =
+  {
+    "rules": [
+      {
+        "triggers": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 3,
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 3,
+                "value": "0"
+              },
+              {
+                "id": 4,
+                "value": "12"
+              }
+            ]
+          }
+        ],
+        "rules": [
+          {
+            "triggers": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 4,
+                    "value": "2"
+                  }
+                ]
+              }
+            ],
+            "rules": [],
+            "actions": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 3,
+                    "value": "0"
+                  },
+                  {
+                    "id": 4,
+                    "value": "83"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+export const rules = JSON.stringify(_rules, null, 2);

@@ -6,16 +6,16 @@ namespace Card_Game_Engine.Services;
 
 public class TriggerService
 {
-    public bool ExecuteCardMovedTrigger(Rule rule, CardContainer before, CardContainer after)
+    public bool ExecuteCardMovedTrigger(Trigger trigger, CardContainer before, CardContainer after)
     {
-        var fromPosition = rule.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.FromPosition)?.Value;
-        var toPosition = rule.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.ToPosition)?.Value;
-        var cardCount = rule.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.CardCount)?.Value ?? "1";
+        var fromPosition = trigger.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.FromPosition)?.Value;
+        var toPosition = trigger.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.ToPosition)?.Value;
+        var cardCount = trigger.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.CardCount)?.Value ?? "1";
 
         if ((fromPosition != null || toPosition != null) && int.TryParse(cardCount, out int count))
         {
-            int.TryParse(fromPosition, out int from);
-            int.TryParse(toPosition, out int to);
+            int? from = Utils.ParseNullableInt(fromPosition);
+            int? to = Utils.ParseNullableInt(toPosition);
             return TriggerFunctions.IsCardMoved(before, after, from, to, count);
         }
         else

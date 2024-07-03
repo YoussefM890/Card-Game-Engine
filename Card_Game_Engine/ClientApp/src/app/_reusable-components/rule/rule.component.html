@@ -1,0 +1,27 @@
+<div [formGroup]="ruleForm" class="rule">
+
+  <div formArrayName="triggers">
+    @for (triggerCtrl of triggers.controls; track triggerCtrl; let i = $index) {
+      <app-trigger [triggerForm]="convertToFormGroup(triggerCtrl)"></app-trigger>
+      <button mat-button color="warn" (click)="removeTrigger(i)">Remove Trigger</button>
+    }
+    <button (click)="addTrigger()" mat-button>Add Trigger</button>
+  </div>
+
+  <div formArrayName="rules">
+    @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
+      <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
+      <button mat-button color="warn" (click)="removeInnerRule(i)">Remove Inner Rule</button>
+    }
+    <button (click)="addInnerRule()" mat-button>Add Inner Rule</button>
+  </div>
+
+  <div formArrayName="actions">
+    @for (actionCtrl of actions.controls; track actionCtrl; let j = $index) {
+      <app-action [actionForm]="convertToFormGroup(actionCtrl)"></app-action>
+      <button mat-button color="warn" (click)="removeAction(j)">Remove Action</button>
+    }
+    <button (click)="addAction()" mat-button>Add Action</button>
+  </div>
+
+</div>

@@ -10,7 +10,7 @@ public class Card
     {
         // Basic validations to ensure the properties fall within expected ranges or states
         if (id < 1 || id > 52) throw new ArgumentOutOfRangeException(nameof(id), "Id must be between 1 and 52.");
-        if (value < 1 || value > 13)
+        if (value < 1 || value > 14)
             throw new ArgumentOutOfRangeException(nameof(value), "Value must be between 1 and 13.");
 
         Id = id;
