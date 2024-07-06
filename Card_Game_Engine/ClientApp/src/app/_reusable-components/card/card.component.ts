@@ -36,8 +36,8 @@ export class CardComponent implements OnInit, AfterViewInit {
   onResize(event) {
     this.adjustCardSize();
   }
+
   ngOnInit() {
-    console.log(this.card)
   }
 
   ngAfterViewInit() {

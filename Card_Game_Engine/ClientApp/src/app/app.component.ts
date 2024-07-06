@@ -35,8 +35,4 @@ export class AppComponent implements OnInit{
   ngOnInit() {
     this.signalRService.startConnection();
   }
-
-  submitForm() {
-
-  }
 }

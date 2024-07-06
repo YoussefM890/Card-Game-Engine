@@ -4,22 +4,22 @@ namespace Card_Game_Engine.Functions;
 
 public class ActionFunctions
 {
-    private readonly CardContainer _cardContainer;
+    private readonly List<GridItem> Grid;
 
-    public ActionFunctions(CardContainer cardContainer)
+    public ActionFunctions(List<GridItem> grid)
     {
-        _cardContainer = cardContainer;
+        Grid = grid;
     }
 
     public void MoveCards(int fromId, int toId, int numberOfCards)
     {
-        if (_cardContainer.Grid.Count() < fromId || _cardContainer.Grid.Count() < toId)
+        if (Grid.Count() < fromId || Grid.Count() < toId)
         {
             throw new ArgumentException("Invalid grid ID.");
         }
 
-        var fromGridItem = _cardContainer.Grid[fromId];
-        var toGridItem = _cardContainer.Grid[toId];
+        var fromGridItem = Grid[fromId];
+        var toGridItem = Grid[toId];
 
         var cardsToMove = fromGridItem.Cards.Take(numberOfCards).ToList();
         fromGridItem.Cards.RemoveRange(0, numberOfCards);

@@ -5,4 +5,6 @@ public class CreateGame
     public List<Rule> Rules { get; set; }
     public List<Card> StartingDeck { get; set; }
     public int StartingPosition { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
 }

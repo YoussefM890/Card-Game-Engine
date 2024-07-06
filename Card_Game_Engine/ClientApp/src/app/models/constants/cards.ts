@@ -1,8 +1,8 @@
 import {Card} from "../classes/card";
 import {CardNameEnum} from "../enums/card-name.enum";
 import {SuitEnum} from "../enums/suit.enum";
-import {ListToObject} from "../functions";
 import {ImagePathEnum} from "../enums/image-path.enum";
+import {ListToObject} from "../../shared/functions/global";
 
 export const distinctCardsList: Card[] = [
   new Card(1, 1, SuitEnum.HEARTS, CardNameEnum.ACE),

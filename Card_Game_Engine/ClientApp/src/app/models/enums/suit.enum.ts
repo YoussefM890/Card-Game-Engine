@@ -1,4 +1,4 @@
-import {ListToObject} from "../functions";
+import {ListToObject} from "../../shared/functions/global";
 
 export enum SuitEnum {
   HEARTS = 1,

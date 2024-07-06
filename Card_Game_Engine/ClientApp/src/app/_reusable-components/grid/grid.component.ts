@@ -37,7 +37,7 @@ export class GridComponent implements OnInit {
   @Input() list: string[] = null;
   @Input() grid: GridItem[] = null;
   @Input() overlap: boolean = false;
-  @Output() cellSelected: EventEmitter<string> = new EventEmitter<string>();
+  @Output() cellSelected: EventEmitter<string | number> = new EventEmitter<string | number>();
   mode: GridDisplayMode = GridDisplayMode.DEFAULT;
   moveCardFrom: number = null;
   moveCardTo: number = null;
@@ -71,7 +71,7 @@ export class GridComponent implements OnInit {
     }
   }
 
-  selectCell(value: string) {
+  selectCell(value: string | number) {
     this.cellSelected.emit(value); // Emit the selected card data
   }
 
@@ -104,5 +104,9 @@ export class GridComponent implements OnInit {
     this.signalrService.invokeExplicitAction(action);
     this.moveCardFrom = null;
     this.moveCardTo = null;
+  }
+
+  range(n: number): number[] {
+    return [...Array(n).keys()];
   }
 }

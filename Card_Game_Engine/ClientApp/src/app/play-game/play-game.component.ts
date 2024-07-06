@@ -22,6 +22,8 @@ import {DOCUMENT} from "@angular/common";
 export class PlayGameComponent implements OnInit {
   grid: GridItem[] = [];
   gridWidthStyle = '60%';
+  cols: number
+  rows: number
 
   constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
   }
@@ -32,19 +34,16 @@ export class PlayGameComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.positionGrid();
     this.setupGameListener();
   }
 
   positionGrid() {
-    const numberOfColumns = 12;
-    const numberOfRows = 7;
     const screenHeight = this.document.documentElement.clientHeight;
     const screenWidth = this.document.documentElement.clientWidth;
     const gridHeight = 0.8;
     const aspectRatio = 1.25; // width to height ratio
-    let gridWidth = (screenHeight * gridHeight * numberOfColumns) /
-      (screenWidth * numberOfRows * aspectRatio);
+    let gridWidth = (screenHeight * gridHeight * this.cols) /
+      (screenWidth * this.rows * aspectRatio);
     this.gridWidthStyle = gridWidth * 100 + '%';
   }
 
@@ -54,8 +53,13 @@ export class PlayGameComponent implements OnInit {
   }
 
   setupGameListener() {
-    this.signalrService.game$.subscribe((game: GameObject) => {
-      this.grid = [...game.grid];
+    this.signalrService.game$.subscribe((gameObject: GameObject) => {
+      this.grid = [...gameObject.grid];
+      if (this.cols != gameObject.width || this.rows != gameObject.height) {
+        this.cols = gameObject.width;
+        this.rows = gameObject.height;
+        this.positionGrid();
+      }
     });
   }
 }

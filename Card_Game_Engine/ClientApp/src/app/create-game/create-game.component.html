@@ -30,9 +30,41 @@
         </div>
       </mat-grid-tile>
       <mat-grid-tile colspan="1" rowspan="1">
-        <div class="p-4">
-          This is a grid reference for the card places that could be used to play.
-          You can use the numbers as a reference to the cards' position in the rules -->
+        <div class="max d-flex flex-column">
+          <div class="p-4">
+            This is a grid reference for the card places that could be used to play.
+            You can use the numbers as a reference to the cards' position in the rules -->
+          </div>
+          <div class="d-flex flex-column p-3 gap-1">
+            <div class="d-flex justify-content-between">
+              <div class="input-group w-50">
+                <span class="input-group-text">Width</span>
+                <input [(ngModel)]="width" class="form-control" readonly type="number">
+              </div>
+              <div>
+                <button (click)="changeWidth(-1)" class="mx-1" mat-mini-fab>
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button (click)="changeWidth(1)" class="mx-1" mat-mini-fab>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="input-group w-50">
+                <span class="input-group-text">Height</span>
+                <input [(ngModel)]="height" class="form-control" readonly type="number">
+              </div>
+              <div>
+                <button (click)="changeHeight(-1)" class="mx-1" mat-mini-fab>
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <button (click)="changeHeight(1)" class="mx-1" mat-mini-fab>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </mat-grid-tile>
     </mat-grid-list>
@@ -61,6 +93,11 @@
     </div>
   </mat-grid-tile>
   <mat-grid-tile class="p-1" colspan="3">
-    <app-grid [displayCellIndex]="true" class="center max "></app-grid>
+    <app-grid
+      [cols]="width"
+      [displayCellIndex]="true"
+      [rows]="height"
+      class="center max "
+    ></app-grid>
   </mat-grid-tile>
 </mat-grid-list>

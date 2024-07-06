@@ -7,14 +7,16 @@ namespace Card_Game_Engine.Services;
 public class RuleService
 {
     private readonly ActionService _actionService;
+    private readonly CardContainerService _cardContainerService;
+    private readonly List<GridItem> _grid;
     private readonly TriggerService _triggerService = new();
-    private CardContainer _cardContainer;
     private List<Rule> _rules = new();
 
-    public RuleService(CardContainer cardContainer)
+    public RuleService(DatabaseService databaseService)
     {
-        _cardContainer = cardContainer;
-        _actionService = new ActionService(cardContainer);
+        _cardContainerService = databaseService.CardContainerService;
+        _grid = databaseService.GetGrid();
+        _actionService = new ActionService(_grid);
     }
 
     public void SetRules(List<Rule> rules)
@@ -56,11 +58,11 @@ public class RuleService
 
         while (actionQueue.Count > 0)
         {
-            CardContainer cardContainerBeforeAction = _cardContainer.DeepCopy();
+            List<GridItem> cardContainerBeforeAction = _cardContainerService.DeepCopy();
             var actionToExecute = actionQueue.Dequeue();
             ExecuteAction(actionToExecute);
             var triggeredActions =
-                GetTriggeredActions(_rules, cardContainerBeforeAction, _cardContainer);
+                GetTriggeredActions(_rules, cardContainerBeforeAction, _grid);
             foreach (var triggeredAction in triggeredActions)
             {
                 actionQueue.Enqueue(triggeredAction);
@@ -79,8 +81,8 @@ public class RuleService
         }
     }
 
-    private List<Action> GetTriggeredActions(List<Rule> rules, CardContainer beforeActionCardContainer,
-        CardContainer afterActionCardContainer)
+    private List<Action> GetTriggeredActions(List<Rule> rules, List<GridItem> beforeActionCardContainer,
+        List<GridItem> afterActionCardContainer)
     {
         var triggeredActions = new List<Action>();
 
@@ -99,8 +101,8 @@ public class RuleService
         return triggeredActions;
     }
 
-    private bool AreTriggersSatisfied(List<Trigger> triggers, CardContainer beforeActionCardContainer,
-        CardContainer afterActionCardContainer)
+    private bool AreTriggersSatisfied(List<Trigger> triggers, List<GridItem> beforeActionCardContainer,
+        List<GridItem> afterActionCardContainer)
     {
         foreach (var trigger in triggers)
         {

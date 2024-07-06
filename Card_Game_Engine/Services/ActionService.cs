@@ -9,9 +9,9 @@ public class ActionService
 {
     private readonly ActionFunctions _actionFunctions;
 
-    public ActionService(CardContainer cardContainer)
+    public ActionService(List<GridItem> grid)
     {
-        _actionFunctions = new ActionFunctions(cardContainer);
+        _actionFunctions = new ActionFunctions(grid);
     }
 
 

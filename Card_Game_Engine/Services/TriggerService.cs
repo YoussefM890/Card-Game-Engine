@@ -6,7 +6,7 @@ namespace Card_Game_Engine.Services;
 
 public class TriggerService
 {
-    public bool ExecuteCardMovedTrigger(Trigger trigger, CardContainer before, CardContainer after)
+    public bool ExecuteCardMovedTrigger(Trigger trigger, List<GridItem> before, List<GridItem> after)
     {
         var fromPosition = trigger.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.FromPosition)?.Value;
         var toPosition = trigger.Parameters.FirstOrDefault(p => p.Id == (int)ParameterEnum.ToPosition)?.Value;

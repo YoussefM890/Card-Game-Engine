@@ -4,11 +4,15 @@ import {Card} from "./card";
 export class CreateGame {
   rules: GameRule[]
   startingDeck: Card[]
-  position: number
+  startingPosition: number
+  width: number
+  height: number
 
-  constructor(rules: GameRule[], startingDeck: any, startingPosition: number = 0) {
+  constructor(rules: GameRule[], startingDeck: Card[], width: number, height: number, startingPosition: number = 0) {
     this.rules = rules;
     this.startingDeck = startingDeck;
-    this.position = startingPosition;
+    this.width = width;
+    this.height = height;
+    this.startingPosition = startingPosition;
   }
 }

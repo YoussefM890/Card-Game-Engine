@@ -7,9 +7,9 @@
       <div class="grid-item disable-text-selection">
         <app-card-deck
           class="max"
-          [ngClass]="moveCardFrom === $index ? 'red-shadow' : moveCardTo === $index ? 'green-shadow' : ''"
+          [ngClass]="moveCardFrom === gridItem.id ? 'red-shadow' : moveCardTo === gridItem.id ? 'green-shadow' : ''"
           [cards]="gridItem.cards"
-          (click)="moveCard($index)"
+          (click)="moveCard(gridItem.id)"
         >
         </app-card-deck>
       </div>
@@ -21,7 +21,7 @@
       </div>
     }
   } @else if (mode === GridDisplayMode.INDEX) {
-    @for (value of list; track value) {
+    @for (value of range(cols * rows); track value) {
       <div (click)="selectCell(value)" class="grid-item disable-text-selection">
         <span>{{ $index }}</span>
       </div>

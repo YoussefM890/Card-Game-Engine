@@ -1,8 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {MatButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
@@ -23,9 +31,9 @@ import {Card} from "../models/classes/card";
 import {distinctCardsNameObject} from "../models/constants/cards";
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {CardNameEnum} from "../models/enums/card-name.enum";
-import {getEnumValues} from "../models/functions";
 import {CreateGame} from "../models/classes/create-game";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
+import {getEnumValues} from '../shared/functions/global';
 
 @Component({
   selector: 'app-create-game',
@@ -51,6 +59,8 @@ import {RuleComponent} from "../_reusable-components/rule/rule.component";
     RouterLinkActive,
     RouterLink,
     RuleComponent,
+    FormsModule,
+    MatMiniFabButton,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
@@ -58,6 +68,8 @@ import {RuleComponent} from "../_reusable-components/rule/rule.component";
 export class CreateGameComponent implements OnInit {
   gameForm: FormGroup;
   triggers: Trigger[] = triggers;
+  width = 12;
+  height = 7;
 
 
   get rules(): FormArray {
@@ -74,7 +86,7 @@ export class CreateGameComponent implements OnInit {
 
   createGameForm() {
     this.gameForm = this.fb.group({
-      rules: this.fb.array([])
+      rules: this.fb.array([]),
     });
   }
 
@@ -101,6 +113,7 @@ export class CreateGameComponent implements OnInit {
   removeRule(index: number) {
     this.rules.removeAt(index);
   }
+
   suits = suitsList.slice(0, 4);
 
   distinctCardsValues = getEnumValues(CardNameEnum);
@@ -108,6 +121,7 @@ export class CreateGameComponent implements OnInit {
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }
+
   suitsForm: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -120,7 +134,7 @@ export class CreateGameComponent implements OnInit {
   onSubmit() {
     console.log(JSON.stringify(this.gameForm.value, null, 2));
     console.log(this.gameForm.value.rules);
-    const createGameObject = new CreateGame(this.gameForm.value.rules, this.selectedCards);
+    const createGameObject = new CreateGame(this.gameForm.value.rules, this.selectedCards, this.width, this.height);
     this.signalrService.createGame(createGameObject);
     this.router.navigate(['/play-game']);
   }
@@ -136,14 +150,14 @@ export class CreateGameComponent implements OnInit {
     console.log(this.suitsForm.value);
   }
 
-  onValueSelected(value: string) {
+  onValueSelected(value: string | number) {
     let currentCard: Card
     if (value === CardNameEnum.JOKER) {
       this.selectedCards.push(new Card(1, distinctCardsNameObject[value].value, SuitEnum.OTHER, 'Joker'));
     } else {
       this.suitsFormArray.value.forEach((selected: boolean, index: number) => {
         if (selected) {
-          this.selectedCards.push(new Card(1, distinctCardsNameObject[value].value, this.suits[index].value as SuitEnum, value));
+          this.selectedCards.push(new Card(1, distinctCardsNameObject[value].value, this.suits[index].value as SuitEnum, value as string));
         }
       });
     }
@@ -153,5 +167,13 @@ export class CreateGameComponent implements OnInit {
   onCardSelectedFromLine(card: Card) {
     this.selectedCards = this.selectedCards.filter(c => c !== card);
     this.selectedCards = [...this.selectedCards];
+  }
+
+  changeWidth(delta: number) {
+    this.width += delta;
+  }
+
+  changeHeight(delta: number) {
+    this.height += delta;
   }
 }
