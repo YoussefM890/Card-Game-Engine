@@ -8,8 +8,8 @@ export class Card {
   suit: SuitEnum;
   name: CardNameEnum | string;
   imagePath?: ImagePathEnum;
-  isFaceUp: boolean = false;
-  isPlayable: boolean = false;
+  isFaceUp: boolean = true;
+  isPlayable: boolean = true;
 
   constructor(id: number, value: number, suit: SuitEnum, name: string, imageUrl?: ImagePathEnum) {
     this.id = id;

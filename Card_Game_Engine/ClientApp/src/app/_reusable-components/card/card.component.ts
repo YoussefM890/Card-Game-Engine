@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {Card} from "../../models/classes/card";
 import {SuitEnum, suitsObject} from "../../models/enums/suit.enum";
 import {distinctCardsValueObject} from "../../models/constants/cards";
+import {CardTransfer} from "../../models/classes/card-transfer";
 
 @Component({
   selector: 'app-card',
@@ -27,7 +27,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     12: ['C5'],
     13: ['C5'],
   }
-  @Input() card: Card
+  @Input() card: CardTransfer
   suits = suitsObject;
   suitEnum = SuitEnum;
   distinctCardValueObject = distinctCardsValueObject;

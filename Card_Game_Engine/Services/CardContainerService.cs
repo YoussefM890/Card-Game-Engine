@@ -1,5 +1,6 @@
 using System.Text;
 using Card_Game_Engine.Models;
+using Card_Game_Engine.Models.Custom_Models.Create_Game;
 
 namespace Card_Game_Engine.Services;
 
@@ -24,7 +25,7 @@ public class CardContainerService
         return _grid.Select(item => item.DeepCopy()).ToList();
     }
 
-    public void ClearAndCreateEmptyGrid(int width, int height)
+    public void ClearAndCreateEmptyGrid(int width, int height, Dictionary<int, CreateGridItem> createGrid)
     {
         _width = width;
         _height = height;
@@ -33,7 +34,8 @@ public class CardContainerService
         {
             foreach (var j in Enumerable.Range(1, width)) // 12 columns
             {
-                _grid.Add(new GridItem(_grid.Count));
+                var gridItem = createGrid.GetValueOrDefault(_grid.Count);
+                _grid.Add(new GridItem(_grid.Count, gridItem?.Visibility));
             }
         }
     }

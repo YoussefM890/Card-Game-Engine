@@ -4,7 +4,7 @@ using Card_Game_Engine.Services;
 using Microsoft.AspNetCore.SignalR;
 using Action = Card_Game_Engine.Models.Action;
 
-namespace Card_Game_Engine;
+namespace Card_Game_Engine.Controllers;
 
 public class GameEngineController : Hub
 {
@@ -25,7 +25,12 @@ public class GameEngineController : Hub
         var connectionId = Context.ConnectionId;
         Console.WriteLine($"User connected with ConnectionId: {connectionId}");
         _databaseService.UserService.AddUser(connectionId);
-        await Clients.Caller.SendAsync("GetUserNumber", _databaseService.GetUsers().Count());
+        var users = _databaseService.GetUsers().ToList();
+        for (int i = 0; i < users.Count; i++)
+        {
+            await Clients.Client(users[i].Id).SendAsync("GetUserNumber", i + 1);
+        }
+
         await Clients.All.SendAsync("UserConnected", connectionId);
         await base.OnConnectedAsync();
     }
@@ -42,7 +47,8 @@ public class GameEngineController : Hub
     {
         Console.WriteLine("Create called!");
         _ruleService.SetRules(createGame.Rules);
-        _databaseService.CardContainerService.ClearAndCreateEmptyGrid(createGame.Width, createGame.Height);
+        _databaseService.CardContainerService.ClearAndCreateEmptyGrid(createGame.Width, createGame.Height,
+            createGame.Grid);
         _databaseService.CardContainerService.SetStartingDeck(createGame.StartingDeck, createGame.StartingPosition);
         // Console.WriteLine(_databaseService.CardContainerService.ToString());
     }
@@ -51,17 +57,25 @@ public class GameEngineController : Hub
     {
         Console.WriteLine("StartGame called!");
         _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
-        GameObject gameObject = new(_databaseService.GetGrid(), _databaseService.CardContainerService.GetWidth(),
-            _databaseService.CardContainerService.GetHeight());
-        await Clients.All.SendAsync("ReceiveGameObject", gameObject);
+        var width = _databaseService.CardContainerService.GetWidth();
+        var height = _databaseService.CardContainerService.GetHeight();
+        foreach (var user in _databaseService.GetUsers())
+        {
+            GameObject gameObject = new(_databaseService.GetTransferGrid(user.Id), width, height);
+            await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
+        }
     }
 
     public async Task InvokeExplicitAction(Action action)
     {
         Console.WriteLine("InvokeExplicitAction called!");
         _ruleService.ProcessActions(new List<Action> { action });
-        GameObject gameObject = new(_databaseService.GetGrid(), _databaseService.CardContainerService.GetWidth(),
-            _databaseService.CardContainerService.GetHeight());
-        await Clients.All.SendAsync("ReceiveGameObject", gameObject);
+        var width = _databaseService.CardContainerService.GetWidth();
+        var height = _databaseService.CardContainerService.GetHeight();
+        foreach (var user in _databaseService.GetUsers())
+        {
+            GameObject gameObject = new(_databaseService.GetTransferGrid(user.Id), width, height);
+            await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
+        }
     }
 }

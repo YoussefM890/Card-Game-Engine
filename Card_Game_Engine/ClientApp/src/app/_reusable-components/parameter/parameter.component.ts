@@ -6,6 +6,8 @@ import {MatInput} from "@angular/material/input";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {Parameter} from "../../models/classes/parameter";
+import {ParameterValueTypeEnum} from "../../models/enums/parameter-value-type.enum";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-parameter',
@@ -18,7 +20,8 @@ import {Parameter} from "../../models/classes/parameter";
     MatInput,
     MatIconButton,
     MatLabel,
-    MatIcon
+    MatIcon,
+    MatTooltip
   ],
   templateUrl: './parameter.component.html',
   styleUrl: './parameter.component.scss'
@@ -26,12 +29,24 @@ import {Parameter} from "../../models/classes/parameter";
 export class ParameterComponent implements OnInit {
   @Input() parameterForm: FormGroup;
   @Input() availableParameters: Parameter[] = [];
+  selectedParameter: Parameter;
+  types = ParameterValueTypeEnum;
 
   constructor() {
   }
 
-  ngOnInit(): void {
+  get valueControl() {
+    return this.parameterForm.get('value');
   }
 
+  ngOnInit(): void {
+    this.selectedParameter = this.availableParameters.find(p => p.id === this.parameterForm.value.id);
+    console.log(this.availableParameters);
+  }
+
+  onParameterChange(paramId: number) {
+    this.selectedParameter = this.availableParameters.find(p => p.id === paramId);
+    this.valueControl.setValue(null);
+  }
 }
 

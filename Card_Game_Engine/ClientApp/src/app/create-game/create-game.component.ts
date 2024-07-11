@@ -33,7 +33,11 @@ import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {CardNameEnum} from "../models/enums/card-name.enum";
 import {CreateGame} from "../models/classes/create-game";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
-import {getEnumValues} from '../shared/functions/global';
+import {filterDictBySize, getEnumValues} from '../shared/functions/global';
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {create_game} from "./create-game.namespace";
+import {CssStyle} from "../models/classes/css-style";
+import {CssStyleEnum} from "../models/enums/css-style.enum";
 
 @Component({
   selector: 'app-create-game',
@@ -61,6 +65,8 @@ import {getEnumValues} from '../shared/functions/global';
     RuleComponent,
     FormsModule,
     MatMiniFabButton,
+    MatButtonToggleGroup,
+    MatButtonToggle,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
@@ -70,6 +76,10 @@ export class CreateGameComponent implements OnInit {
   triggers: Trigger[] = triggers;
   width = 12;
   height = 7;
+  visibilityOptions = create_game.visibilityOptions;
+  selectedVisibilityOption = this.visibilityOptions[0];
+  grid: Record<number, create_game.GridItem> = {};
+  itemStyles: Record<number, CssStyle[]> = {};
 
 
   get rules(): FormArray {
@@ -134,7 +144,14 @@ export class CreateGameComponent implements OnInit {
   onSubmit() {
     console.log(JSON.stringify(this.gameForm.value, null, 2));
     console.log(this.gameForm.value.rules);
-    const createGameObject = new CreateGame(this.gameForm.value.rules, this.selectedCards, this.width, this.height);
+
+    const createGameObject = new CreateGame(
+      this.gameForm.value.rules,
+      this.width,
+      this.height,
+      this.selectedCards,
+      filterDictBySize<number, create_game.GridItem>(this.grid, this.width * this.height),
+    );
     this.signalrService.createGame(createGameObject);
     this.router.navigate(['/play-game']);
   }
@@ -176,4 +193,28 @@ export class CreateGameComponent implements OnInit {
   changeHeight(delta: number) {
     this.height += delta;
   }
+
+  changeCellVisibility(index: number) {
+    if (this.grid.hasOwnProperty(index)) {
+      const currentVisibility = this.grid[index].visibility;
+      if (currentVisibility === this.selectedVisibilityOption.value) {
+        delete this.grid[index];
+        delete this.itemStyles[index];
+      } else {
+        this.grid[index].visibility = this.selectedVisibilityOption.value;
+        this.itemStyles[index] = this.getStyles(this.selectedVisibilityOption);
+      }
+    } else {
+      this.grid[index] = {id: index, visibility: this.selectedVisibilityOption.value};
+      this.itemStyles[index] = this.getStyles(this.selectedVisibilityOption);
+    }
+  }
+
+  getStyles(selectedVisibilityOption: create_game.VisibilityOption) {
+    return [
+      new CssStyle(CssStyleEnum.BoxShadow, `0 0 10px ${selectedVisibilityOption.color}`),
+      new CssStyle(CssStyleEnum.BackgroundColor, selectedVisibilityOption.background)
+    ];
+  }
+
 }

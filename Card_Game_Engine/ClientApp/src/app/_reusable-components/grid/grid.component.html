@@ -3,32 +3,30 @@
   class="grid-container"
 >
   @if (mode === GridDisplayMode.DECK) {
-    @for (gridItem of grid; track gridItem.id) {
-      <div class="grid-item disable-text-selection">
-        <app-card-deck
-          class="max"
-          [ngClass]="moveCardFrom === gridItem.id ? 'red-shadow' : moveCardTo === gridItem.id ? 'green-shadow' : ''"
-          [cards]="gridItem.cards"
-          (click)="moveCard(gridItem.id)"
-        >
-        </app-card-deck>
+    @for (gridItem of grid; track gridItem.topCard) {
+      <div class="grid-item disable-text-selection" (click)="onCellClick(gridItem)"
+           [style]="getItemStyle(gridItem.id)"
+      >
+        @if (gridItem.topCard) {
+          <app-card class="max" [card]="gridItem.topCard"></app-card>
+        }
       </div>
     }
   } @else if (mode === GridDisplayMode.TEXT) {
     @for (value of list; track value) {
-      <div (click)="selectCell(value)" class="grid-item disable-text-selection">
+      <div (click)="onCellClick(value)" class="grid-item disable-text-selection" [style]="getItemStyle($index)">
         <span>{{ value }}</span>
       </div>
     }
   } @else if (mode === GridDisplayMode.INDEX) {
     @for (value of range(cols * rows); track value) {
-      <div (click)="selectCell(value)" class="grid-item disable-text-selection">
+      <div (click)="onCellClick(value)" class="grid-item disable-text-selection" [style]="getItemStyle(value)">
         <span>{{ $index }}</span>
       </div>
     }
   } @else if (mode === GridDisplayMode.DEFAULT) {
     @for (value of list; track value) {
-      <div class="grid-item disable-text-selection"></div>
+      <div class="grid-item disable-text-selection" [style]="getItemStyle($index)"></div>
     }
   }
 </div>

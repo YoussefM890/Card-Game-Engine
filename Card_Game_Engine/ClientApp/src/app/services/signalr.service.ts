@@ -14,8 +14,7 @@ export class SignalRService {
   private gameSubject = new BehaviorSubject<GameObject>(new GameObject());
   public game$ = this.gameSubject.asObservable();
   private readonly baseUrl = `${window.location.protocol}//${window.location.host}`;
-
-  private userNumber: number;
+  private _userNumber: number;
 
   constructor() {
     console.log('SignalRService instantiated');
@@ -80,11 +79,8 @@ export class SignalRService {
     });
   }
 
-  private userNumberListener = () => {
-    this.hubConnection.on('GetUserNumber', (userNumber: number) => {
-      console.log('User number:', userNumber);
-      this.userNumber = userNumber;
-    });
+  get userNumber(): number {
+    return this._userNumber;
   }
 
   private receiveMessageListener = () => {
@@ -93,10 +89,17 @@ export class SignalRService {
     });
   }
 
+  private userNumberListener = () => {
+    this.hubConnection.on('GetUserNumber', (userNumber: number) => {
+      console.log('User number:', userNumber);
+      this._userNumber = userNumber;
+    });
+  }
+
   private receiveGameObjectListener = () => {
     this.hubConnection.on('ReceiveGameObject', (gameObject: GameObject) => {
       console.log('Received game object:', gameObject);
-      if (this.userNumber % 2 === 0) {
+      if (this._userNumber % 2 === 0) {
         gameObject.grid = mirrorGrid(gameObject.grid, gameObject.height, gameObject.width);
       }
       this.gameSubject.next(gameObject);

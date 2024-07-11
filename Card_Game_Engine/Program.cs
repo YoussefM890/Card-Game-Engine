@@ -1,4 +1,4 @@
-using Card_Game_Engine;
+using Card_Game_Engine.Controllers;
 using Card_Game_Engine.Services;
 
 var builder = WebApplication.CreateBuilder(args);

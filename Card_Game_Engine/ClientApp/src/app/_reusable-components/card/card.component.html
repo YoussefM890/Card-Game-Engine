@@ -1,22 +1,26 @@
 <div #cardElm
+     [class.back]="!card.isFaceUp"
      [style.color]="suits[card.suit].color"
-     class="front"
+     [class.front]="card.isFaceUp"
+     class="card"
 >
-  @if (distinctCardValueObject[card.value].imagePath) {
-    <img class="face" [src]="distinctCardValueObject[card.value].imagePath" alt="{{card.value}}">
-  }
-  <div class="index">
-    <span class="indexValue">{{ card.value }}</span>
-    <span class="indexSuit">{{ suits[card.suit].symbol }}</span>
-  </div>
-  @for (spot of rankSpots[card.value]; track card.value) {
-    <div class="spot{{spot}}">
+  @if (card.isFaceUp) {
+    @if (distinctCardValueObject[card.value].imagePath) {
+      <img class="face" [src]="distinctCardValueObject[card.value].imagePath" alt="{{card.value}}">
+    }
+    <div class="index">
+      <span class="indexValue">{{ card.value }}</span>
+      <span class="indexSuit">{{ suits[card.suit].symbol }}</span>
+    </div>
+    @for (spot of rankSpots[card.value]; track card.value) {
+      <div class="spot{{spot}}">
       <span
         [class.ace]="card.value === 1"
         [class.hearts]="card.suit === suitEnum.HEARTS"
       >
         {{ suits[card.suit].symbol }}
       </span>
-    </div>
+      </div>
+    }
   }
 </div>

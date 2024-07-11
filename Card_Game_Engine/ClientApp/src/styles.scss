@@ -6,9 +6,15 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box !important;
-  font-family: "Comic Sans MS", "Roboto", "Helvetica Neue", "sans-serif" !important;
 }
 
+body, app-root {
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+}
+
+.mdc-form-field {
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+}
 .center {
   display: flex;
   justify-content: center;

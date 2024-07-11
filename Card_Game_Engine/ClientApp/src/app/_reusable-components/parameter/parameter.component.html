@@ -1,14 +1,31 @@
 <div [formGroup]="parameterForm" class="row">
   <mat-form-field appearance="fill" class="col-7">
     <mat-label>Parameter</mat-label>
-    <mat-select formControlName="id">
+    <mat-select (selectionChange)="onParameterChange($event.value)" formControlName="id">
       @for (parameter of availableParameters; track parameter.id) {
         <mat-option [value]="parameter.id">{{ parameter.display }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
-  <mat-form-field appearance="fill" class="col-5">
-    <mat-label>Value</mat-label>
-    <input matInput formControlName="value" placeholder="Value">
-  </mat-form-field>
+
+  @if (selectedParameter) {
+    @switch (selectedParameter.type) {
+      @case (types.Text) {
+        <mat-form-field appearance="fill" class="col-5">
+          <mat-label>Value</mat-label>
+          <input matInput formControlName="value" placeholder="Value">
+        </mat-form-field>
+      }
+      @case (types.Select) {
+        <mat-form-field appearance="fill" class="col-5">
+          <mat-label>Value</mat-label>
+          <mat-select formControlName="value">
+            @for (option of selectedParameter.args; track option.value) {
+              <mat-option [matTooltip]="option.description" [value]="option.value">{{ option.display }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+    }
+  }
 </div>

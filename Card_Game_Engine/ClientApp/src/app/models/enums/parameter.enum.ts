@@ -4,9 +4,9 @@ export enum ParameterEnum {
   'FromPosition' = 3,
   'ToPosition' = 4,
 
-
   //action parameters
   'ShuffleCount' = 2,
+  'Visibility' = 6,
 
   //trigger parameters
   'By' = 5,

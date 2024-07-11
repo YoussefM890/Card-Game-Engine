@@ -2,16 +2,13 @@ import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output,} from
 import {CardComponent} from "../card/card.component";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {NgClass, NgStyle} from "@angular/common";
-import {GridItem} from "../../models/classes/grid-item";
 import {CardLineComponent} from "../card-line/card-line.component";
 import {CardDeckComponent} from "../card-deck/card-deck.component";
 import {SignalRService} from "../../services/signalr.service";
 import {GridDisplayMode} from "../../models/enums/gird-display-mode";
 import {CdkDrag, CdkDragDrop, CdkDropList,} from "@angular/cdk/drag-drop";
-import {ActionDTO} from "../../models/classes/action";
-import {ActionEnum} from "../../models/enums/action.enum";
-import {ParameterDTO} from "../../models/classes/parameter";
-import {ParameterEnum} from "../../models/enums/parameter.enum";
+import {GridTransferItem} from "../../models/classes/grid-transfer-item";
+import {CssStyle} from "../../models/classes/css-style";
 
 @Component({
   selector: 'app-grid',
@@ -35,9 +32,10 @@ export class GridComponent implements OnInit {
   @Input() cols: number = 12;
   @Input() displayCellIndex: boolean = false;
   @Input() list: string[] = null;
-  @Input() grid: GridItem[] = null;
+  @Input() grid: GridTransferItem[] = null;
   @Input() overlap: boolean = false;
-  @Output() cellSelected: EventEmitter<string | number> = new EventEmitter<string | number>();
+  @Input() itemStyles: Record<number, CssStyle[]> = null;
+  @Output() cellClick: EventEmitter<any> = new EventEmitter<any>();
   mode: GridDisplayMode = GridDisplayMode.DEFAULT;
   moveCardFrom: number = null;
   moveCardTo: number = null;
@@ -71,25 +69,11 @@ export class GridComponent implements OnInit {
     }
   }
 
-  selectCell(value: string | number) {
-    this.cellSelected.emit(value); // Emit the selected card data
+  onCellClick(item: any) {
+    this.cellClick.emit(item); // Emit the selected card data
   }
 
-  moveCard(index: number) {
-    if (this.moveCardFrom === null) {
-      this.moveCardFrom = index;
-      return;
-    }
-    if (this.moveCardFrom === index) {
-      this.moveCardFrom = null;
-      return;
-    }
-    this.moveCardTo = index;
-    console.log('Move card from', this.moveCardFrom, 'to', this.moveCardTo)
-    this._moveCard();
-  }
-
-  onCardDropped(event: CdkDragDrop<GridItem[]>) {
+  onCardDropped(event: CdkDragDrop<GridTransferItem[]>) {
     console.log('Card dropped', event)
   }
 
@@ -97,16 +81,14 @@ export class GridComponent implements OnInit {
     console.log('Card drag ended', index)
   }
 
-  private _moveCard() {
-    const action = new ActionDTO(ActionEnum.MoveCard);
-    action.addParameter(new ParameterDTO(ParameterEnum.FromPosition, '' + this.moveCardFrom));
-    action.addParameter(new ParameterDTO(ParameterEnum.ToPosition, '' + this.moveCardTo));
-    this.signalrService.invokeExplicitAction(action);
-    this.moveCardFrom = null;
-    this.moveCardTo = null;
-  }
-
   range(n: number): number[] {
     return [...Array(n).keys()];
+  }
+
+  getItemStyle(itemId: number): string {
+    if (this.itemStyles && this.itemStyles[itemId]) {
+      return this.itemStyles[itemId].map(style => `${style.style}: ${style.value}`).join('; ');
+    }
+    return '';
   }
 }

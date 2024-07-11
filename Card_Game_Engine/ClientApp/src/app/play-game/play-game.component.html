@@ -1,7 +1,29 @@
 <button [routerLink]="['/create']" color="primary" mat-raised-button>navigate to create</button>
 <button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+<div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
+  @for (option of visibilityOptions; track option) {
+    <div class="example-box"
+         cdkDrag cdkDragLockAxis="y"
+         [cdkDragDisabled]="option.disabled"
+         (click)="toggleOption(option)"
+         [style.background]=option.background
+         [style.color]=option.color
+         [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
+         [matTooltip]="option.description"
+    >
+      {{ option.display }}
+    </div>
+  }
+</div>
 @if (grid.length > 0) {
   <div [style.width]="gridWidthStyle" class="grid">
-    <app-grid [cols]="cols" [grid]="grid" [rows]="rows" class="center max"></app-grid>
+    <app-grid
+      class="center max"
+      [cols]="cols"
+      [grid]="grid"
+      [rows]="rows"
+      [itemStyles]="itemStyles"
+      (cellClick)="onCellClick($event)"
+    ></app-grid>
   </div>
 }

@@ -16,7 +16,7 @@ public class RuleService
     {
         _cardContainerService = databaseService.CardContainerService;
         _grid = databaseService.GetGrid();
-        _actionService = new ActionService(_grid);
+        _actionService = new ActionService(_grid, databaseService.GetUsers());
     }
 
     public void SetRules(List<Rule> rules)

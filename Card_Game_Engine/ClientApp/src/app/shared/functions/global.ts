@@ -18,3 +18,9 @@ export function ListToObject(list: any[], attr: string) {
     return acc;
   }, {});
 }
+
+export function filterDictBySize<K extends number | string, V>(dict: Record<K, V>, size: number): Record<K, V> {
+  return Object.fromEntries(
+    Object.entries(dict).filter(([key]) => Number(key) < size)
+  ) as Record<K, V>;
+}

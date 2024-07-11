@@ -4,8 +4,18 @@ import {MatButton} from "@angular/material/button";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {SignalRService} from "../services/signalr.service";
 import {GameObject} from "../models/classes/game-object";
-import {GridItem} from "../models/classes/grid-item";
-import {DOCUMENT} from "@angular/common";
+import {DOCUMENT, NgStyle} from "@angular/common";
+import {GridTransferItem} from "../models/classes/grid-transfer-item";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
+import {MatTooltip} from "@angular/material/tooltip";
+import {CssStyle} from "../models/classes/css-style";
+import {CssStyleEnum} from "../models/enums/css-style.enum";
+import {ActionDTO} from "../models/classes/action";
+import {ActionEnum} from "../models/enums/action.enum";
+import {ParameterDTO} from "../models/classes/parameter";
+import {ParameterEnum} from "../models/enums/parameter.enum";
+import {VisibilityOptionsEnum} from "../models/constants/parameter-value-options/visibility-options";
+import {play_game} from "./play-game.namespace";
 
 @Component({
   selector: 'app-play-game',
@@ -14,16 +24,24 @@ import {DOCUMENT} from "@angular/common";
     GridComponent,
     MatButton,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    CdkDropList,
+    CdkDrag,
+    NgStyle,
+    MatTooltip
   ],
   templateUrl: './play-game.component.html',
   styleUrl: './play-game.component.scss'
 })
 export class PlayGameComponent implements OnInit {
-  grid: GridItem[] = [];
+  grid: GridTransferItem[] = [];
   gridWidthStyle = '60%';
   cols: number
   rows: number
+  visibilityOptions = play_game.visibilityOptions;
+  selectedVisibilityOption = null;
+  selectedCellId: number = null;
+  itemStyles = null;
 
   constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
   }
@@ -62,4 +80,76 @@ export class PlayGameComponent implements OnInit {
       }
     });
   }
+
+  onCellClick(item: GridTransferItem) {
+    if (this.selectedCellId === item.id) {
+      this.cycleVisibilityOption();
+    } else {
+      if (this.selectedCellId !== null && this.selectedVisibilityOption !== null) {
+        this.moveCard(this.selectedCellId, item.id, this.selectedVisibilityOption);
+      } else {
+        this.selectFirstActiveOption();
+        this.selectedCellId = item.id;
+      }
+    }
+    this.updateItemStyles();
+  }
+
+  toggleOption(option: play_game.VisibilityOption) {
+    option.disabled = !option.disabled;
+    if (option.disabled && option === this.selectedVisibilityOption) {
+      this.selectedVisibilityOption = null;
+      this.selectedCellId = null;
+    }
+    this.updateItemStyles();
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.visibilityOptions, event.previousIndex, event.currentIndex);
+  }
+
+  private cycleVisibilityOption() {
+    const activeOptions = this.visibilityOptions.filter(opt => !opt.disabled);
+    const currentIndex = activeOptions.findIndex(opt => opt === this.selectedVisibilityOption);
+
+    if (currentIndex === activeOptions.length - 1) {
+      this.selectedVisibilityOption = null;
+      this.selectedCellId = null;
+    } else {
+      this.selectedVisibilityOption = activeOptions[currentIndex + 1];
+    }
+    this.updateItemStyles();
+  }
+
+  private selectFirstActiveOption() {
+    const firstActiveOption = this.visibilityOptions.find(opt => !opt.disabled);
+    this.selectedVisibilityOption = firstActiveOption || null;
+    this.updateItemStyles();
+  }
+
+  private moveCard(fromPosition: number, toPosition: number, visibilityOption: play_game.VisibilityOption) {
+    console.log(`Moving card ${fromPosition} to ${toPosition} with visibility ${visibilityOption.display}`);
+    let trueVisibility: string = visibilityOption.value;
+    if (visibilityOption.value === play_game.VisibilityEnum.Private) {
+      this.signalrService.userNumber % 2 === 0 ? trueVisibility = VisibilityOptionsEnum.Player2 : trueVisibility = VisibilityOptionsEnum.Player1;
+    }
+    const action = new ActionDTO(ActionEnum.MoveCard);
+    action.addParameter(new ParameterDTO(ParameterEnum.FromPosition, '' + fromPosition));
+    action.addParameter(new ParameterDTO(ParameterEnum.ToPosition, '' + toPosition));
+    action.addParameter(new ParameterDTO(ParameterEnum.Visibility, trueVisibility));
+    this.signalrService.invokeExplicitAction(action);
+    this.selectedVisibilityOption = null;
+    this.selectedCellId = null;
+    this.updateItemStyles();
+  }
+
+  private updateItemStyles() {
+    this.itemStyles = {};
+    if (this.selectedCellId !== null && this.selectedVisibilityOption !== null) {
+      this.itemStyles[this.selectedCellId] = [
+        new CssStyle(CssStyleEnum.BoxShadow, `0 0 10px 5px ${this.selectedVisibilityOption.background}`)
+      ];
+    }
+  }
+
 }

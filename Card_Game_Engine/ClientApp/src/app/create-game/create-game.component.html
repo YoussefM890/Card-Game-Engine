@@ -23,14 +23,14 @@
     </div>
   </mat-grid-tile>
   <mat-grid-tile colspan="2" rowspan="2">
-    <mat-grid-list class="max" cols="1" rowHeight="49.9%">
+    <mat-grid-list class="max" cols="1" rowHeight="33.3%">
       <mat-grid-tile colspan="1" rowspan="1">
         <div class="p-4">
           Select the cards deck that you will play with -->
         </div>
       </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="1">
-        <div class="max d-flex flex-column">
+      <mat-grid-tile colspan="1" rowspan="2">
+        <div class="max d-flex flex-column justify-content-end">
           <div class="p-4">
             This is a grid reference for the card places that could be used to play.
             You can use the numbers as a reference to the cards' position in the rules -->
@@ -65,6 +65,18 @@
               </div>
             </div>
           </div>
+          <mat-button-toggle-group [(ngModel)]="selectedVisibilityOption" aria-label="visibility" name="visibility"
+                                   vertical>
+            @for (visibility of visibilityOptions; track visibility.value) {
+              <mat-button-toggle [value]="visibility"
+                                 [style.color]="visibility.color"
+                                 [style.background-color]="visibility.background"
+                                 class="font-weight-bold"
+              >
+                {{ visibility.display }}
+              </mat-button-toggle>
+            }
+          </mat-button-toggle-group>
         </div>
       </mat-grid-tile>
     </mat-grid-list>
@@ -84,7 +96,7 @@
         </div>
       </div>
       <app-grid
-        (cellSelected)="onValueSelected($event)"
+        (cellClick)="onValueSelected($event)"
         [cols]="7" [displayCellIndex]="true"
         [rows]="2"
         [list]="distinctCardsValues"
@@ -97,6 +109,8 @@
       [cols]="width"
       [displayCellIndex]="true"
       [rows]="height"
+      (cellClick)="changeCellVisibility($event)"
+      [itemStyles]="itemStyles"
       class="center max "
     ></app-grid>
   </mat-grid-tile>
