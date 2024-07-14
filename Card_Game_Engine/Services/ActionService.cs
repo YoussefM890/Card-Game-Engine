@@ -1,5 +1,4 @@
 using Card_Game_Engine.Functions;
-using Card_Game_Engine.Models;
 using Card_Game_Engine.Models.Classes;
 using Card_Game_Engine.Models.Classes.Actions;
 using Card_Game_Engine.Models.Enums;
@@ -20,11 +19,11 @@ public class ActionService
 
     public void ExecuteMoveCardAction(Action action)
     {
-        var fromPosition = Utils.GetIntParameterValue(action.Parameters, ParameterEnum.FromPosition);
-        var toPosition = Utils.GetIntParameterValue(action.Parameters, ParameterEnum.ToPosition);
-        var cardCount = Utils.GetIntParameterValue(action.Parameters, ParameterEnum.CardCount, 1);
-        var visibility =
-            Utils.GetIntParameterValue(action.Parameters, ParameterEnum.Visibility, (int)VisibilityOptionEnum.Keep);
+        var fromPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.FromPosition);
+        var toPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.ToPosition);
+        var cardCount = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.CardCount, 1);
+        var visibility = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Visibility,
+            (int)VisibilityOptionEnum.Keep);
 
         if (fromPosition == null || toPosition == null)
         {

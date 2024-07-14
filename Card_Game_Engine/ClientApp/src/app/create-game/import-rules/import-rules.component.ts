@@ -6,11 +6,13 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {FormBuilder, FormGroup, FormsModule} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {rules} from "./dummy-rules";
+import {SignalRService} from "../../services/signalr.service";
+import {clearFormArray} from "../../shared/functions/global";
 
 @Component({
   selector: 'app-import-rules',
@@ -30,23 +32,35 @@ import {rules} from "./dummy-rules";
 })
 export class ImportRulesComponent {
   rules: string = rules;
+  form: FormGroup = this.service.createGameForm;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<ImportRulesComponent>,
-    public fb: FormBuilder
+    private fb: FormBuilder,
+    private service: SignalRService
   ) {
   }
 
   // Step 4: Main form creation function
-  createDynamicForm(data: any): FormGroup {
-    return this.fb.group({
-      rules: this.fb.array(data.rules.map(rule => this.createRuleFormGroup(rule)))
-    });
+  updateForm(data: any) {
+    // Clear existing form arrays
+    clearFormArray(this.form.get('rules') as FormArray);
+    clearFormArray(this.form.get('startingDeck') as FormArray);
+
+    // Set new values for form arrays
+    data.rules.forEach(rule => (this.form.get('rules') as FormArray).push(this.createRuleFormGroup(rule)));
+    data.startingDeck.forEach(card => (this.form.get('startingDeck') as FormArray).push(this.createCardFormGroup(card)));
+
+    // Set new values for simple form controls
+    this.form.get('width').setValue(data.width);
+    this.form.get('height').setValue(data.height);
+    this.form.get('grid').setValue(data.grid);
   }
 
   onSubmit() {
-    this.dialogRef.close(this.createDynamicForm(JSON.parse(this.rules)));
+    this.updateForm(JSON.parse(this.rules));
+    this.dialogRef.close();
   }
 
   // Step 1: Create a parameter FormGroup
@@ -79,6 +93,14 @@ export class ImportRulesComponent {
       triggers: this.fb.array(rule.triggers.map(trigger => this.createTriggerFormGroup(trigger))),
       actions: this.fb.array(rule.actions.map(action => this.createActionFormGroup(action))),
       rules: this.fb.array(rule.rules.map(subRule => this.createRuleFormGroup(subRule)))
+    });
+  }
+
+  // Create a card FormGroup
+  private createCardFormGroup(card: any): FormGroup {
+    return this.fb.group({
+      value: card.value,
+      suit: card.suit,
     });
   }
 }

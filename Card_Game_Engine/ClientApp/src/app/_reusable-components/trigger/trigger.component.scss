@@ -1,6 +1,9 @@
+$color: #a2d752;
+$background: #ebf5dc;
+$opacity: 1;
 .trigger {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid $color;
+  background: rgba($background, $opacity);
   padding: 10px;
   border-radius: 8px;
 }

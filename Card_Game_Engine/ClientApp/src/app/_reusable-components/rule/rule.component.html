@@ -5,7 +5,7 @@
       <app-trigger [triggerForm]="convertToFormGroup(triggerCtrl)"></app-trigger>
       <button mat-button color="warn" (click)="removeTrigger(i)">Remove Trigger</button>
     }
-    <button (click)="addTrigger()" mat-button>Add Trigger</button>
+    <button (click)="addTrigger()" mat-button [style.color]="'#36a000'">Add Trigger</button>
   </div>
 
   <div formArrayName="rules">
@@ -13,7 +13,7 @@
       <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
       <button mat-button color="warn" (click)="removeInnerRule(i)">Remove Inner Rule</button>
     }
-    <button (click)="addInnerRule()" mat-button>Add Inner Rule</button>
+    <button (click)="addInnerRule()" mat-button [style.color]="'#b78800'">Add Inner Rule</button>
   </div>
 
   <div formArrayName="actions">
@@ -21,7 +21,7 @@
       <app-action [actionForm]="convertToFormGroup(actionCtrl)"></app-action>
       <button mat-button color="warn" (click)="removeAction(j)">Remove Action</button>
     }
-    <button (click)="addAction()" mat-button>Add Action</button>
+    <button (click)="addAction()" mat-button [style.color]="'#2e99fa'">Add Action</button>
   </div>
 
 </div>

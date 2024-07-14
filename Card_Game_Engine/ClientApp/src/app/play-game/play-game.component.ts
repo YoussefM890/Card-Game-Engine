@@ -13,9 +13,9 @@ import {CssStyleEnum} from "../models/enums/css-style.enum";
 import {ActionDTO} from "../models/classes/action";
 import {ActionEnum} from "../models/enums/action.enum";
 import {ParameterDTO} from "../models/classes/parameter";
-import {ParameterEnum} from "../models/enums/parameter.enum";
-import {VisibilityOptionsEnum} from "../models/constants/parameter-value-options/visibility-options";
 import {play_game} from "./play-game.namespace";
+import {ActionParameterEnum} from "../models/enums/parameter.enums";
+import {VisibilityOptionsEnum} from "../models/enums/parameter-value-options.enums";
 
 @Component({
   selector: 'app-play-game',
@@ -134,9 +134,9 @@ export class PlayGameComponent implements OnInit {
       this.signalrService.userNumber % 2 === 0 ? trueVisibility = VisibilityOptionsEnum.Player2 : trueVisibility = VisibilityOptionsEnum.Player1;
     }
     const action = new ActionDTO(ActionEnum.MoveCard);
-    action.addParameter(new ParameterDTO(ParameterEnum.FromPosition, '' + fromPosition));
-    action.addParameter(new ParameterDTO(ParameterEnum.ToPosition, '' + toPosition));
-    action.addParameter(new ParameterDTO(ParameterEnum.Visibility, trueVisibility));
+    action.addParameter(new ParameterDTO(ActionParameterEnum.FromPosition, '' + fromPosition));
+    action.addParameter(new ParameterDTO(ActionParameterEnum.ToPosition, '' + toPosition));
+    action.addParameter(new ParameterDTO(ActionParameterEnum.Visibility, trueVisibility));
     this.signalrService.invokeExplicitAction(action);
     this.selectedVisibilityOption = null;
     this.selectedCellId = null;

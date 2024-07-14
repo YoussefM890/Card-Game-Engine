@@ -1,6 +1,9 @@
+$color: #2e99fa;
+$background: #dfecf7;
+$opacity: 1;
 .action {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid $color;
+  background: rgba($background, $opacity);
   padding: 10px;
   border-radius: 8px;
 }

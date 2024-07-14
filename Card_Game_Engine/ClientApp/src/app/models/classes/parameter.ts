@@ -1,14 +1,14 @@
-import {ParameterEnum} from "../enums/parameter.enum";
+import {ActionParameterEnum, TriggerParameterEnum} from "../enums/parameter.enums";
 import {ParameterValueTypeEnum} from "../enums/parameter-value-type.enum";
 
 export class Parameter {
-  id : ParameterEnum;
+  id: ActionParameterEnum | TriggerParameterEnum;
   display: string;
   value? : any;
   type?: ParameterValueTypeEnum;
   args?: any[];
 
-  constructor(id: ParameterEnum, display: string, type = ParameterValueTypeEnum.Text, args = []) {
+  constructor(id: ActionParameterEnum | TriggerParameterEnum, display: string, type = ParameterValueTypeEnum.Text, args = []) {
     this.id = id;
     this.display = display;
     this.value = null
@@ -18,10 +18,10 @@ export class Parameter {
 }
 
 export class ParameterDTO {
-  id: ParameterEnum;
+  id: ActionParameterEnum | TriggerParameterEnum;
   value: string;
 
-  constructor(id: ParameterEnum, value: string) {
+  constructor(id: ActionParameterEnum | TriggerParameterEnum, value: string) {
     this.id = id;
     this.value = value;
   }

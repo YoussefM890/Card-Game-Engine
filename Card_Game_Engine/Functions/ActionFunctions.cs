@@ -1,6 +1,6 @@
-using Card_Game_Engine.Models;
 using Card_Game_Engine.Models.Classes;
 using Card_Game_Engine.Models.Classes.Actions;
+using Card_Game_Engine.Models.Enums;
 using Card_Game_Engine.Models.Enums.ParameterOptions;
 
 namespace Card_Game_Engine.Functions;

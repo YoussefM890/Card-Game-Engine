@@ -1,4 +1,4 @@
-namespace Card_Game_Engine.Models.Enums.ParameterOptions;
+namespace Card_Game_Engine.Models.Enums;
 
 public enum CardVisibilityEnum
 {

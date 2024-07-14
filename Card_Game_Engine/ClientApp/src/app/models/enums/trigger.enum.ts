@@ -1,4 +1,5 @@
 export enum TriggerEnum {
-  GameStart = 1,
-  CardMoved = 2,
+  GameStart,
+  CardMoved,
+  DeckCardCount,
 }

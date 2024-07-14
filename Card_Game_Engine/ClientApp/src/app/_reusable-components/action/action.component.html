@@ -7,7 +7,7 @@
       }
     </mat-select>
   </mat-form-field>
-  <div formArrayName="parameters" class="parameters">
+  <div formArrayName="parameters">
     @for (paramCtrl of parameters.controls; track paramCtrl.value.id; let k = $index) {
       <div class="d-flex">
         <app-parameter class="flex-grow-1"
@@ -21,5 +21,4 @@
     }
   </div>
   <button mat-button (click)="addParameter()">Add Parameter</button>
-  <!--  <button mat-button color="warn" (click)="removeAction()">Remove Action</button>-->
 </div>

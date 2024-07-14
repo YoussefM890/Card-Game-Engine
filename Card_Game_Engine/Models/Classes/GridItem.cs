@@ -1,6 +1,6 @@
 using Card_Game_Engine.Models.Enums;
 
-namespace Card_Game_Engine.Models;
+namespace Card_Game_Engine.Models.Classes;
 
 public class GridItem
 {

@@ -40,3 +40,10 @@ body, app-root {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
+
+.sticky-top {
+  position: -webkit-sticky; // Safari
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}

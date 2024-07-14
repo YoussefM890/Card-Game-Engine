@@ -5,24 +5,36 @@ import {ActionDTO} from '../models/classes/action';
 import {CreateGame} from '../models/classes/create-game';
 import {GameObject} from "../models/classes/game-object";
 import {mirrorGrid} from "./signalr.functions";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
+  private readonly baseUrl = `${window.location.protocol}//${window.location.host}`;
   private hubConnection: signalR.HubConnection;
   private gameSubject = new BehaviorSubject<GameObject>(new GameObject());
   public game$ = this.gameSubject.asObservable();
-  private readonly baseUrl = `${window.location.protocol}//${window.location.host}`;
   private _userNumber: number;
+  public createGameForm: FormGroup = null;
 
-  constructor() {
+  constructor(private fb: FormBuilder) {
     console.log('SignalRService instantiated');
     if (this.baseUrl.includes('localhost')) {
       this.baseUrl = this.baseUrl.replace('4200', '5000');
     }
+    this.buildCreateGameForm()
   }
 
+  private buildCreateGameForm() {
+    this.createGameForm = this.fb.group({
+      rules: this.fb.array([]),
+      width: 9,
+      height: 5,
+      startingDeck: this.fb.array([]),
+      grid: {}
+    });
+  }
   public getHubConnection() {
     return this.hubConnection;
   }
@@ -79,9 +91,6 @@ export class SignalRService {
     });
   }
 
-  get userNumber(): number {
-    return this._userNumber;
-  }
 
   private receiveMessageListener = () => {
     this.hubConnection.on('ReceiveMessage', (message: string) => {
@@ -104,5 +113,9 @@ export class SignalRService {
       }
       this.gameSubject.next(gameObject);
     });
+  }
+
+  get userNumber(): number {
+    return this._userNumber;
   }
 }

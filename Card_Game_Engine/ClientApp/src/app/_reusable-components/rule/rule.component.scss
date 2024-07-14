@@ -1,6 +1,9 @@
+$color: #ffce53;
+$background: #fff8e6;
+$opacity: 1;
 .rule {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid $color;
+  background: rgba($background, $opacity);
   padding: 10px;
   border-radius: 8px;
 }

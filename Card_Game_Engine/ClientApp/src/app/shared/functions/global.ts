@@ -1,3 +1,5 @@
+import {FormArray} from "@angular/forms";
+
 export function getEnumKeys<T>(enumType: T): string[] {
   return Object.keys(enumType).filter(key => isNaN(Number(key)));
 }
@@ -23,4 +25,18 @@ export function filterDictBySize<K extends number | string, V>(dict: Record<K, V
   return Object.fromEntries(
     Object.entries(dict).filter(([key]) => Number(key) < size)
   ) as Record<K, V>;
+}
+
+export function clearFormArray(formArray: FormArray) {
+  while (formArray.length) {
+    formArray.removeAt(0);
+  }
+}
+
+export function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log('Text copied to clipboard');
+  }).catch(err => {
+    console.error('Could not copy text: ', err);
+  });
 }
