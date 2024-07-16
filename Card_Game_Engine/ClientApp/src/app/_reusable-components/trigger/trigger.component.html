@@ -1,20 +1,21 @@
 <div [formGroup]="triggerForm" class="trigger">
   <mat-form-field appearance="fill" class="w-100">
     <mat-label>Trigger</mat-label>
-    <mat-select (selectionChange)="updateTriggerParameters()" formControlName="id">
+    <mat-select (selectionChange)="onTriggerChange()" formControlName="id">
       @for (trigger of triggers; track trigger.id) {
         <mat-option [value]="trigger.id">{{ trigger.display }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
   <div formArrayName="parameters">
-    @for (paramCtrl of parameters.controls; track paramCtrl.value.id; let k = $index) {
+    @for (paramCtrl of parametersArray.controls; track paramCtrl.value.id; ) {
       <div class="d-flex">
         <app-parameter class="flex-grow-1"
                        [parameterForm]="convertToFormGroup(paramCtrl)"
-                       [availableParameters]="updateTriggerParameters()"
+                       [availableParameters]="parameters[$index]"
+                       (parameterChange)="updateParameters()"
         ></app-parameter>
-        <button mat-icon-button color="warn" (click)="removeParameter(k)" class="col-1">
+        <button mat-icon-button color="warn" (click)="removeParameter($index)" class="col-1">
           <mat-icon>remove_circle_outline</mat-icon>
         </button>
       </div>

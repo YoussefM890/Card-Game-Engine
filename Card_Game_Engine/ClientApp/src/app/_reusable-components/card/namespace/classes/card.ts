@@ -1,6 +1,6 @@
-import {SuitEnum} from "../enums/suit.enum";
-import {ImagePathEnum} from "../enums/image-path.enum";
+import {SuitEnum} from "../../../../create-game/namespace/enums/suit.enum";
 import {CardNameEnum} from "../enums/card-name.enum";
+import {ImagePathEnum} from "../constants/image-path.enum";
 
 export class Card {
   id: number;

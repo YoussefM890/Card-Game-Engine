@@ -3,19 +3,19 @@ import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatButton} from "@angular/material/button";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {SignalRService} from "../services/signalr.service";
-import {GameObject} from "../models/classes/game-object";
 import {DOCUMENT, NgStyle} from "@angular/common";
-import {GridTransferItem} from "../models/classes/grid-transfer-item";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {MatTooltip} from "@angular/material/tooltip";
 import {CssStyle} from "../models/classes/css-style";
 import {CssStyleEnum} from "../models/enums/css-style.enum";
-import {ActionDTO} from "../models/classes/action";
-import {ActionEnum} from "../models/enums/action.enum";
-import {ParameterDTO} from "../models/classes/parameter";
 import {play_game} from "./play-game.namespace";
-import {ActionParameterEnum} from "../models/enums/parameter.enums";
-import {VisibilityOptionsEnum} from "../models/enums/parameter-value-options.enums";
+import {GridItem} from "./namespace/classes/grid-item";
+import {Game} from "./namespace/classes/game";
+import {Action} from './namespace/classes/action';
+import {ActionEnum} from "../_reusable-components/action/namespace/enums/action.enum";
+import {VisibilityOptionsEnum} from "../_reusable-components/parameter/namespace/enums/parameter-value-options.enums";
+import {Parameter} from './namespace/classes/parameter';
+import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/enums/parameter.enums";
 
 @Component({
   selector: 'app-play-game',
@@ -34,7 +34,7 @@ import {VisibilityOptionsEnum} from "../models/enums/parameter-value-options.enu
   styleUrl: './play-game.component.scss'
 })
 export class PlayGameComponent implements OnInit {
-  grid: GridTransferItem[] = [];
+  grid: GridItem[] = [];
   gridWidthStyle = '60%';
   cols: number
   rows: number
@@ -71,7 +71,7 @@ export class PlayGameComponent implements OnInit {
   }
 
   setupGameListener() {
-    this.signalrService.game$.subscribe((gameObject: GameObject) => {
+    this.signalrService.game$.subscribe((gameObject: Game) => {
       this.grid = [...gameObject.grid];
       if (this.cols != gameObject.width || this.rows != gameObject.height) {
         this.cols = gameObject.width;
@@ -81,7 +81,7 @@ export class PlayGameComponent implements OnInit {
     });
   }
 
-  onCellClick(item: GridTransferItem) {
+  onCellClick(item: GridItem) {
     if (this.selectedCellId === item.id) {
       this.cycleVisibilityOption();
     } else {
@@ -133,10 +133,10 @@ export class PlayGameComponent implements OnInit {
     if (visibilityOption.value === play_game.VisibilityEnum.Private) {
       this.signalrService.userNumber % 2 === 0 ? trueVisibility = VisibilityOptionsEnum.Player2 : trueVisibility = VisibilityOptionsEnum.Player1;
     }
-    const action = new ActionDTO(ActionEnum.MoveCard);
-    action.addParameter(new ParameterDTO(ActionParameterEnum.FromPosition, '' + fromPosition));
-    action.addParameter(new ParameterDTO(ActionParameterEnum.ToPosition, '' + toPosition));
-    action.addParameter(new ParameterDTO(ActionParameterEnum.Visibility, trueVisibility));
+    const action = new Action(ActionEnum.MoveCard);
+    action.addParameter(new Parameter(ActionParameterEnum.FromPosition, '' + fromPosition));
+    action.addParameter(new Parameter(ActionParameterEnum.ToPosition, '' + toPosition));
+    action.addParameter(new Parameter(ActionParameterEnum.Visibility, trueVisibility));
     this.signalrService.invokeExplicitAction(action);
     this.selectedVisibilityOption = null;
     this.selectedCellId = null;

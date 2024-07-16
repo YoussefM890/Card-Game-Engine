@@ -3,11 +3,14 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule,
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {Action} from "../../models/classes/action";
 import {ParameterComponent} from "../parameter/parameter.component";
-import {actions} from "../../models/constants/actions";
-import {Parameter} from "../../models/classes/parameter";
 import {MatIcon} from "@angular/material/icon";
+import {clearFormArray} from "../../shared/functions/global";
+import {Action} from "./namespace/classes/action";
+import {actions, actionsObject} from "./namespace/constants/actions";
+import {Parameter} from "../parameter/namespace/classes/parameter";
+import {ActionParameterEnum} from "../parameter/namespace/enums/parameter.enums";
+import {getAvailableParameters} from "../_namespace/functions";
 
 @Component({
   selector: 'app-action',
@@ -29,16 +32,21 @@ import {MatIcon} from "@angular/material/icon";
 export class ActionComponent implements OnInit {
   @Input() actionForm: FormGroup;
   actions: Action[] = actions;
-  actionParameters: Parameter[] = [];
-
-  get parameters(): FormArray {
-    return this.actionForm.get('parameters') as FormArray;
-  }
+  parameters: Parameter[][];
 
   constructor(private fb: FormBuilder) {
   }
 
+  get parametersArray() {
+    return this.actionForm.get('parameters') as FormArray;
+  }
+
   ngOnInit(): void {
+    this.updateParameters()
+  }
+
+  convertToFormGroup(control: AbstractControl): FormGroup {
+    return control as FormGroup;
   }
 
   addParameter() {
@@ -46,18 +54,29 @@ export class ActionComponent implements OnInit {
       id: [null, Validators.required],
       value: [null, Validators.required]
     });
-    this.parameters.push(parameterForm);
+    this.parametersArray.push(parameterForm);
+    this.updateParameters();
   }
 
-  updateActionParameters() {
-    return actions.find(t => t.id === this.actionForm.value.id).parameters;
-  }
-
-  convertToFormGroup(control: AbstractControl): FormGroup {
-    return control as FormGroup;
+  updateParameters() {
+    this.parameters = []
+    let usedParameters = new Set<ActionParameterEnum>()
+    for (let i = 0; i < this.parametersArray.length; i++) {
+      const availableParameters = actionsObject[this.actionForm.value.id]?.parameters;
+      this.parameters.push(getAvailableParameters(availableParameters, usedParameters));
+      const parameterId = this.parametersArray.at(i).value.id;
+      if (parameterId != null) usedParameters.add(parameterId);
+    }
   }
 
   removeParameter(index: number) {
-    this.parameters.removeAt(index);
+    this.parametersArray.removeAt(index);
+    this.updateParameters();
   }
+
+  onActionChange() {
+    clearFormArray(this.parametersArray);
+    this.updateParameters();
+  }
+
 }

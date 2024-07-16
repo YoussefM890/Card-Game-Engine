@@ -1,4 +1,4 @@
-import {Parameter} from "./parameter";
+import {Parameter} from "../../../parameter/namespace/classes/parameter";
 
 export class Trigger {
   id : number;

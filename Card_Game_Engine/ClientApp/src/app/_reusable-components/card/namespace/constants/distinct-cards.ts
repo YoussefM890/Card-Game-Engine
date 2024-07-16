@@ -1,8 +1,8 @@
 import {Card} from "../classes/card";
+import {SuitEnum} from "../../../../create-game/namespace/enums/suit.enum";
 import {CardNameEnum} from "../enums/card-name.enum";
-import {SuitEnum} from "../enums/suit.enum";
-import {ImagePathEnum} from "../enums/image-path.enum";
-import {ListToObject} from "../../shared/functions/global";
+import {ListToObject} from "../../../../shared/functions/global";
+import {ImagePathEnum} from "./image-path.enum";
 
 export const distinctCardsList: Card[] = [
   new Card(1, 1, SuitEnum.HEARTS, CardNameEnum.ACE),

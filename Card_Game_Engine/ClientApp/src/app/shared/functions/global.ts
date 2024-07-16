@@ -40,3 +40,7 @@ export function copyToClipboard(text: string) {
     console.error('Could not copy text: ', err);
   });
 }
+
+export function deepCopy<T = any>(obj: T): any {
+  return JSON.parse(JSON.stringify(obj));
+}

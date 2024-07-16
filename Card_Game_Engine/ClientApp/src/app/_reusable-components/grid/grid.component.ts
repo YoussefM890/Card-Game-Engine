@@ -5,10 +5,10 @@ import {NgClass, NgStyle} from "@angular/common";
 import {CardLineComponent} from "../card-line/card-line.component";
 import {CardDeckComponent} from "../card-deck/card-deck.component";
 import {SignalRService} from "../../services/signalr.service";
-import {GridDisplayMode} from "../../models/enums/gird-display-mode";
 import {CdkDrag, CdkDragDrop, CdkDropList,} from "@angular/cdk/drag-drop";
-import {GridTransferItem} from "../../models/classes/grid-transfer-item";
 import {CssStyle} from "../../models/classes/css-style";
+import {GridDisplayMode} from './namespace/enums/gird-display-mode';
+import {GridItem} from "../../play-game/namespace/classes/grid-item";
 
 @Component({
   selector: 'app-grid',
@@ -32,7 +32,7 @@ export class GridComponent implements OnInit {
   @Input() cols: number = 12;
   @Input() displayCellIndex: boolean = false;
   @Input() list: string[] = null;
-  @Input() grid: GridTransferItem[] = null;
+  @Input() grid: GridItem[] = null;
   @Input() overlap: boolean = false;
   @Input() itemStyles: Record<number, CssStyle[]> = null;
   @Output() cellClick: EventEmitter<any> = new EventEmitter<any>();
@@ -73,7 +73,7 @@ export class GridComponent implements OnInit {
     this.cellClick.emit(item); // Emit the selected card data
   }
 
-  onCardDropped(event: CdkDragDrop<GridTransferItem[]>) {
+  onCardDropped(event: CdkDragDrop<GridItem[]>) {
     console.log('Card dropped', event)
   }
 

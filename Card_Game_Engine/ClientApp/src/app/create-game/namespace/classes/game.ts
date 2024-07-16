@@ -1,20 +1,20 @@
-import {GameRule} from "./game-rule";
 import {Card} from "./card";
-import {create_game} from "../../create-game/create-game.namespace";
+import {Rule} from "../../../_reusable-components/rule/namespace/classes/rule";
+import {GridItem} from "./grid-item";
 
-export class CreateGame {
-  rules: GameRule[]
+export class Game {
+  rules: Rule[]
   startingDeck: Card[]
   startingPosition: number
-  grid: Record<number, create_game.GridItem>
+  grid: Record<number, GridItem>
   width: number
   height: number
 
   constructor(
-    rules: GameRule[],
+    rules: Rule[],
     width: number, height: number,
     startingDeck: Card[] = [],
-    grid: Record<number, create_game.GridItem> = {},
+    grid: Record<number, GridItem> = {},
     startingPosition: number = 0
   ) {
     this.rules = rules;

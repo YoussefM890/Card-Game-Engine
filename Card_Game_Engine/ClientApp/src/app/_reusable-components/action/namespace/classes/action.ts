@@ -1,5 +1,5 @@
-import {Parameter, ParameterDTO} from "./parameter";
 import {ActionEnum} from "../enums/action.enum";
+import {Parameter} from "../../../parameter/namespace/classes/parameter";
 
 export class Action {
   id: ActionEnum;
@@ -10,19 +10,5 @@ export class Action {
     this.id = id;
     this.display = display;
     this.parameters = parameters;
-  }
-}
-
-export class ActionDTO {
-  id: ActionEnum;
-  parameters: ParameterDTO[];
-
-  constructor(id: number) {
-    this.id = id;
-    this.parameters = []
-  }
-
-  addParameter(parameter: ParameterDTO) {
-    this.parameters.push(parameter);
   }
 }

@@ -13,8 +13,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {NgStyle} from "@angular/common";
-import {Card} from "../../models/classes/card";
 import {CardComponent} from "../card/card.component";
+import {Card} from "../card/namespace/classes/card";
 
 @Component({
   selector: 'app-card-line',

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {BehaviorSubject} from 'rxjs';
-import {ActionDTO} from '../models/classes/action';
-import {CreateGame} from '../models/classes/create-game';
-import {GameObject} from "../models/classes/game-object";
 import {mirrorGrid} from "./signalr.functions";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {Game as CreateGame} from "../create-game/namespace/classes/game";
+import {Action} from "../play-game/namespace/classes/action";
+import {Game as PlayGame} from "../play-game/namespace/classes/game";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 export class SignalRService {
   private readonly baseUrl = `${window.location.protocol}//${window.location.host}`;
   private hubConnection: signalR.HubConnection;
-  private gameSubject = new BehaviorSubject<GameObject>(new GameObject());
+  private gameSubject = new BehaviorSubject<PlayGame>(new PlayGame());
   public game$ = this.gameSubject.asObservable();
   private _userNumber: number;
   public createGameForm: FormGroup = null;
@@ -79,7 +79,7 @@ export class SignalRService {
     this.hubConnection.invoke('StartGame');
   }
 
-  public invokeExplicitAction(action: ActionDTO) {
+  public invokeExplicitAction(action: Action) {
     console.log('Invoking action:', action);
     this.hubConnection.invoke('InvokeExplicitAction', action);
   }
@@ -106,7 +106,7 @@ export class SignalRService {
   }
 
   private receiveGameObjectListener = () => {
-    this.hubConnection.on('ReceiveGameObject', (gameObject: GameObject) => {
+    this.hubConnection.on('ReceiveGameObject', (gameObject: PlayGame) => {
       console.log('Received game object:', gameObject);
       if (this._userNumber % 2 === 0) {
         gameObject.grid = mirrorGrid(gameObject.grid, gameObject.height, gameObject.width);

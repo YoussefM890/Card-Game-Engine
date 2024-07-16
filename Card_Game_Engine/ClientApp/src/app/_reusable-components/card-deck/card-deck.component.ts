@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {Card} from "../../models/classes/card";
 import {CardComponent} from "../card/card.component";
 
 @Component({
@@ -13,5 +12,5 @@ import {CardComponent} from "../card/card.component";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardDeckComponent {
-  @Input() cards: Card[] = [];
+  @Input() cards: any[] = [];
 }

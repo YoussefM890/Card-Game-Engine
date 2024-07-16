@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {SuitEnum, suitsObject} from "../../models/enums/suit.enum";
-import {distinctCardsValueObject} from "../../models/constants/cards";
-import {CardTransfer} from "../../models/classes/card-transfer";
+import {SuitEnum, suitsObject} from "../../create-game/namespace/enums/suit.enum";
+import {distinctCardsValueObject} from "./namespace/constants/distinct-cards";
 
 @Component({
   selector: 'app-card',
@@ -27,7 +26,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     12: ['C5'],
     13: ['C5'],
   }
-  @Input() card: CardTransfer
+  @Input() card: any
   suits = suitsObject;
   suitEnum = SuitEnum;
   distinctCardValueObject = distinctCardsValueObject;
