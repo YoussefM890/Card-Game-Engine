@@ -4,21 +4,8 @@ const _rules =
       {
         "triggers": [
           {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "1"
-              },
-              {
-                "id": 5,
-                "value": "3"
-              },
-              {
-                "id": 7,
-                "value": "3"
-              }
-            ]
+            "id": -1,
+            "parameters": []
           }
         ],
         "actions": [
@@ -382,35 +369,35 @@ const _rules =
     "grid": {
       "0": {
         "id": 0,
-        "visibility": 4
+        "visibility": 3
       },
       "1": {
         "id": 1,
-        "visibility": 4
+        "visibility": 5
       },
       "2": {
         "id": 2,
-        "visibility": 4
+        "visibility": 5
       },
       "3": {
         "id": 3,
-        "visibility": 4
+        "visibility": 5
       },
       "4": {
         "id": 4,
-        "visibility": 4
+        "visibility": 5
       },
       "5": {
         "id": 5,
-        "visibility": 4
+        "visibility": 5
       },
       "6": {
         "id": 6,
-        "visibility": 4
+        "visibility": 5
       },
       "7": {
         "id": 7,
-        "visibility": 4
+        "visibility": 3
       },
       "8": {
         "id": 8,
@@ -418,7 +405,7 @@ const _rules =
       },
       "9": {
         "id": 9,
-        "visibility": 3
+        "visibility": 2
       },
       "10": {
         "id": 10,
@@ -438,7 +425,7 @@ const _rules =
       },
       "14": {
         "id": 14,
-        "visibility": 3
+        "visibility": 2
       },
       "15": {
         "id": 15,
@@ -450,7 +437,7 @@ const _rules =
       },
       "17": {
         "id": 17,
-        "visibility": 3
+        "visibility": 2
       },
       "18": {
         "id": 18,
@@ -470,7 +457,7 @@ const _rules =
       },
       "22": {
         "id": 22,
-        "visibility": 3
+        "visibility": 2
       },
       "23": {
         "id": 23,
@@ -478,157 +465,55 @@ const _rules =
       },
       "24": {
         "id": 24,
-        "visibility": 5
+        "visibility": 3
       },
       "25": {
         "id": 25,
-        "visibility": 5
+        "visibility": 4
       },
       "26": {
         "id": 26,
-        "visibility": 5
+        "visibility": 4
       },
       "27": {
         "id": 27,
-        "visibility": 5
+        "visibility": 4
       },
       "28": {
         "id": 28,
-        "visibility": 5
+        "visibility": 4
       },
       "29": {
         "id": 29,
-        "visibility": 5
+        "visibility": 4
       },
       "30": {
         "id": 30,
-        "visibility": 5
+        "visibility": 4
       },
       "31": {
         "id": 31,
-        "visibility": 5
+        "visibility": 3
       }
-    }
-  }
-const chkobba =
-  {
-    "rules": [
+    },
+    "manualTriggers": [
       {
-        "triggers": [
-          {
-            "id": 1,
-            "parameters": []
-          }
-        ],
-        "actions": [
-          {
-            "id": 7,
-            "parameters": []
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "43"
-              },
-              {
-                "id": 6,
-                "value": "3"
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "44"
-              },
-              {
-                "id": 6,
-                "value": "3"
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "45"
-              },
-              {
-                "id": 6,
-                "value": "3"
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "3"
-              },
-              {
-                "id": 6,
-                "value": "4"
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "4"
-              },
-              {
-                "id": 6,
-                "value": "4"
-          }
-        ]
-          },
-          {
-            "id": 2,
-            "parameters": [
-              {
-                "id": 3,
-                "value": "0"
-              },
-              {
-                "id": 4,
-                "value": "5"
-              },
-              {
-                "id": 6,
-                "value": "4"
-              }
-            ]
-          }
-        ],
-        "rules": []
+        "id": -1,
+        "name": "Deal To Everyone",
+        "description": "",
+        "visibility": 2
+      },
+      {
+        "id": -2,
+        "name": "Deal To Player 1",
+        "description": "Deal To Player 1",
+        "visibility": 4
+      },
+      {
+        "id": -3,
+        "name": "Deal To Player 2",
+        "description": "Deal To Player 2",
+        "visibility": 5
       }
     ]
   }

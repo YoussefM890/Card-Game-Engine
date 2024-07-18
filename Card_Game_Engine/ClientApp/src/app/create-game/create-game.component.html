@@ -7,10 +7,28 @@
             <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
           </div>
           <div>
+            <button (click)="addButton()" class="me-1" color="primary" mat-raised-button>
+              {{ manualTriggersArray.length === 0 ? 'Add' : 'Edit' }} Manual Triggers
+            </button>
             <button (click)="importRules()" class="me-1" color="primary" mat-raised-button>Import Game Settings</button>
-            <button [routerLink]="['/play']" color="primary" mat-raised-button>navigate to play</button>
+            <button [routerLink]="['/play']" color="accent" mat-raised-button>navigate to play</button>
           </div>
         </div>
+        @if (manualTriggersArray.controls.length > 0) {
+          <div class="d-flex align-items-center gap-3 m-2">
+            <span>Manual Triggers :</span>
+            <mat-chip-set class="example-chip">
+              @for (trigger of manualTriggersArray.value; track trigger.id) {
+                <mat-chip
+                  class="example-box"
+                  [ngStyle]="getTriggerStyles(trigger)"
+                  [matTooltip]="trigger.description"
+                >{{ trigger.name }}
+                </mat-chip>
+              }
+            </mat-chip-set>
+          </div>
+        }
         <div formArrayName="rules">
           @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
             <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>

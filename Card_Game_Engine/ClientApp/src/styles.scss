@@ -47,3 +47,16 @@ body, app-root {
   top: 0;
   z-index: 1000;
 }
+
+.flex-spacer {
+  flex: 1 1 auto;
+}
+
+//.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+//  background-color: transparent !important;
+//}
+//
+///* Manipulate background color on hover and focus */
+//.mat-mdc-form-field-focus-overlay {
+//  background-color: transparent !important;
+//}

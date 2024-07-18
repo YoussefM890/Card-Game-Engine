@@ -1,5 +1,4 @@
 using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Enums;
 using Card_Game_Engine.Services;
 using Microsoft.AspNetCore.SignalR;
 using Action = Card_Game_Engine.Models.Action;
@@ -47,23 +46,11 @@ public class GameEngineController : Hub
     {
         Console.WriteLine("Create called!");
         _ruleService.SetRules(createGame.Rules);
+        _databaseService.SetManualTriggers(createGame.ManualTriggers);
         _databaseService.CardContainerService.ClearAndCreateEmptyGrid(createGame.Width, createGame.Height,
             createGame.Grid);
         _databaseService.CardContainerService.SetStartingDeck(createGame.StartingDeck, createGame.StartingPosition);
         // Console.WriteLine(_databaseService.CardContainerService.ToString());
-    }
-
-    public async Task StartGame()
-    {
-        Console.WriteLine("StartGame called!");
-        _ruleService.FireTriggerIfFound(TriggerEnum.GameStart);
-        var width = _databaseService.CardContainerService.GetWidth();
-        var height = _databaseService.CardContainerService.GetHeight();
-        foreach (var user in _databaseService.GetUsers())
-        {
-            GameObject gameObject = new(_databaseService.GetTransferGrid(user.Id), width, height);
-            await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
-        }
     }
 
     public async Task InvokeExplicitAction(Action action)
@@ -72,9 +59,28 @@ public class GameEngineController : Hub
         _ruleService.ProcessActions(new List<Action> { action });
         var width = _databaseService.CardContainerService.GetWidth();
         var height = _databaseService.CardContainerService.GetHeight();
+
         foreach (var user in _databaseService.GetUsers())
         {
-            GameObject gameObject = new(_databaseService.GetTransferGrid(user.Id), width, height);
+            var transferGrid = _databaseService.GetTransferGrid(user.Id);
+            var manualTriggers = _databaseService.GetManualTriggers(user.Id);
+            GameObject gameObject = new(transferGrid, width, height, manualTriggers);
+            await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
+        }
+    }
+
+    public async Task InvokeExplicitTrigger(int triggerId)
+    {
+        Console.WriteLine("ExplicitTrigger called!");
+        _ruleService.FireTriggerIfFound(triggerId);
+        var width = _databaseService.CardContainerService.GetWidth();
+        var height = _databaseService.CardContainerService.GetHeight();
+
+        foreach (var user in _databaseService.GetUsers())
+        {
+            var transferGrid = _databaseService.GetTransferGrid(user.Id);
+            var manualTriggers = _databaseService.GetManualTriggers(user.Id);
+            GameObject gameObject = new(transferGrid, width, height, manualTriggers);
             await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
         }
     }

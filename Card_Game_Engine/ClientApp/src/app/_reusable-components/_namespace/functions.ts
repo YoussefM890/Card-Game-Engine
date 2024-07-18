@@ -10,7 +10,6 @@ export function getAvailableParameters(availableParameters: Parameter[], usedPar
       (!parameter.canBeDuplicated && usedParameters.has(parameter.id)) ||
       (parameter.cannotBeUsedWith.some(id => usedParameters.has(id)))
     ) {
-      console.log('parameter', parameter.id, 'cannot be used')
       availableParameters = availableParameters.filter(p => p.id !== parameter.id);
     }
   }

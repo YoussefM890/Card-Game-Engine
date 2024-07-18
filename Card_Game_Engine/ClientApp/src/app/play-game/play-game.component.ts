@@ -16,6 +16,9 @@ import {ActionEnum} from "../_reusable-components/action/namespace/enums/action.
 import {VisibilityOptionsEnum} from "../_reusable-components/parameter/namespace/enums/parameter-value-options.enums";
 import {Parameter} from './namespace/classes/parameter';
 import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/enums/parameter.enums";
+import {TriggerEnum} from "../_reusable-components/trigger/namespace/enums/trigger.enum";
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
 
 @Component({
   selector: 'app-play-game',
@@ -28,7 +31,9 @@ import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/e
     CdkDropList,
     CdkDrag,
     NgStyle,
-    MatTooltip
+    MatTooltip,
+    MatChip,
+    MatChipSet
   ],
   templateUrl: './play-game.component.html',
   styleUrl: './play-game.component.scss'
@@ -42,6 +47,7 @@ export class PlayGameComponent implements OnInit {
   selectedVisibilityOption = null;
   selectedCellId: number = null;
   itemStyles = null;
+  manualTriggers: ManualTrigger[] = [];
 
   constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
   }
@@ -52,7 +58,7 @@ export class PlayGameComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.setupGameListener();
+    this.listenToGameObject();
   }
 
   positionGrid() {
@@ -67,15 +73,16 @@ export class PlayGameComponent implements OnInit {
 
   startGame() {
     console.log('Starting game');
-    this.signalrService.startGame();
+    this.signalrService.invokeExplicitTrigger(TriggerEnum.GameStart);
   }
 
-  setupGameListener() {
+  listenToGameObject() {
     this.signalrService.game$.subscribe((gameObject: Game) => {
       this.grid = [...gameObject.grid];
       if (this.cols != gameObject.width || this.rows != gameObject.height) {
         this.cols = gameObject.width;
         this.rows = gameObject.height;
+        this.manualTriggers = gameObject.manualTriggers;
         this.positionGrid();
       }
     });
@@ -102,6 +109,10 @@ export class PlayGameComponent implements OnInit {
       this.selectedCellId = null;
     }
     this.updateItemStyles();
+  }
+
+  invokeTrigger(triggerId: number) {
+    this.signalrService.invokeExplicitTrigger(triggerId);
   }
 
   drop(event: CdkDragDrop<string[]>) {

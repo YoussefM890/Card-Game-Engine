@@ -10,4 +10,5 @@ public class CreateGame
     public Dictionary<int, CreateNamespace.GridItem> Grid { get; set; } = new();
     public int Width { get; set; }
     public int Height { get; set; }
+    public List<CreateNamespace.ManualTrigger> ManualTriggers { get; set; } = new();
 }

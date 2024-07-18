@@ -26,12 +26,10 @@ import {CardComponent} from "../_reusable-components/card/card.component";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
-import {copyToClipboard, filterDictBySize, getEnumValues} from '../shared/functions/global';
+import {copyToClipboard, filterDictBySize, getEnumValues, recreateFormArray} from '../shared/functions/global';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {CssStyle} from "../models/classes/css-style";
 import {CssStyleEnum} from "../models/enums/css-style.enum";
-import {Trigger} from "../_reusable-components/trigger/namespace/classes/trigger";
-import {triggers} from "../_reusable-components/trigger/namespace/constants/triggers";
 import {CardNameEnum} from "../_reusable-components/card/namespace/enums/card-name.enum";
 import {SuitEnum, suitsList} from "./namespace/enums/suit.enum";
 import {Card as CreateGameCard} from "./namespace/classes/card";
@@ -43,6 +41,11 @@ import {
 import {GridItem} from "./namespace/classes/grid-item";
 import {Card as GlobalCard} from "../_reusable-components/card/namespace/classes/card";
 import {VisibilityOption} from "./namespace/classes/visibility-option";
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {ManualTrigger} from "./namespace/classes/manual-trigger";
+import {AddEditManualTriggerComponent} from "./add-edit-manual-trigger/add-edit-manual-trigger.component";
+import {NgStyle} from "@angular/common";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-create-game',
@@ -72,13 +75,16 @@ import {VisibilityOption} from "./namespace/classes/visibility-option";
     MatMiniFabButton,
     MatButtonToggleGroup,
     MatButtonToggle,
+    MatChip,
+    MatChipSet,
+    NgStyle,
+    MatTooltip,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
 })
 export class CreateGameComponent implements OnInit {
   gameForm: FormGroup;
-  triggers: Trigger[] = triggers;
   visibilityOptions = visibilityOptions;
   selectedVisibilityOption = this.visibilityOptions[0];
   itemStyles: Record<number, CssStyle[]> = {};
@@ -115,6 +121,10 @@ export class CreateGameComponent implements OnInit {
     }).afterClosed().subscribe(() => {
       this.fillDisplay(this.gameForm)
     });
+  }
+
+  get manualTriggersArray() {
+    return this.gameForm.get('manualTriggers') as FormArray;
   }
 
   fillDisplay(form: FormGroup) {
@@ -234,6 +244,23 @@ export class CreateGameComponent implements OnInit {
     ];
   }
 
+  addButton() {
+    this.dialog.open(AddEditManualTriggerComponent, {
+      width: '1000px',
+      height: '700px',
+      data: {
+        manualTriggers: this.manualTriggersArray.value
+      }
+    }).afterClosed().subscribe((newButtons) => {
+      if (newButtons) {
+        console.log("new button", newButtons)
+        recreateFormArray(this.manualTriggersArray, newButtons);
+      }
+      console.log(this.gameForm.value)
+    });
+  }
+
+
   get widthControl() {
     return this.gameForm.get('width');
   }
@@ -246,4 +273,12 @@ export class CreateGameComponent implements OnInit {
     return this.gameForm.get('startingDeck') as FormArray;
   }
 
+  getTriggerStyles(trigger: ManualTrigger) {
+    const option = this.visibilityOptions.find(option => option.value === trigger.visibility);
+    return {
+      [CssStyleEnum.BackgroundColor]: option.background,
+      //this color is not applying idk why
+      [CssStyleEnum.Color]: option.color
+    };
+  }
 }

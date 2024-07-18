@@ -2,7 +2,7 @@ namespace Card_Game_Engine.Models.Enums;
 
 public enum TriggerEnum
 {
-    GameStart,
-    CardMoved,
-    DeckCardCount,
+    GameStart = 0,
+    CardMoved = 1,
+    DeckCardCount = 2,
 }

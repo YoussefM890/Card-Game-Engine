@@ -13,6 +13,7 @@ import {MatButton} from "@angular/material/button";
 import {rules} from "./dummy-rules";
 import {SignalRService} from "../../services/signalr.service";
 import {clearFormArray} from "../../shared/functions/global";
+import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({
   selector: 'app-import-rules',
@@ -26,6 +27,7 @@ import {clearFormArray} from "../../shared/functions/global";
     MatDialogActions,
     MatButton,
     MatLabel,
+    MatToolbar,
   ],
   templateUrl: './import-rules.component.html',
   styleUrls: ['./import-rules.component.scss']
@@ -47,15 +49,18 @@ export class ImportRulesComponent {
     // Clear existing form arrays
     clearFormArray(this.form.get('rules') as FormArray);
     clearFormArray(this.form.get('startingDeck') as FormArray);
+    clearFormArray(this.form.get('manualTriggers') as FormArray);
 
     // Set new values for form arrays
     data.rules.forEach(rule => (this.form.get('rules') as FormArray).push(this.createRuleFormGroup(rule)));
     data.startingDeck.forEach(card => (this.form.get('startingDeck') as FormArray).push(this.createCardFormGroup(card)));
+    data.manualTriggers.forEach(trigger => (this.form.get('manualTriggers') as FormArray).push(this.createManualTriggerFormGroup(trigger)));
 
     // Set new values for simple form controls
     this.form.get('width').setValue(data.width);
     this.form.get('height').setValue(data.height);
     this.form.get('grid').setValue(data.grid);
+    this.form.get('manualTriggers').setValue(data.manualTriggers);
   }
 
   onSubmit() {
@@ -101,6 +106,16 @@ export class ImportRulesComponent {
     return this.fb.group({
       value: card.value,
       suit: card.suit,
+    });
+  }
+
+  // Create a manual trigger FormGroup
+  private createManualTriggerFormGroup(trigger: any): FormGroup {
+    return this.fb.group({
+      id: trigger.id,
+      name: trigger.name,
+      description: trigger.description,
+      visibility: trigger.visibility
     });
   }
 }

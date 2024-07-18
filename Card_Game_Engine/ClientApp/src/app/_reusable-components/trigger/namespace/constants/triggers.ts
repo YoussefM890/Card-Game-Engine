@@ -2,11 +2,12 @@ import {Trigger} from "../classes/trigger";
 import {TriggerEnum} from "../enums/trigger.enum";
 import {Parameter} from "../../../parameter/namespace/classes/parameter";
 import {TriggerParameterEnum} from "../../../parameter/namespace/enums/parameter.enums";
-import {ListToObject} from "../../../../shared/functions/global";
 import {ParameterValueTypeEnum} from "../../../parameter/namespace/enums/parameter-value-type.enum";
 
 const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
+
+
 export const triggers: Trigger[] = [
   new Trigger(TriggerEnum.GameStart, 'Game Start'),
   new Trigger(TriggerEnum.CardMoved, 'Card Moved', [
@@ -23,6 +24,4 @@ export const triggers: Trigger[] = [
       new Parameter(TriggerParameterEnum.GreaterThan, 'Greater Than >'),
     ]),
 ];
-
-export const triggersObject = ListToObject(triggers, 'id');
 

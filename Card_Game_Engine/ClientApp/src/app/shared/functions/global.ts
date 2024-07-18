@@ -1,4 +1,4 @@
-import {FormArray} from "@angular/forms";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
 
 export function getEnumKeys<T>(enumType: T): string[] {
   return Object.keys(enumType).filter(key => isNaN(Number(key)));
@@ -33,6 +33,18 @@ export function clearFormArray(formArray: FormArray) {
   }
 }
 
+export function recreateFormArray(formArray: FormArray, arrayValue: any[]) {
+  clearFormArray(formArray);
+  arrayValue.forEach(value => {
+    const group = {};
+    Object.keys(value).forEach(key => {
+      group[key] = new FormControl(value[key]);
+    });
+    const control = new FormGroup(group);
+    formArray.push(control);
+  });
+}
+
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text).then(() => {
     console.log('Text copied to clipboard');
@@ -43,4 +55,26 @@ export function copyToClipboard(text: string) {
 
 export function deepCopy<T = any>(obj: T): any {
   return JSON.parse(JSON.stringify(obj));
+}
+
+export function validateForm(form: any): boolean {
+  let isValid = true;
+
+  Object.keys(form.controls).forEach(field => {
+    const control = form.get(field);
+    if (control instanceof FormArray) {
+      control.controls.forEach(c => {
+        if (!validateForm(c)) {
+          isValid = false;
+        }
+      });
+    } else {
+      control.markAsTouched({onlySelf: true});
+      if (control.invalid) {
+        isValid = false;
+      }
+    }
+  });
+
+  return isValid;
 }

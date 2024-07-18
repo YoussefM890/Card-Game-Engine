@@ -1,5 +1,20 @@
-<button [routerLink]="['/create']" color="primary" mat-raised-button>navigate to create</button>
-<button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+<div class="d-flex justify-content-between">
+  <div>
+    <button [routerLink]="['/create']" color="primary" mat-raised-button>navigate to create</button>
+    <button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+  </div>
+  <div>
+    <mat-chip-set>
+      @for (trigger of manualTriggers; track trigger.id) {
+        <mat-chip
+          [matTooltip]="trigger.description"
+          (click)="invokeTrigger(trigger.id)"
+        >{{ trigger.name }}
+        </mat-chip>
+      }
+    </mat-chip-set>
+  </div>
+</div>
 <div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
   @for (option of visibilityOptions; track option) {
     <div class="example-box"

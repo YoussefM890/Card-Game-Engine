@@ -10,6 +10,7 @@ export enum TriggerParameterEnum {
   GreaterThan = 6,
   EqualTo = 7,
   NotEqualTo = 8,
+  TriggerName = 9,
 }
 
 export enum ActionParameterEnum {

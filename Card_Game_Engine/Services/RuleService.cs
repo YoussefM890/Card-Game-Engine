@@ -24,7 +24,7 @@ public class RuleService
         _rules = rules;
     }
 
-    public void FireTriggerIfFound(TriggerEnum trigger)
+    public void FireTriggerIfFound(int trigger)
     {
         var allActions = new List<Action>();
 
