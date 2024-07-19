@@ -19,20 +19,28 @@ public class ActionService
 
     public void ExecuteMoveCardAction(Action action)
     {
-        var fromPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.FromPosition);
+        var fromPositionsString = Utils.GetStringParameterValue(action.Parameters, ActionParameterEnum.FromPositions);
         var toPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.ToPosition);
         var cardCount = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.CardCount, 1);
         var visibility = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Visibility,
             (int)VisibilityOptionEnum.Keep);
 
-        if (fromPosition == null || toPosition == null)
-        {
-            Console.WriteLine("Invalid MoveCard action parameters.");
-            throw new ArgumentException("Invalid MoveCard action parameters.");
-        }
+        Utils.ThrowExceptionIfNullOrEmpty(toPosition, "Invalid MoveCard action parameters.");
 
-        MoveCardAction actionParams = new(fromPosition.Value, toPosition.Value, cardCount!.Value,
+        var fromPositions = Utils.CsvToIntList(fromPositionsString, "MoveCard action FromPositions");
+
+        MoveCardAction actionParams = new(fromPositions, toPosition!.Value, cardCount!.Value,
             (VisibilityOptionEnum)visibility!);
         _actionFunctions.MoveCards(actionParams);
+    }
+
+
+    public void ExecuteShuffleDeckAction(Action action)
+    {
+        var position = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.AtPosition);
+
+        Utils.ThrowExceptionIfNullOrEmpty(position, "Invalid ShuffleDeck action parameters.");
+
+        _actionFunctions.ShuffleDeck(position!.Value);
     }
 }

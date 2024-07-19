@@ -1,12 +1,12 @@
 export enum ActionEnum {
   'StartGame' = 1,
   'MoveCard' = 2,
+  'ShuffleDeck' = 3,
 //   'DealCards' = 2,
 //   'PlayCard' = 3,
 //   'EndTurn' = 4,
 //   'EndGame' = 5,
 //   'DrawCard' = 6,
-  'ShuffleDeck' = 7,
 //   'DiscardCard' = 8,
 //   'DrawCardFromDiscardPile' = 9,
 //   'DrawCardFromDeck' = 10,

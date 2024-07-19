@@ -1,5 +1,6 @@
 using Card_Game_Engine.Models.Classes;
 using Card_Game_Engine.Models.Classes.Triggers;
+using Card_Game_Engine.Models.Enums.ParameterOptions;
 
 namespace Card_Game_Engine.Functions;
 
@@ -28,14 +29,30 @@ public class TriggerFunctions
 
     public static bool IsDeckCardCountMatching(DeckCardCountTrigger triggerParams, List<GridItem> after)
     {
-        var gridItem = after.FirstOrDefault(gridItem => gridItem.Id == triggerParams.Position);
-        if (gridItem == null)
+        switch (triggerParams.PositionsRelation)
         {
-            Console.WriteLine("Invalid Position parameter.");
-            return false;
-        }
+            case PositionsRelationOptionsEnum.Sum:
+                int sum = triggerParams.Positions.Sum(pos =>
+                    after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0);
+                return CheckConditions(sum, triggerParams);
 
-        int cardCount = gridItem.Cards.Count;
+            case PositionsRelationOptionsEnum.All:
+                return triggerParams.Positions.All(pos =>
+                    CheckConditions(after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
+                        triggerParams));
+
+            case PositionsRelationOptionsEnum.Any:
+                return triggerParams.Positions.Any(pos =>
+                    CheckConditions(after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
+                        triggerParams));
+
+            default:
+                throw new ArgumentException("Invalid PositionsRelation parameter.");
+        }
+    }
+
+    private static bool CheckConditions(int cardCount, DeckCardCountTrigger triggerParams)
+    {
         if (triggerParams.EqualTo.HasValue && cardCount != triggerParams.EqualTo.Value)
         {
             return false;

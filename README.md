@@ -3,12 +3,23 @@
 ![image](https://github.com/user-attachments/assets/826d9c90-84a9-4973-9cb0-b38174926cce)
 ## Play Game (from v0.15)
 ![image](https://github.com/user-attachments/assets/980616ff-3164-4f76-ad22-74922a8e0508)
+## Add Manual Triggers (from v0.15)
+![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
+## Import Game Setup (from v0.16)
+![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
+
+
+# v0.16 UI :
+## Import Game Setup
+![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
 
 # v0.15 UI :
 ## Create Game
 ![image](https://github.com/user-attachments/assets/826d9c90-84a9-4973-9cb0-b38174926cce)
 ## Play Game
 ![image](https://github.com/user-attachments/assets/980616ff-3164-4f76-ad22-74922a8e0508)
+## Add Manual Triggers
+![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
 
 # v0.13 UI :
 ## Create Game

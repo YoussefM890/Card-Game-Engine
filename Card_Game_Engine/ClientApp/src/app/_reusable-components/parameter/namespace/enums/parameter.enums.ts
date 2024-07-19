@@ -10,14 +10,16 @@ export enum TriggerParameterEnum {
   GreaterThan = 6,
   EqualTo = 7,
   NotEqualTo = 8,
-  TriggerName = 9,
+  PositionsRelation = 9,
 }
 
 export enum ActionParameterEnum {
   CardCount = 0,
-  FromPosition = 1,
+  FromPositions = 1,
   ToPosition = 2,
   ShuffleCount = 3,
   Visibility = 4,
+  AtPosition = 5,
+  AllCards = 6
 }
 

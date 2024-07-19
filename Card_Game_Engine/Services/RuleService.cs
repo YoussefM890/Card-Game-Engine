@@ -92,6 +92,9 @@ public class RuleService
             case (int)ActionEnum.MoveCard:
                 _actionService.ExecuteMoveCardAction(action);
                 break;
+            case (int)ActionEnum.ShuffleDeck:
+                _actionService.ExecuteShuffleDeckAction(action);
+                break;
         }
     }
 
@@ -121,8 +124,6 @@ public class RuleService
             bool isTriggered = false;
             switch (trigger.Id)
             {
-                // case (int)TriggerEnum.GameStart:
-                // isTriggered = isGameStartTriggered();
                 case (int)TriggerEnum.CardMoved:
                     isTriggered = _triggerService.ExecuteCardMovedTrigger(trigger, beforeActionCardContainer,
                         afterActionCardContainer);

@@ -4,8 +4,21 @@ const _rules =
       {
         "triggers": [
           {
-            "id": -1,
-            "parameters": []
+            "id": 2,
+            "parameters": [
+              {
+                "id": 3,
+                "value": "9,10,11"
+              },
+              {
+                "id": 7,
+                "value": "3"
+              },
+              {
+                "id": 9,
+                "value": "0"
+              }
+            ]
           }
         ],
         "actions": [
@@ -14,11 +27,15 @@ const _rules =
             "parameters": [
               {
                 "id": 1,
-                "value": "0"
+                "value": "9,10,11"
               },
               {
                 "id": 2,
-                "value": "1"
+                "value": "17"
+              },
+              {
+                "id": 0,
+                "value": "0"
               }
             ]
           }

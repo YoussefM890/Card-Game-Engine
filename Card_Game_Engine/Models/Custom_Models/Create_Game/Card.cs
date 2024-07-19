@@ -15,8 +15,15 @@ public class Card
     public GlobalEnums.SuitEnum Suit { get; set; }
 
     public GlobalClasses.Card ToGlobalCard(int id, string? name = null,
-        GlobalEnums.CardVisibilityEnum visibility = GlobalEnums.CardVisibilityEnum.Cell, bool isPlayable = true)
+        GlobalEnums.CardVisibilityEnum? visibility = null, bool? isPlayable = null)
     {
-        return new GlobalClasses.Card(id, Value, Suit, name, visibility, isPlayable);
+        return new GlobalClasses.Card(
+            id,
+            Value,
+            Suit,
+            name,
+            visibility ?? GlobalEnums.CardVisibilityEnum.Cell,
+            isPlayable ?? true
+        );
     }
 }

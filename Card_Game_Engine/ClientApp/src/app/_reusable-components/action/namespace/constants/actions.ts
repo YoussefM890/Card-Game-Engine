@@ -11,12 +11,14 @@ import {ActionEnum} from "../enums/action.enum";
 const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
 export const actions: Action[] = [
-  new Action(ActionEnum.ShuffleDeck, "Shuffle Deck"),
-  new Action(ActionEnum.MoveCard, "Move Card", [
-    new Parameter(ActionParameterEnum.FromPosition, "From Position"),
+  new Action(ActionEnum.ShuffleDeck, "Shuffle Deck", [
+    new Parameter(ActionParameterEnum.AtPosition, "At Position"),
+  ]),
+  new Action(ActionEnum.MoveCard, "Move Cards", [
+    new Parameter(ActionParameterEnum.FromPositions, "From Positions"),
     new Parameter(ActionParameterEnum.ToPosition, "To Position"),
-    new Parameter(ActionParameterEnum.CardCount, "Card Count"),
-    new Parameter(ActionParameterEnum.Visibility, "Visibility", select, [
+    new Parameter(ActionParameterEnum.CardCount, "Card Count (default is 1)", "Number of cards to move (0 to move all)", text),
+    new Parameter(ActionParameterEnum.Visibility, "Visibility (default is Keep)", null, select, [
       new SelectOption(VisibilityOptionsEnum.Keep, "Keep", "Keep the same visibility as the card had before the action"),
       new SelectOption(VisibilityOptionsEnum.Cell, "Cell", "Set the visibility of the card to the visibility of the cell\""),
       new SelectOption(VisibilityOptionsEnum.Visible, "Visible", "Visible to all players"),

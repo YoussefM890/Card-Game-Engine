@@ -145,7 +145,7 @@ export class PlayGameComponent implements OnInit {
       this.signalrService.userNumber % 2 === 0 ? trueVisibility = VisibilityOptionsEnum.Player2 : trueVisibility = VisibilityOptionsEnum.Player1;
     }
     const action = new Action(ActionEnum.MoveCard);
-    action.addParameter(new Parameter(ActionParameterEnum.FromPosition, '' + fromPosition));
+    action.addParameter(new Parameter(ActionParameterEnum.FromPositions, '' + fromPosition));
     action.addParameter(new Parameter(ActionParameterEnum.ToPosition, '' + toPosition));
     action.addParameter(new Parameter(ActionParameterEnum.Visibility, trueVisibility));
     this.signalrService.invokeExplicitAction(action);

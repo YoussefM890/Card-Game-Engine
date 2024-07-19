@@ -1,5 +1,6 @@
 using System.Text;
 using Card_Game_Engine.Models.Classes;
+using Card_Game_Engine.Models.Enums;
 using CreateNamespace = Card_Game_Engine.Models.Custom_Models.Create_Game;
 
 namespace Card_Game_Engine.Services;
@@ -17,8 +18,9 @@ public class CardContainerService
 
     public void SetStartingDeck(List<CreateNamespace.Card> startingDeck, int startingPosition = 0)
     {
+        var startingPositionVisibility = (CardVisibilityEnum)_grid[startingPosition].Visibility;
         _grid[startingPosition].Cards = startingDeck
-            .Select((createCard, index) => createCard.ToGlobalCard(index + 1))
+            .Select((createCard, index) => createCard.ToGlobalCard(index + 1, null, startingPositionVisibility))
             .ToList();
     }
 

@@ -5,18 +5,18 @@ namespace Card_Game_Engine.Models.Classes;
 public class Card
 {
     // Constructor
-    public Card(int id = 1, int value = 1, SuitEnum suit = SuitEnum.HEARTS, string? name = null,
-        CardVisibilityEnum visibility = CardVisibilityEnum.Cell, bool isPlayable = true)
+    public Card(int? id = null, int? value = null, SuitEnum? suit = null, string? name = null,
+        CardVisibilityEnum? visibility = null, bool? isPlayable = null)
     {
-        if (value < 1 || value > 14)
+        Value = value ?? 1;
+        if (Value < 1 || Value > 14)
             throw new ArgumentOutOfRangeException(nameof(value), "Value must be between 1 and 13.");
 
-        Id = id;
-        Value = value;
-        Suit = suit;
-        Name = name ?? $"{value} of {suit}";
-        Visibility = visibility;
-        IsPlayable = isPlayable;
+        Id = id ?? 1;
+        Suit = suit ?? SuitEnum.HEARTS;
+        Name = name ?? $"{Value} of {Suit}";
+        Visibility = visibility ?? CardVisibilityEnum.Cell;
+        IsPlayable = isPlayable ?? true;
     }
 
     public int Id { get; set; }

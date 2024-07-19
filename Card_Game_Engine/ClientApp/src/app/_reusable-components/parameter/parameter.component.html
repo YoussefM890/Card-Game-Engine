@@ -3,7 +3,7 @@
     <mat-label>Parameter</mat-label>
     <mat-select (selectionChange)="onParameterChange($event.value)" formControlName="id">
       @for (parameter of availableParameters; track parameter.id) {
-        <mat-option [value]="parameter.id">{{ parameter.display }}</mat-option>
+        <mat-option [matTooltip]="parameter.description" [value]="parameter.id">{{ parameter.display }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
