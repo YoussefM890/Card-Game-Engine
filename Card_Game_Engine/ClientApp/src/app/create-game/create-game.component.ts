@@ -28,8 +28,6 @@ import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
 import {copyToClipboard, filterDictBySize, getEnumValues, recreateFormArray} from '../shared/functions/global';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {CssStyle} from "../models/classes/css-style";
-import {CssStyleEnum} from "../models/enums/css-style.enum";
 import {CardNameEnum} from "../_reusable-components/card/namespace/enums/card-name.enum";
 import {SuitEnum, suitsList} from "./namespace/enums/suit.enum";
 import {Card as CreateGameCard} from "./namespace/classes/card";
@@ -46,6 +44,8 @@ import {ManualTrigger} from "./namespace/classes/manual-trigger";
 import {AddEditManualTriggerComponent} from "./add-edit-manual-trigger/add-edit-manual-trigger.component";
 import {NgStyle} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
+import {CssStyle} from "../shared/models/classes/css-style";
+import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
 
 @Component({
   selector: 'app-create-game',
@@ -205,12 +205,15 @@ export class CreateGameComponent implements OnInit {
   }
 
   onCardSelectedFromLine(card: GlobalCard) {
-    this.selectedCards = this.selectedCards.filter(c => c !== card);
-    const index = this.startingDeckArray.controls.findIndex((ctrl: FormControl) => ctrl.value === card);
-    if (index >= 0) {
-      this.startingDeckArray.removeAt(index);
+    const selectedCardIndex = this.selectedCards.findIndex(c => c === card);
+    if (selectedCardIndex >= 0) {
+      this.selectedCards = [...this.selectedCards.slice(0, selectedCardIndex), ...this.selectedCards.slice(selectedCardIndex + 1)];
+      this.startingDeckArray.removeAt(selectedCardIndex);
+    } else {
+      console.log("Card not found in the selected cards:", card);
     }
   }
+
 
   changeWidth(delta: number) {
     this.widthControl.setValue(this.widthControl.value + delta);
@@ -244,7 +247,7 @@ export class CreateGameComponent implements OnInit {
     ];
   }
 
-  addButton() {
+  addManualTrigger() {
     this.dialog.open(AddEditManualTriggerComponent, {
       width: '1000px',
       height: '700px',
@@ -273,7 +276,7 @@ export class CreateGameComponent implements OnInit {
     return this.gameForm.get('startingDeck') as FormArray;
   }
 
-  getTriggerStyles(trigger: ManualTrigger) {
+  getManualTriggerStyles(trigger: ManualTrigger) {
     const option = this.visibilityOptions.find(option => option.value === trigger.visibility);
     return {
       [CssStyleEnum.BackgroundColor]: option.background,

@@ -17,9 +17,12 @@ public enum TriggerParameterEnum
 public enum ActionParameterEnum
 {
     CardCount = 0,
-    FromPositions = 1,
+    FromPosition = 1,
     ToPosition = 2,
     ShuffleCount = 3,
     Visibility = 4,
-    AtPosition = 5,
+    AtPositions = 5,
+    AllCards = 6,
+    FromPositions = 7,
+    ToPositions = 8,
 }

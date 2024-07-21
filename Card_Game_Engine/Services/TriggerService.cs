@@ -38,12 +38,17 @@ public class TriggerService
         var positionsRelation = Utils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.PositionsRelation,
             (int)PositionsRelationOptionsEnum.Sum);
 
-        var positions = Utils.CsvToIntList(positionsString);
+        Utils.ThrowExceptionIfAnyNullOrEmpty("Invalid DeckCardCount trigger parameters.", positionsString);
+
+
         if (equals == null && lessThan == null && greaterThan == null && notEquals == null)
         {
             Console.WriteLine("Invalid DeckCardCount trigger parameters.");
             return false;
         }
+
+        var positions = Utils.CsvToIntList(positionsString);
+
 
         DeckCardCountTrigger triggerParams = new(positions, (PositionsRelationOptionsEnum)positionsRelation!.Value,
             equals, lessThan, greaterThan, notEquals);

@@ -18,41 +18,65 @@ public class ActionFunctions
 
     public void MoveCards(MoveCardAction action)
     {
-        foreach (var fromPosition in action.FromPositions)
+        // Handle moving cards
+        List<int> fromPositions = action.FromPositions ?? new List<int> { action.FromPosition!.Value };
+        List<int> toPositions = action.ToPositions ?? new List<int> { action.ToPosition!.Value };
+        List<Card> movedCards = new();
+
+
+        foreach (var fromPosition in fromPositions)
         {
-            if (_grid.Count() <= fromPosition || _grid.Count() <= action.ToPosition)
-            {
-                throw new ArgumentException("Invalid grid ID.");
-            }
-
             var fromGridItem = _grid[fromPosition];
-            var toGridItem = _grid[action.ToPosition];
-
+            int requestedCount = action.CardCount * toPositions.Count;
             int availableCards = fromGridItem.Cards.Count;
-
             // if card count is 0, move all cards
-            int cardsToMove = action.CardCount == 0 ? availableCards : Math.Min(availableCards, action.CardCount);
-
-            if (cardsToMove < action.CardCount)
+            int cardsToMove = requestedCount == 0
+                ? availableCards
+                : Math.Min(availableCards, requestedCount);
+            if (cardsToMove < requestedCount)
             {
                 Console.WriteLine(
-                    $"Warning: Only {cardsToMove} cards available to move from {fromPosition} to {action.ToPosition}, less than the requested {action.CardCount}.");
-                // maybe add a logic to warn the user
+                    $"Warning: Only {cardsToMove} cards available to move from {fromPosition}, less than the requested {requestedCount}.");
             }
 
-            var movedCards = fromGridItem.Cards.Take(cardsToMove).ToList();
+            movedCards.AddRange(fromGridItem.Cards.Take(cardsToMove));
             fromGridItem.Cards.RemoveRange(0, cardsToMove);
+        }
 
-            movedCards.Reverse();
-            foreach (var card in movedCards)
+        // Reverse the order to keep the entered positions order
+        movedCards.Reverse();
+
+        foreach (var toPosition in toPositions)
+        {
+            if (movedCards.Count == 0)
             {
-                // Warning: need to be careful that the two enums match the same visibility values when casting
+                Console.WriteLine($"Warning: No cards to move to {toPosition}.");
+                continue;
+            }
+
+            var toGridItem = _grid[toPosition];
+            int requestedCount = action.CardCount * fromPositions.Count;
+            int cardsToMove = requestedCount == 0
+                ? movedCards.Count
+                : Math.Min(movedCards.Count, requestedCount);
+
+            if (cardsToMove < requestedCount)
+            {
+                Console.WriteLine(
+                    $"Warning: Only {cardsToMove} cards available to move to position {toPosition} less than the requested {requestedCount}.");
+            }
+
+            var cardsToInsert = movedCards.Take(cardsToMove).ToList();
+            movedCards.RemoveRange(0, cardsToMove);
+
+            foreach (var card in cardsToInsert)
+            {
+                // Update card visibility based on the action
                 switch (action.CardVisibility)
                 {
                     case VisibilityOptionEnum.Keep:
                         if (card.Visibility == CardVisibilityEnum.Cell)
                             card.Visibility = (CardVisibilityEnum)toGridItem.Visibility;
-                        // else keep the same visibility
                         break;
                     case VisibilityOptionEnum.Cell:
                         card.Visibility = (CardVisibilityEnum)toGridItem.Visibility;
@@ -76,17 +100,14 @@ public class ActionFunctions
         }
     }
 
-
-    public void ShuffleDeck(int position)
+    public void ShuffleDeck(List<int> positions)
     {
-        if (_grid.Count() < position)
+        foreach (var position in positions)
         {
-            throw new ArgumentException("Invalid grid ID.");
+            var gridItem = _grid[position];
+            var shuffledCards = gridItem.Cards.OrderBy(x => Guid.NewGuid()).ToList();
+            gridItem.Cards.Clear();
+            gridItem.Cards.AddRange(shuffledCards);
         }
-
-        var gridItem = _grid[position];
-        var shuffledCards = gridItem.Cards.OrderBy(x => Guid.NewGuid()).ToList();
-        gridItem.Cards.Clear();
-        gridItem.Cards.AddRange(shuffledCards);
     }
 }

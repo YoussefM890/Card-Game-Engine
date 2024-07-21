@@ -1,4 +1,5 @@
 export enum ParameterValueTypeEnum {
-  'Text',
-  'Select',
+  Text = 0,
+  Select = 1,
+  Positions = 2,
 }

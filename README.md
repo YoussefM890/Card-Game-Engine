@@ -7,7 +7,12 @@
 ![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
 ## Import Game Setup (from v0.16)
 ![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
+## Positions Selector (from v0.17)
+![image](https://github.com/user-attachments/assets/cdaecddf-d298-4324-87f3-8215538a482e)
 
+# v0.17 UI :
+## Positions Selector
+![image](https://github.com/user-attachments/assets/cdaecddf-d298-4324-87f3-8215538a482e)
 
 # v0.16 UI :
 ## Import Game Setup

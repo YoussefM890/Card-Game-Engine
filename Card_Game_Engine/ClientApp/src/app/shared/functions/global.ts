@@ -78,3 +78,18 @@ export function validateForm(form: any): boolean {
 
   return isValid;
 }
+
+export function CsvToIntSet(csv: string): Set<number> {
+  return new Set(
+    csv
+      .split(',')
+      .map(str => str.trim())
+      .filter(str => !isNaN(Number(str)) && Number.isInteger(parseFloat(str))) // Check for valid integers
+      .map(str => parseInt(str, 10)) // Convert to integers
+  );
+}
+
+export function setToCsv(set: Set<number | string>): string {
+  return Array.from(set).join(',');
+}
+

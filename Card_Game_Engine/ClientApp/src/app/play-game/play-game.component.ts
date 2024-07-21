@@ -6,8 +6,6 @@ import {SignalRService} from "../services/signalr.service";
 import {DOCUMENT, NgStyle} from "@angular/common";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {MatTooltip} from "@angular/material/tooltip";
-import {CssStyle} from "../models/classes/css-style";
-import {CssStyleEnum} from "../models/enums/css-style.enum";
 import {play_game} from "./play-game.namespace";
 import {GridItem} from "./namespace/classes/grid-item";
 import {Game} from "./namespace/classes/game";
@@ -19,6 +17,8 @@ import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/e
 import {TriggerEnum} from "../_reusable-components/trigger/namespace/enums/trigger.enum";
 import {MatChip, MatChipSet} from "@angular/material/chips";
 import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
+import {CssStyle} from "../shared/models/classes/css-style";
+import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
 
 @Component({
   selector: 'app-play-game',

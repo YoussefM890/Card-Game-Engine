@@ -10,26 +10,58 @@ namespace Card_Game_Engine.Services;
 public class ActionService
 {
     private readonly ActionFunctions _actionFunctions;
+    private readonly List<GridItem> _grid;
 
     public ActionService(List<GridItem> grid, List<User> users)
     {
+        _grid = grid;
         _actionFunctions = new ActionFunctions(grid, users);
     }
 
 
     public void ExecuteMoveCardAction(Action action)
     {
+        var fromPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.FromPosition);
         var fromPositionsString = Utils.GetStringParameterValue(action.Parameters, ActionParameterEnum.FromPositions);
         var toPosition = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.ToPosition);
+        var toPositionsString = Utils.GetStringParameterValue(action.Parameters, ActionParameterEnum.ToPositions);
         var cardCount = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.CardCount, 1);
         var visibility = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Visibility,
-            (int)VisibilityOptionEnum.Keep);
+            (int)VisibilityOptionEnum.Cell);
 
-        Utils.ThrowExceptionIfNullOrEmpty(toPosition, "Invalid MoveCard action parameters.");
 
-        var fromPositions = Utils.CsvToIntList(fromPositionsString, "MoveCard action FromPositions");
+        Utils.ThrowExceptionIfAllFalse("Specify either FromPosition or FromPositions for MoveCard action.",
+            fromPosition.HasValue, !string.IsNullOrEmpty(fromPositionsString));
 
-        MoveCardAction actionParams = new(fromPositions, toPosition!.Value, cardCount!.Value,
+        Utils.ThrowExceptionIfAllFalse("Specify either ToPosition or ToPositions for MoveCard action.",
+            toPosition.HasValue, !string.IsNullOrEmpty(toPositionsString));
+
+        var fromPositions = Utils.CsvToIntList(fromPositionsString, "FromPositions");
+        var toPositions = Utils.CsvToIntList(toPositionsString, "ToPositions");
+
+        if (fromPosition.HasValue)
+        {
+            Utils.ThrowExceptionIfAnyIsInvalidGridId("Invalid FromPosition for MoveCard action.", _grid,
+                fromPosition.Value);
+        }
+        else
+        {
+            Utils.ThrowExceptionIfAnyIsInvalidGridId("Invalid FromPositions for MoveCard action.", _grid,
+                fromPositions!.ToArray());
+        }
+
+        if (toPosition.HasValue)
+        {
+            Utils.ThrowExceptionIfAnyIsInvalidGridId("Invalid ToPosition for MoveCard action.", _grid,
+                toPosition.Value);
+        }
+        else
+        {
+            Utils.ThrowExceptionIfAnyIsInvalidGridId("Invalid ToPositions for MoveCard action.", _grid,
+                toPositions!.ToArray());
+        }
+
+        MoveCardAction actionParams = new(fromPosition, fromPositions, toPosition, toPositions, cardCount!.Value,
             (VisibilityOptionEnum)visibility!);
         _actionFunctions.MoveCards(actionParams);
     }
@@ -37,10 +69,10 @@ public class ActionService
 
     public void ExecuteShuffleDeckAction(Action action)
     {
-        var position = Utils.GetIntParameterValue(action.Parameters, ActionParameterEnum.AtPosition);
-
-        Utils.ThrowExceptionIfNullOrEmpty(position, "Invalid ShuffleDeck action parameters.");
-
-        _actionFunctions.ShuffleDeck(position!.Value);
+        var positionsString = Utils.GetStringParameterValue(action.Parameters, ActionParameterEnum.AtPositions);
+        Utils.ThrowExceptionIfAnyNullOrEmpty("Invalid ShuffleDeck action parameters.", positionsString);
+        var positions = Utils.CsvToIntList(positionsString, "Shuffle Deck At Positions");
+        Utils.ThrowExceptionIfAnyIsInvalidGridId("Invalid ShuffleDeck action parameters.", _grid, positions!.ToArray());
+        _actionFunctions.ShuffleDeck(positions!);
     }
 }

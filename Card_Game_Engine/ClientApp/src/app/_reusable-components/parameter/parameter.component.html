@@ -26,6 +26,15 @@
           </mat-select>
         </mat-form-field>
       }
+      @case (types.Positions) {
+        <mat-form-field appearance="fill" class="col-5">
+          <mat-label>Value</mat-label>
+          <input matInput formControlName="value" placeholder="Value">
+          <button mat-icon-button matSuffix (click)="openPositionsSelectorModal($event)">
+            <mat-icon>grid_on</mat-icon>
+          </button>
+        </mat-form-field>
+      }
     }
   }
 </div>

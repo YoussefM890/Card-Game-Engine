@@ -7,7 +7,7 @@
             <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
           </div>
           <div>
-            <button (click)="addButton()" class="me-1" color="primary" mat-raised-button>
+            <button (click)="addManualTrigger()" class="me-1" color="primary" mat-raised-button>
               {{ manualTriggersArray.length === 0 ? 'Add' : 'Edit' }} Manual Triggers
             </button>
             <button (click)="importRules()" class="me-1" color="primary" mat-raised-button>Import Game Setup</button>
@@ -21,7 +21,7 @@
               @for (trigger of manualTriggersArray.value; track trigger.id) {
                 <mat-chip
                   class="example-box"
-                  [ngStyle]="getTriggerStyles(trigger)"
+                  [ngStyle]="getManualTriggerStyles(trigger)"
                   [matTooltip]="trigger.description"
                 >{{ trigger.name }}
                 </mat-chip>

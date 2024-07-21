@@ -1,10 +1,8 @@
 export enum TriggerParameterEnum {
   CardCount = 0,
   FromPosition = 1,
-  // FromVisibility = 1,
   ToPosition = 2,
-  // ToVisibility = 2,
-  Position = 3,
+  Positions = 3,
   By = 4,
   LessThan = 5,
   GreaterThan = 6,
@@ -15,11 +13,13 @@ export enum TriggerParameterEnum {
 
 export enum ActionParameterEnum {
   CardCount = 0,
-  FromPositions = 1,
+  FromPosition = 1,
   ToPosition = 2,
   ShuffleCount = 3,
   Visibility = 4,
-  AtPosition = 5,
-  AllCards = 6
+  AtPositions = 5,
+  AllCards = 6,
+  FromPositions = 7,
+  ToPositions = 8,
 }
 

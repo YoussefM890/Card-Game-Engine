@@ -1,3 +1,5 @@
+import {ColorEnum} from "../shared/models/enums/color.enum";
+
 export namespace play_game {
   export enum VisibilityEnum {
     Keep = "0",
@@ -27,8 +29,8 @@ export namespace play_game {
 
     constructor(
       value: VisibilityEnum,
-      color: string,
-      background: string,
+      color: ColorEnum,
+      background: ColorEnum,
       description: string = null,
       disabled: boolean = false,
     ) {
@@ -44,33 +46,33 @@ export namespace play_game {
   export const visibilityOptions: VisibilityOption[] = [
 
     new VisibilityOption(
-      VisibilityEnum.Keep,
-      '#3e3e3e',
-      '#d5d4d4',
-      'keep the same visibility'
-    ),
-    new VisibilityOption(
       VisibilityEnum.Cell,
-      '#002e5b',
-      '#2e99fa',
+      ColorEnum.DarkBlue,
+      ColorEnum.Blue,
       'Take the same visibility as the cell you are moving to.',
     ),
     new VisibilityOption(
+      VisibilityEnum.Keep,
+      ColorEnum.DarkGray,
+      ColorEnum.Gray,
+      'keep the same visibility'
+    ),
+    new VisibilityOption(
       VisibilityEnum.Visible,
-      '#2e4a00',
-      '#a2d752',
+      ColorEnum.DarkGreen,
+      ColorEnum.Green,
       'make the card visible to everyone'
     ),
     new VisibilityOption(
       VisibilityEnum.Private,
-      '#614a01',
-      '#ffd753',
+      ColorEnum.DarkYellow,
+      ColorEnum.Yellow,
       'make the card visible only to you'
     ),
     new VisibilityOption(
       VisibilityEnum.Hidden,
-      '#6a0000',
-      '#ff9696',
+      ColorEnum.DarkRed,
+      ColorEnum.Red,
       'make the card hidden to everyone'
     )
   ];

@@ -1,27 +1,30 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatInput} from "@angular/material/input";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatTooltipModule} from "@angular/material/tooltip";
 import {Parameter} from "./namespace/classes/parameter";
 import {ParameterValueTypeEnum} from "./namespace/enums/parameter-value-type.enum";
+import {MatOptionModule} from "@angular/material/core";
+import {MatDialog} from "@angular/material/dialog";
+import {PositionsSelectorModalComponent} from "./positions-selector-modal/positions-selector-modal.component";
+import {CsvToIntSet} from "../../shared/functions/global";
 
 @Component({
   selector: 'app-parameter',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatFormField,
-    MatSelect,
-    MatOption,
-    MatInput,
-    MatIconButton,
-    MatLabel,
-    MatIcon,
-    MatTooltip
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './parameter.component.html',
   styleUrl: './parameter.component.scss',
@@ -33,12 +36,9 @@ export class ParameterComponent implements OnInit {
   selectedParameter: Parameter;
   types = ParameterValueTypeEnum;
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
   }
 
-  get valueControl() {
-    return this.parameterForm.get('value');
-  }
 
   ngOnInit(): void {
     this.selectedParameter = this.availableParameters.find(p => p.id === this.parameterForm.value.id);
@@ -48,6 +48,22 @@ export class ParameterComponent implements OnInit {
     this.selectedParameter = this.availableParameters.find(p => p.id === paramId);
     this.valueControl.setValue(null);
     this.parameterChange.emit(paramId);
+  }
+
+  get valueControl() {
+    return this.parameterForm.get('value');
+  }
+
+  openPositionsSelectorModal(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dialog.open(PositionsSelectorModalComponent, {
+      data: {
+        positions: CsvToIntSet(this.valueControl.value ?? '')
+      }
+    }).afterClosed().subscribe((positionsString) => {
+      this.valueControl.setValue(positionsString);
+    });
   }
 }
 

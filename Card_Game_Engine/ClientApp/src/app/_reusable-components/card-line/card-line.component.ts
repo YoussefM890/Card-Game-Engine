@@ -49,10 +49,6 @@ export class CardLineComponent implements AfterViewInit, OnInit,OnChanges{
       this.cdr.detectChanges();
     }
   }
-  private onCardsChanged() {
-    // Execute the methods you need when the cards input changes
-    console.log('Cards have changed', this.cards);
-  }
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.calculateContainerWidth();

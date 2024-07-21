@@ -55,7 +55,7 @@ public class GameEngineController : Hub
 
     public async Task InvokeExplicitAction(Action action)
     {
-        Console.WriteLine("InvokeExplicitAction called!");
+        // Console.WriteLine("InvokeExplicitAction called!");
         _ruleService.ProcessActions(new List<Action> { action });
         var width = _databaseService.CardContainerService.GetWidth();
         var height = _databaseService.CardContainerService.GetHeight();
@@ -71,7 +71,7 @@ public class GameEngineController : Hub
 
     public async Task InvokeExplicitTrigger(int triggerId)
     {
-        Console.WriteLine("ExplicitTrigger called!");
+        // Console.WriteLine("InvokeExplicitTrigger called!");
         _ruleService.FireTriggerIfFound(triggerId);
         var width = _databaseService.CardContainerService.GetWidth();
         var height = _databaseService.CardContainerService.GetHeight();

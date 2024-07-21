@@ -3,11 +3,12 @@ import {TriggerEnum} from "../enums/trigger.enum";
 import {Parameter} from "../../../parameter/namespace/classes/parameter";
 import {TriggerParameterEnum} from "../../../parameter/namespace/enums/parameter.enums";
 import {ParameterValueTypeEnum} from "../../../parameter/namespace/enums/parameter-value-type.enum";
-import {SelectOption} from "../../../../models/classes/select-option";
 import {PositionsRelationOptionsEnum} from "../../../parameter/namespace/enums/parameter-value-options.enums";
+import {SelectOption} from "../../../../shared/models/classes/select-option";
 
 const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
+const positions = ParameterValueTypeEnum.Positions;
 
 
 export const triggers: Trigger[] = [
@@ -18,7 +19,7 @@ export const triggers: Trigger[] = [
     new Parameter(TriggerParameterEnum.CardCount, 'Card Count'),
   ]),
   new Trigger(TriggerEnum.DeckCardCount, 'Deck Card Count', [
-      new Parameter(TriggerParameterEnum.Position, 'Position'),
+    new Parameter(TriggerParameterEnum.Positions, 'Positions', null, positions),
     new Parameter(TriggerParameterEnum.EqualTo, 'Equal To =', null, text, [], [
       TriggerParameterEnum.LessThan,
       TriggerParameterEnum.GreaterThan,

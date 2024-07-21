@@ -54,7 +54,7 @@ export class TriggerComponent implements OnInit {
   addParameter() {
     const parameterForm = this.fb.group({
       id: [null, Validators.required],
-      value: [null, Validators.required]
+      value: ['', Validators.required]
     });
     this.parametersArray.push(parameterForm);
     this.updateParameters();

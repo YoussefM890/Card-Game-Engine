@@ -4,11 +4,10 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {NgClass, NgStyle} from "@angular/common";
 import {CardLineComponent} from "../card-line/card-line.component";
 import {CardDeckComponent} from "../card-deck/card-deck.component";
-import {SignalRService} from "../../services/signalr.service";
-import {CdkDrag, CdkDragDrop, CdkDropList,} from "@angular/cdk/drag-drop";
-import {CssStyle} from "../../models/classes/css-style";
+import {CdkDrag, CdkDropList,} from "@angular/cdk/drag-drop";
 import {GridDisplayMode} from './namespace/enums/gird-display-mode';
 import {GridItem} from "../../play-game/namespace/classes/grid-item";
+import {CssStyle} from "../../shared/models/classes/css-style";
 
 @Component({
   selector: 'app-grid',
@@ -37,17 +36,9 @@ export class GridComponent implements OnInit {
   @Input() itemStyles: Record<number, CssStyle[]> = null;
   @Output() cellClick: EventEmitter<any> = new EventEmitter<any>();
   mode: GridDisplayMode = GridDisplayMode.DEFAULT;
-  moveCardFrom: number = null;
-  moveCardTo: number = null;
   previousIndex: number = null;
-  gridDimensions: { width: number, height: number, offsetTop: number, offsetLeft: number } = {
-    width: 0,
-    height: 0,
-    offsetTop: 0,
-    offsetLeft: 0
-  };
 
-  constructor(private signalrService: SignalRService, private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -71,14 +62,6 @@ export class GridComponent implements OnInit {
 
   onCellClick(item: any) {
     this.cellClick.emit(item); // Emit the selected card data
-  }
-
-  onCardDropped(event: CdkDragDrop<GridItem[]>) {
-    console.log('Card dropped', event)
-  }
-
-  onDragEnded(index: number) {
-    console.log('Card drag ended', index)
   }
 
   range(n: number): number[] {
