@@ -2,6 +2,7 @@ using Card_Game_Engine.Controllers;
 using Card_Game_Engine.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -10,6 +11,7 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowCredentials());
 });
+
 builder.Services.AddSingleton<RuleService>();
 builder.Services.AddSingleton<DatabaseService>();
 
@@ -36,5 +38,4 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
-
 app.Run();

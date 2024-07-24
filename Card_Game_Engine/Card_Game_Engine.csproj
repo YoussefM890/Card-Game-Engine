@@ -28,6 +28,21 @@
     <ItemGroup>
         <Folder Include="ClientApp\src\app\_reusable-components\grid\namespace\classes\"/>
         <Folder Include="ClientApp\src\app\_reusable-components\grid\namespace\constants\"/>
+        <Folder Include="wwwroot\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-3OEKG56K.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-4QGHOW6G.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-FME56UVT.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-I5P5BN5S.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-LQZ3AZDV.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\chunk-XJT2NRI3.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\index.server.html"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\main.server.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\polyfills.server.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\render-utils.server.mjs"/>
+        <_ContentIncludedByDefault Remove="wwwroot\server\server.mjs"/>
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -7,12 +7,13 @@ import {Game as CreateGame} from "../create-game/namespace/classes/game";
 import {Action} from "../play-game/namespace/classes/action";
 import {Game as PlayGame} from "../play-game/namespace/classes/game";
 import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
+import {ConfigService} from "./config.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
-  private readonly baseUrl = `${window.location.protocol}//${window.location.host}`;
+  private baseUrl: string;
   private hubConnection: signalR.HubConnection;
   private gameSubject = new BehaviorSubject<PlayGame>(new PlayGame());
   public game$ = this.gameSubject.asObservable();
@@ -21,7 +22,8 @@ export class SignalRService {
   private _userNumber: number;
   public createGameForm: FormGroup = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private configService: ConfigService) {
+    this.baseUrl = this.configService.baseUrl;
     if (this.baseUrl.includes('localhost')) {
       this.baseUrl = this.baseUrl.replace('4200', '5000');
     }

@@ -474,6 +474,19 @@ const _chkobba =
                 "value": "0"
               }
             ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 8,
+                "value": "20,21,23,24"
+              }
+            ]
           }
         ],
         "rules": []
@@ -521,97 +534,8 @@ const _chkobba =
                     "value": "0"
                   },
                   {
-                    "id": 2,
-                    "value": "3"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
-                  }
-                ]
-              },
-              {
-                "id": 2,
-                "parameters": [
-                  {
-                    "id": 1,
-                    "value": "0"
-                  },
-                  {
-                    "id": 2,
-                    "value": "4"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
-                  }
-                ]
-              },
-              {
-                "id": 2,
-                "parameters": [
-                  {
-                    "id": 1,
-                    "value": "0"
-                  },
-                  {
-                    "id": 2,
-                    "value": "5"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
-                  }
-                ]
-              },
-              {
-                "id": 2,
-                "parameters": [
-                  {
-                    "id": 1,
-                    "value": "0"
-                  },
-                  {
-                    "id": 2,
-                    "value": "39"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
-                  }
-                ]
-              },
-              {
-                "id": 2,
-                "parameters": [
-                  {
-                    "id": 1,
-                    "value": "0"
-                  },
-                  {
-                    "id": 2,
-                    "value": "40"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
-                  }
-                ]
-              },
-              {
-                "id": 2,
-                "parameters": [
-                  {
-                    "id": 1,
-                    "value": "0"
-                  },
-                  {
-                    "id": 2,
-                    "value": "41"
-                  },
-                  {
-                    "id": 4,
-                    "value": "1"
+                    "id": 8,
+                    "value": "3,4,5,41,40,39"
                   }
                 ]
               }
@@ -632,8 +556,8 @@ const _chkobba =
             "id": 2,
             "parameters": [
               {
-                "id": 1,
-                "value": "1,2,3,4,5,6,7,12,13,14,21,22,23,24,30,31,32,39,40,41"
+                "id": 7,
+                "value": "1,3,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,26,25,24,33,42,43,34,44,35,23,32,41,40,31,22,21,30,39,38,29,20,19,18,27,28,37,36"
               },
               {
                 "id": 2,
@@ -651,6 +575,19 @@ const _chkobba =
               {
                 "id": 5,
                 "value": "0"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 8,
+                "value": "20,21,23,24"
               }
             ]
           }
@@ -1008,22 +945,10 @@ const _chkobba =
       {
         "id": -1,
         "name": "Collect Cards",
-        "description": "",
+        "description": "collect cards and restart the next hand",
         "visibility": 2
-      },
-      {
-        "id": -2,
-        "name": "Deal To Player 1",
-        "description": "Deal To Player 1",
-        "visibility": 4
-      },
-      {
-        "id": -3,
-        "name": "Deal To Player 2",
-        "description": "Deal To Player 2",
-        "visibility": 5
       }
     ]
   }
 ;
-export const rules = JSON.stringify(_rules, null, 2);
+export const rules = JSON.stringify(_chkobba, null, 2);
