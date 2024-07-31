@@ -946,7 +946,7 @@ const _chkobba =
         "id": -1,
         "name": "Collect Cards",
         "description": "collect cards and restart the next hand",
-        "visibility": 2
+        "visibility": 4
       }
     ]
   }

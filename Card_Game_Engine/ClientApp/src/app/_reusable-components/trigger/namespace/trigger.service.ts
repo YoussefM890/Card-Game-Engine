@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Trigger} from "./classes/trigger";
 import {triggers} from "./constants/triggers";
-import {SignalRService} from "../../../services/signalr.service";
 import {ManualTrigger} from "../../../create-game/namespace/classes/manual-trigger";
+import {SignalRService} from "../../../shared/services/signalr.service";
 
 @Injectable({
   providedIn: 'root'

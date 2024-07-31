@@ -2,6 +2,7 @@ namespace Card_Game_Engine.Models.Enums;
 
 public enum RoleEnum
 {
-    Player,
-    Spectator
+    Spectator = 0,
+    Player1 = 1,
+    Player2 = 2,
 }

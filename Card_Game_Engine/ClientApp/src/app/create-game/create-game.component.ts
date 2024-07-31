@@ -18,7 +18,6 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {ActionComponent} from "../_reusable-components/action/action.component";
 import {ParameterComponent} from "../_reusable-components/parameter/parameter.component";
-import {SignalRService} from "../services/signalr.service";
 import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatCheckbox} from "@angular/material/checkbox";
@@ -46,6 +45,9 @@ import {NgStyle} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
 import {CssStyle} from "../shared/models/classes/css-style";
 import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
+import {UserInfo} from "../shared/models/classes/user-info";
+import {SignalRService} from "../shared/services/signalr.service";
+import {NavComponent} from "../_reusable-components/nav/nav.component";
 
 @Component({
   selector: 'app-create-game',
@@ -79,6 +81,7 @@ import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
     MatChipSet,
     NgStyle,
     MatTooltip,
+    NavComponent,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
@@ -92,6 +95,8 @@ export class CreateGameComponent implements OnInit {
   suits = suitsList.slice(0, 4);
   distinctCardsValues = getEnumValues(CardNameEnum);
   selectedCards: GlobalCard[] = [];
+  userInfo: UserInfo
+  showRoomId = false;
 
   constructor(private fb: FormBuilder,
               private signalrService: SignalRService,
@@ -111,7 +116,15 @@ export class CreateGameComponent implements OnInit {
   ngOnInit() {
     this.createSuitsForm()
     this.fillDisplay(this.gameForm);
+    this.listenToUserInfo();
     console.log(this.gameForm.value);
+  }
+
+  listenToUserInfo() {
+    this.signalrService.userInfo$.subscribe(userInfo => {
+      this.userInfo = userInfo;
+      this.showRoomId = userInfo?.isRoomOwner;
+    });
   }
 
   importRules() {
@@ -174,7 +187,7 @@ export class CreateGameComponent implements OnInit {
     const form = this.gameForm.value;
     form.grid = filterDictBySize<number, GridItem>(form.grid, form.width * form.height);
     this.signalrService.createGame(form);
-    this.router.navigate(['/play-game']);
+    this.router.navigate(['/play']);
   }
   get suitsFormArray() {
     return this.suitsForm.get('suits') as FormArray;
@@ -263,6 +276,14 @@ export class CreateGameComponent implements OnInit {
     });
   }
 
+  getManualTriggerStyles(trigger: ManualTrigger) {
+    const option = this.visibilityOptions.find(option => option.value === trigger.visibility);
+    return {
+      [CssStyleEnum.BackgroundColor]: option.background,
+      //this color is not applying idk why
+      [CssStyleEnum.Color]: option.color
+    };
+  }
 
   get widthControl() {
     return this.gameForm.get('width');
@@ -276,12 +297,4 @@ export class CreateGameComponent implements OnInit {
     return this.gameForm.get('startingDeck') as FormArray;
   }
 
-  getManualTriggerStyles(trigger: ManualTrigger) {
-    const option = this.visibilityOptions.find(option => option.value === trigger.visibility);
-    return {
-      [CssStyleEnum.BackgroundColor]: option.background,
-      //this color is not applying idk why
-      [CssStyleEnum.Color]: option.color
-    };
-  }
 }

@@ -12,8 +12,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials());
 });
 
-builder.Services.AddSingleton<RuleService>();
-builder.Services.AddSingleton<DatabaseService>();
+builder.Services.AddSingleton<RoomsService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(); // Add this line to add SignalR services

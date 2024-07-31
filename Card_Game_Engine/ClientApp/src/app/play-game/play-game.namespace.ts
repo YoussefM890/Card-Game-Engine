@@ -1,4 +1,5 @@
 import {ColorEnum} from "../shared/models/enums/color.enum";
+import {F} from "@angular/cdk/keycodes";
 
 export namespace play_game {
   export enum VisibilityEnum {
@@ -32,7 +33,7 @@ export namespace play_game {
       color: ColorEnum,
       background: ColorEnum,
       description: string = null,
-      disabled: boolean = false,
+      disabled: boolean = true,
     ) {
       this.value = value;
       this.display = VisibilityEnumView[value];
@@ -50,6 +51,7 @@ export namespace play_game {
       ColorEnum.DarkBlue,
       ColorEnum.Blue,
       'Take the same visibility as the cell you are moving to.',
+      false,
     ),
     new VisibilityOption(
       VisibilityEnum.Keep,

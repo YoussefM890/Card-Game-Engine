@@ -1,17 +1,18 @@
 import {VisibilityEnum, VisibilityEnumView} from "../enums/visibility.enum";
+import {ColorEnum} from "../../../shared/models/enums/color.enum";
 
 export class VisibilityOption {
   value: VisibilityEnum;
   display: string;
-  color: string;
-  background: string;
+  color: ColorEnum;
+  background: ColorEnum;
   description: string;
   disabled: boolean;
 
   constructor(
     value: VisibilityEnum,
-    color: string,
-    background: string,
+    color: ColorEnum,
+    background: ColorEnum,
     description: string = null,
     disabled: boolean = false,
   ) {

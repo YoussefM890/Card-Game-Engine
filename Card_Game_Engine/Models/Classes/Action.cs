@@ -25,4 +25,10 @@ public class Action
 
         return hash;
     }
+
+    public override string ToString()
+    {
+        var parameters = string.Join(", ", Parameters.Select(p => p.ToString()));
+        return $"Action Id: {Id}, Parameters: [{parameters}]";
+    }
 }

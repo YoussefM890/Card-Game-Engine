@@ -9,25 +9,22 @@ public class RuleService
     private readonly ActionService _actionService;
     private readonly CardContainerService _cardContainerService;
     private readonly List<GridItem> _grid;
-    private readonly TriggerService _triggerService = new();
-    private List<Rule> _rules = new();
 
-    public RuleService(DatabaseService databaseService)
-    {
-        _cardContainerService = databaseService.CardContainerService;
-        _grid = databaseService.GetGrid();
-        _actionService = new ActionService(_grid, databaseService.GetUsers());
-    }
+    private readonly TriggerService _triggerService;
+    private List<Rule> _rules;
 
-    public void SetRules(List<Rule> rules)
+    public RuleService(Room room)
     {
-        _rules = rules;
+        _cardContainerService = room.CardContainerService;
+        _grid = room.Grid;
+        _actionService = new ActionService(_grid, room.Users);
+        _rules = room.Rules;
+        _triggerService = new TriggerService();
     }
 
     public void FireTriggerIfFound(int trigger)
     {
         var allActions = new List<Action>();
-
         foreach (var rule in _rules)
         {
             var foundTriggers = rule.Triggers.Where(t => t.Id == (int)trigger).ToList();
@@ -51,8 +48,9 @@ public class RuleService
     public void ProcessActions(List<Action> actions)
     {
         Queue<Action> actionQueue = new Queue<Action>();
-        HashSet<Action>
-            actionSet = new HashSet<Action>(); //To insures the time efficiency when checking for action existence 
+
+        //To insures the time efficiency when checking for action existence 
+        HashSet<Action> actionSet = new HashSet<Action>();
 
         foreach (var action in actions)
         {

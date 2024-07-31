@@ -1,0 +1,29 @@
+<mat-toolbar class="text-center px-0 d-flex justify-content-between">
+  @if (parentComponent === 'create-game') {
+    <button [routerLink]="['/play']" color="primary" mat-raised-button class="corner-button">Navigate To Play</button>
+  } @else {
+    @if (userInfo.isRoomOwner) {
+      <button [routerLink]="['/create']" color="primary" mat-raised-button class="corner-button">Navigate To Create
+      </button>
+    } @else {
+      <div></div>
+    }
+  }
+  <div>
+    Room Id:
+    @if (showRoomId) {
+      <span>{{ userInfo.roomId }}</span>
+    } @else {
+      <span>{{ getHiddenRoomId() }}</span>
+    }
+    <mat-icon (click)="copyRoomId()" class="clickable-icon ms-2" [matTooltip]="'Copy Room Id'">content_copy</mat-icon>
+    <mat-icon
+      (click)="showRoomId = !showRoomId"
+      class="clickable-icon ml-2"
+      [matTooltip]="showRoomId ? 'Hide Room Id' : 'Show Room Id'"
+    >
+      {{ showRoomId ? 'visibility_off' : 'visibility' }}
+    </mat-icon>
+  </div>
+  <button (click)="leaveRoom()" color="warn" mat-raised-button class="corner-button">Leave Room</button>
+</mat-toolbar>

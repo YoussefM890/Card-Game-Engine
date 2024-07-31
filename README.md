@@ -1,14 +1,24 @@
 # Current UI
-## Create Game (from v0.15)
-![image](https://github.com/user-attachments/assets/826d9c90-84a9-4973-9cb0-b38174926cce)
-## Play Game (from v0.15)
-![image](https://github.com/user-attachments/assets/980616ff-3164-4f76-ad22-74922a8e0508)
+## Home (from v0.18)
+![image](https://github.com/user-attachments/assets/5d9e8e9f-5759-4601-8345-6153051b53ae)
+## Create Game (from v0.18)
+![image](https://github.com/user-attachments/assets/c941d57a-9c68-473d-8b02-fb5c2eef98c2)
+## Play Game (from v0.18)
+![image](https://github.com/user-attachments/assets/3496f48f-2730-403d-b027-22a2d836b3f9)
 ## Add Manual Triggers (from v0.15)
 ![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
 ## Import Game Setup (from v0.16)
 ![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
 ## Positions Selector (from v0.17)
 ![image](https://github.com/user-attachments/assets/cdaecddf-d298-4324-87f3-8215538a482e)
+
+# v0.18 UI :
+## Home
+![image](https://github.com/user-attachments/assets/5d9e8e9f-5759-4601-8345-6153051b53ae)
+## Create Game
+![image](https://github.com/user-attachments/assets/c941d57a-9c68-473d-8b02-fb5c2eef98c2)
+## Play Game
+![image](https://github.com/user-attachments/assets/3496f48f-2730-403d-b027-22a2d836b3f9)
 
 # v0.17 UI :
 ## Positions Selector

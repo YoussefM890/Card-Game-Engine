@@ -11,9 +11,9 @@ public class CardContainerService
     private int _height;
     private int _width;
 
-    public CardContainerService(List<GridItem> grid)
+    public CardContainerService(Room room)
     {
-        _grid = grid;
+        _grid = room.Grid;
     }
 
     public void SetStartingDeck(List<CreateNamespace.Card> startingDeck, int startingPosition = 0)

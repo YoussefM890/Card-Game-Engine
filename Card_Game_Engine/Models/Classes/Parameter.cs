@@ -19,4 +19,9 @@ public class Parameter
     {
         return HashCode.Combine(Id, Value);
     }
+
+    public override string ToString()
+    {
+        return $"Parameter Id: {Id}, Value: {Value}";
+    }
 }

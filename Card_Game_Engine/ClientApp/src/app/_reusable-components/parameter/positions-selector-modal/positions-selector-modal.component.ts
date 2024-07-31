@@ -1,5 +1,4 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {SignalRService} from "../../../services/signalr.service";
 import {GridComponent} from "../../grid/grid.component";
 import {generateGridDimensions} from "../../grid/namespace/functions";
 import {NgStyle} from "@angular/common";
@@ -8,6 +7,7 @@ import {CssStyle} from "../../../shared/models/classes/css-style";
 import {CssStyleEnum} from "../../../shared/models/enums/css-style.enum";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {setToCsv} from "../../../shared/functions/global";
+import {SignalRService} from "../../../shared/services/signalr.service";
 
 @Component({
   selector: 'app-positions-selector-modal',

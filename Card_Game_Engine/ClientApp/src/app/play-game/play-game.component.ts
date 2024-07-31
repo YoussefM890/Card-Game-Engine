@@ -2,7 +2,6 @@ import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatButton} from "@angular/material/button";
 import {RouterLink, RouterLinkActive} from "@angular/router";
-import {SignalRService} from "../services/signalr.service";
 import {DOCUMENT, NgStyle} from "@angular/common";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -19,6 +18,11 @@ import {MatChip, MatChipSet} from "@angular/material/chips";
 import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
 import {CssStyle} from "../shared/models/classes/css-style";
 import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
+import {RoleEnum} from "../shared/models/enums/role.enum";
+import {SignalRService} from "../shared/services/signalr.service";
+import {MatGridList} from "@angular/material/grid-list";
+import {UserInfo} from "../shared/models/classes/user-info";
+import {NavComponent} from "../_reusable-components/nav/nav.component";
 
 @Component({
   selector: 'app-play-game',
@@ -33,7 +37,9 @@ import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
     NgStyle,
     MatTooltip,
     MatChip,
-    MatChipSet
+    MatChipSet,
+    MatGridList,
+    NavComponent,
   ],
   templateUrl: './play-game.component.html',
   styleUrl: './play-game.component.scss'
@@ -48,6 +54,7 @@ export class PlayGameComponent implements OnInit {
   selectedCellId: number = null;
   itemStyles = null;
   manualTriggers: ManualTrigger[] = [];
+  userInfo: UserInfo;
 
   constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
   }
@@ -59,6 +66,13 @@ export class PlayGameComponent implements OnInit {
 
   ngOnInit(): void {
     this.listenToGameObject();
+    this.listenToUserInfo();
+  }
+
+  listenToUserInfo() {
+    this.signalrService.userInfo$.subscribe(userInfo => {
+      this.userInfo = userInfo;
+    });
   }
 
   positionGrid() {
@@ -79,10 +93,10 @@ export class PlayGameComponent implements OnInit {
   listenToGameObject() {
     this.signalrService.game$.subscribe((gameObject: Game) => {
       this.grid = [...gameObject.grid];
+      this.manualTriggers = gameObject.manualTriggers;
       if (this.cols != gameObject.width || this.rows != gameObject.height) {
         this.cols = gameObject.width;
         this.rows = gameObject.height;
-        this.manualTriggers = gameObject.manualTriggers;
         this.positionGrid();
       }
     });
@@ -142,7 +156,9 @@ export class PlayGameComponent implements OnInit {
     console.log(`Moving card ${fromPosition} to ${toPosition} with visibility ${visibilityOption.display}`);
     let trueVisibility: string = visibilityOption.value;
     if (visibilityOption.value === play_game.VisibilityEnum.Private) {
-      this.signalrService.userNumber % 2 === 0 ? trueVisibility = VisibilityOptionsEnum.Player2 : trueVisibility = VisibilityOptionsEnum.Player1;
+      this.signalrService.playerRole === RoleEnum.Player2
+        ? trueVisibility = VisibilityOptionsEnum.Player2
+        : trueVisibility = VisibilityOptionsEnum.Player1
     }
     const action = new Action(ActionEnum.MoveCard);
     action.addParameter(new Parameter(ActionParameterEnum.FromPositions, '' + fromPosition));
@@ -162,5 +178,4 @@ export class PlayGameComponent implements OnInit {
       ];
     }
   }
-
 }

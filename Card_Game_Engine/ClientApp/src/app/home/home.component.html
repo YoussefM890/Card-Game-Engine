@@ -1,0 +1,18 @@
+<div class="d-flex justify-content-center align-items-center max">
+  <mat-card class="w-25 h-75" [style.background-color]="'whitesmoke'">
+    <mat-card-title>
+      <mat-toolbar class="d-flex justify-content-center" [style.background-color]="'lightgray'">
+        <span>Welcome to Card Game Engine</span>
+      </mat-toolbar>
+    </mat-card-title>
+    <mat-card-content class="d-flex flex-column justify-content-center max gap-5">
+      <button mat-raised-button color="accent" (click)="createRoom()">Create Your Own Room</button>
+      <h3 class="w-100 text-center">OR</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Room Id</mat-label>
+        <input matInput placeholder="Ex. 48c48404-f92d-4ffb-9820-e7c6924af861" [(ngModel)]="roomId">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="joinRoom()">Join an Existing Room</button>
+    </mat-card-content>
+  </mat-card>
+</div>

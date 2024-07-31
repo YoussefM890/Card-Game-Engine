@@ -11,9 +11,9 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {rules} from "./dummy-rules";
-import {SignalRService} from "../../services/signalr.service";
 import {clearFormArray} from "../../shared/functions/global";
 import {MatToolbar} from "@angular/material/toolbar";
+import {SignalRService} from "../../shared/services/signalr.service";
 
 @Component({
   selector: 'app-import-rules',

@@ -52,6 +52,54 @@ body, app-root {
   flex: 1 1 auto;
 }
 
+.clickable-icon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 8px;
+}
+
+.clickable-icon:hover {
+  transform: scale(1.1);
+  color: #2e99fa;
+}
+
+.clickable-icon:active {
+  transform: scale(0.9);
+}
+
+.corner-button {
+  height: 100% !important;
+  border-radius: 0 !important;
+}
+
+.success-snackbar {
+  background-color: limegreen;
+  color: white;
+  box-shadow: 0 0 5px 3px rgba(0, 100, 0, 0.3);
+}
+
+.info-snackbar {
+  background-color: dodgerblue;
+  color: white;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 139, 0.3);
+}
+
+.warning-snackbar {
+  background-color: orange;
+  color: white;
+  box-shadow: 0 0 5px 3px rgba(139, 69, 19, 0.3);
+}
+
+.error-snackbar {
+  background-color: crimson;
+  color: white;
+  box-shadow: 0 0 5px 3px rgba(139, 0, 0, 0.3);
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background: rgba(0, 0, 0, 0) !important;
+}
+
 //.mdc-text-field--filled:not(.mdc-text-field--disabled) {
 //  background-color: transparent !important;
 //}

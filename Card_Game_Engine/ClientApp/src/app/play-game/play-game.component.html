@@ -1,34 +1,43 @@
-<div class="d-flex justify-content-between">
-  <div>
-    <button [routerLink]="['/create']" color="primary" mat-raised-button>navigate to create</button>
-    <button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
-  </div>
-  <div>
-    <mat-chip-set>
-      @for (trigger of manualTriggers; track trigger.id) {
-        <mat-chip
-          [matTooltip]="trigger.description"
-          (click)="invokeTrigger(trigger.id)"
-        >{{ trigger.name }}
-        </mat-chip>
-      }
-    </mat-chip-set>
-  </div>
-</div>
-<div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
-  @for (option of visibilityOptions; track option) {
-    <div class="example-box"
-         cdkDrag cdkDragLockAxis="y"
-         [cdkDragDisabled]="option.disabled"
-         (click)="toggleOption(option)"
-         [style.background]=option.background
-         [style.color]=option.color
-         [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
-         [matTooltip]="option.description"
-    >
-      {{ option.display }}
+<div class="max d-flex flex-column">
+  <app-nav [parentComponent]="'play-game'"></app-nav>
+  <div class="p-2 max">
+    <div class="max d-flex flex-column justify-content-between">
+      <div class="d-flex justify-content-between">
+        <div>
+          @if (userInfo.isRoomOwner) {
+            <button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+          }
+        </div>
+        <div>
+          <mat-chip-set>
+            @for (trigger of manualTriggers; track trigger.id) {
+              <mat-chip
+                [matTooltip]="trigger.description"
+                (click)="invokeTrigger(trigger.id)"
+              >{{ trigger.name }}
+              </mat-chip>
+            }
+          </mat-chip-set>
+        </div>
+      </div>
+      <div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
+        @for (option of visibilityOptions; track option) {
+          <div class="example-box"
+               cdkDrag cdkDragLockAxis="y"
+               [cdkDragDisabled]="option.disabled"
+               (click)="toggleOption(option)"
+               [style.background]=option.background
+               [style.color]=option.color
+               [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
+               [matTooltip]="option.description"
+          >
+            {{ option.display }}
+          </div>
+        }
+      </div>
+      <div></div>
     </div>
-  }
+  </div>
 </div>
 @if (grid.length > 0) {
   <div [style.width]="gridWidthStyle" class="grid">
@@ -42,3 +51,4 @@
     ></app-grid>
   </div>
 }
+
