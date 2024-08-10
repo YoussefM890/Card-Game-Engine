@@ -7,7 +7,7 @@ export function getEnumKeys<T>(enumType: T): string[] {
 export function getEnumValues<T>(enumObj: T): string[] {
   return Object.keys(enumObj)
     .map(key => enumObj[key])
-    .filter(value => typeof value === 'string'); // Adjust this line if your enum values are not strings
+    .filter(value => typeof value === 'string');
 }
 
 export function isStringOrNumber(value: any): value is string | number {

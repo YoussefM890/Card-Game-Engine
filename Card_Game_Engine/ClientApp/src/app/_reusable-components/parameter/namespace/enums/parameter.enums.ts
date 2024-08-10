@@ -9,6 +9,8 @@ export enum TriggerParameterEnum {
   EqualTo = 7,
   NotEqualTo = 8,
   PositionsRelation = 9,
+  ScoreType = 10,
+  TriggerBehavior = 11,
 }
 
 export enum ActionParameterEnum {
@@ -21,5 +23,7 @@ export enum ActionParameterEnum {
   AllCards = 6,
   FromPositions = 7,
   ToPositions = 8,
+  Value = 9,
+  Player = 10,
 }
 

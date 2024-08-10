@@ -1,4 +1,4 @@
-using Card_Game_Engine.Models.Enums.ParameterOptions;
+using Card_Game_Engine.Models.Enums.ParameterOptions.ActionOptions;
 
 namespace Card_Game_Engine.Models.Classes.Actions;
 

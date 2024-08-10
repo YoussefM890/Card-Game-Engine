@@ -1,10 +1,10 @@
-using Card_Game_Engine.Models.Enums.ParameterOptions;
+using Card_Game_Engine.Models.Enums.ParameterOptions.TriggerOptions;
 
 namespace Card_Game_Engine.Models.Classes.Triggers;
 
 public class DeckCardCountTrigger
 {
-    public DeckCardCountTrigger(List<int> deckPosition, PositionsRelationOptionsEnum positionsRelation, int? equalTo,
+    public DeckCardCountTrigger(List<int> deckPosition, PositionsRelationOptionEnum positionsRelation, int? equalTo,
         int? lessThan, int? greaterThan, int? notEqualTo)
     {
         Positions = deckPosition;
@@ -16,7 +16,7 @@ public class DeckCardCountTrigger
     }
 
     public List<int> Positions { get; set; }
-    public PositionsRelationOptionsEnum PositionsRelation { get; set; }
+    public PositionsRelationOptionEnum PositionsRelation { get; set; }
     public int? EqualTo { get; set; }
     public int? LessThan { get; set; }
     public int? GreaterThan { get; set; }

@@ -109,12 +109,13 @@ public class GameEngineController : Hub
         room!.RuleService.ProcessActions(new List<Action> { action });
         var width = room.CardContainerService.GetWidth();
         var height = room.CardContainerService.GetHeight();
+        var scores = room.UserService.GetScores();
 
         foreach (var user in room.Users)
         {
             var transferGrid = room.GetTransferGrid(user.Id);
             var manualTriggers = room.GetManualTriggersByUser(user.Id);
-            GameObject gameObject = new(transferGrid, width, height, manualTriggers);
+            GameObject gameObject = new(transferGrid, scores[0], scores[1], width, height, manualTriggers);
             await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
         }
     }
@@ -126,12 +127,13 @@ public class GameEngineController : Hub
         room!.RuleService.FireTriggerIfFound(triggerId);
         var width = room.CardContainerService.GetWidth();
         var height = room.CardContainerService.GetHeight();
+        var scores = room.UserService.GetScores();
 
         foreach (var user in room.Users)
         {
             var transferGrid = room.GetTransferGrid(user.Id);
             var manualTriggers = room.GetManualTriggersByUser(user.Id);
-            GameObject gameObject = new(transferGrid, width, height, manualTriggers);
+            GameObject gameObject = new(transferGrid, scores[0], scores[1], width, height, manualTriggers);
             await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
         }
     }

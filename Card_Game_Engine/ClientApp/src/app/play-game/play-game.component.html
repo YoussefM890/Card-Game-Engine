@@ -9,6 +9,14 @@
           }
         </div>
         <div>
+            <span [style.color]="isPlayer1 ? 'green' : 'black'">
+              {{ (isPlayer1 ? 'Your Score: ' : 'Player 1 Score: ') + game.player1Score }}
+            </span>
+          <span [style.color]="isPlayer2 ? 'green' : 'black'" class="ms-5">
+              {{ (isPlayer2 ? 'Your Score: ' : 'Player 2 Score: ') + game.player2Score }}
+            </span>
+        </div>
+        <div>
           <mat-chip-set>
             @for (trigger of manualTriggers; track trigger.id) {
               <mat-chip
@@ -39,10 +47,12 @@
     </div>
   </div>
 </div>
+
 @if (grid.length > 0) {
-  <div [style.width]="gridWidthStyle" class="grid">
+  <div class="grid">
     <app-grid
-      class="center max"
+      class="center auto-pointer-events"
+      [ngStyle]="gridStyles"
       [cols]="cols"
       [grid]="grid"
       [rows]="rows"
@@ -51,4 +61,3 @@
     ></app-grid>
   </div>
 }
-

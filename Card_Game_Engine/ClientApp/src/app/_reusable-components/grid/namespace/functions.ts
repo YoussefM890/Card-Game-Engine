@@ -1,30 +1,53 @@
-export function generateGridDimensions(
-  rows: number,
+export function generateGridDimensionsFromHeight(
   cols: number,
+  rows: number,
   height: number = 0.8,
-  width: number = null,
   widthToHeightRatio: number = 1.25,
   maxWidth: number = 0.8,
-  maxHeight: number = 1,
+  heightOffset: number = 0,// height offset percentage
+  widthOffset: number = 0 // width offset percentage
 ) {
   const screenHeight = document.documentElement.clientHeight;
   const screenWidth = document.documentElement.clientWidth;
 
-  let gridWidth: number;
-  let gridHeight: number;
+  const gridHeight = screenHeight * height;
+  const cellHeight = gridHeight / rows;
+  const gridWidth = Math.min(cellHeight / widthToHeightRatio * cols, screenWidth * maxWidth);
 
-  if (width !== null) {
-    gridWidth = screenWidth * (width / 100);
-    const cellWidth = gridWidth / cols;
-    gridHeight = Math.min(cellWidth * widthToHeightRatio * rows, screenHeight * maxHeight);
-  } else {
-    gridHeight = screenHeight * height;
-    const cellHeight = gridHeight / rows;
-    gridWidth = Math.min(cellHeight / widthToHeightRatio * cols, screenWidth * maxWidth);
-  }
+  // Calculate offsets in pixels
+  const widthOffsetPixels = screenWidth * (widthOffset);
+  const heightOffsetPixels = screenHeight * (heightOffset);
 
   return {
     width: gridWidth + 'px',
-    height: gridHeight + 'px'
-  }
+    height: gridHeight + 'px',
+    transform: `translate(${widthOffsetPixels}px, ${heightOffsetPixels}px)` // Apply the offsets
+  };
+}
+
+export function generateGridDimensionsFromWidth(
+  cols: number,
+  rows: number,
+  width: number,
+  widthToHeightRatio: number = 1.25,
+  maxHeight: number = 1,
+  widthOffset: number = 0, // width offset percentage
+  heightOffset: number = 0 // height offset percentage
+) {
+  const screenHeight = document.documentElement.clientHeight;
+  const screenWidth = document.documentElement.clientWidth;
+
+  const gridWidth = screenWidth * (width / 100);
+  const cellWidth = gridWidth / cols;
+  const gridHeight = Math.min(cellWidth * widthToHeightRatio * rows, screenHeight * maxHeight);
+
+  // Calculate offsets in pixels
+  const widthOffsetPixels = screenWidth * (widthOffset / 100);
+  const heightOffsetPixels = screenHeight * (heightOffset / 100);
+
+  return {
+    width: gridWidth + 'px',
+    height: gridHeight + 'px',
+    transform: `translate(${widthOffsetPixels}px, ${heightOffsetPixels}px)` // Apply the offsets
+  };
 }

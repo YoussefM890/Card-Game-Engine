@@ -3,3 +3,5 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+Card_Game_Engine/wwwroot/
+.idea/

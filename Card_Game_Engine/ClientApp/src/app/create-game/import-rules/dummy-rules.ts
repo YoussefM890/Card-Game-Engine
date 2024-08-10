@@ -593,6 +593,70 @@ const _chkobba =
           }
         ],
         "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -2,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "0"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -3,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -4,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 5,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "2"
+              },
+              {
+                "id": 9,
+                "value": "0"
+              }
+            ]
+          }
+        ],
+        "rules": []
       }
     ],
     "width": 9,
@@ -947,6 +1011,456 @@ const _chkobba =
         "name": "Collect Cards",
         "description": "collect cards and restart the next hand",
         "visibility": 4
+      },
+      {
+        "id": -2,
+        "name": "Add Score To Player 1",
+        "description": null,
+        "visibility": 2
+      },
+      {
+        "id": -3,
+        "name": "Add Score To Player 2",
+        "description": null,
+        "visibility": 2
+      },
+      {
+        "id": -4,
+        "name": "Reset Scores",
+        "description": null,
+        "visibility": 4
+      }
+    ]
+  }
+;
+
+const testingScores =
+  {
+    "rules": [
+      {
+        "triggers": [
+          {
+            "id": 3,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "0"
+              },
+              {
+                "id": 7,
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "9"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": 3,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "2"
+              },
+              {
+                "id": 7,
+                "value": "2"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "10"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -1,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "0"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -2,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -3,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "0"
+              },
+              {
+                "id": 9,
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "1"
+              },
+              {
+                "id": 9,
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": 3,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "6"
+              },
+              {
+                "id": 7,
+                "value": "0"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "44"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      }
+    ],
+    "width": 9,
+    "height": 5,
+    "startingDeck": [
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 2
+      },
+      {
+        "value": 1,
+        "suit": 3
+      },
+      {
+        "value": 1,
+        "suit": 4
+      }
+    ],
+    "grid": {},
+    "manualTriggers": [
+      {
+        "id": -1,
+        "name": "increment p1 score",
+        "description": null,
+        "visibility": 2
+      },
+      {
+        "id": -2,
+        "name": "increment p2 score",
+        "description": null,
+        "visibility": 2
+      },
+      {
+        "id": -3,
+        "name": "increment both scores",
+        "description": null,
+        "visibility": 2
       }
     ]
   }

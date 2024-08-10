@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {GridComponent} from "../../grid/grid.component";
-import {generateGridDimensions} from "../../grid/namespace/functions";
+import {generateGridDimensionsFromHeight} from "../../grid/namespace/functions";
 import {NgStyle} from "@angular/common";
 import {ColorEnum} from "../../../shared/models/enums/color.enum";
 import {CssStyle} from "../../../shared/models/classes/css-style";
@@ -34,7 +34,7 @@ export class PositionsSelectorModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gridStyles = generateGridDimensions(this.height, this.width, 0.8)
+    this.gridStyles = generateGridDimensionsFromHeight(this.width, this.height, 0.8)
     this.selectedCells = this.data.positions
     this.selectedCells.forEach(index => this.addStyle(index))
   }

@@ -1,7 +1,7 @@
 using Card_Game_Engine.Models.Classes;
 using Card_Game_Engine.Models.Classes.Actions;
 using Card_Game_Engine.Models.Enums;
-using Card_Game_Engine.Models.Enums.ParameterOptions;
+using Card_Game_Engine.Models.Enums.ParameterOptions.ActionOptions;
 
 namespace Card_Game_Engine.Functions;
 
@@ -108,6 +108,50 @@ public class ActionFunctions
             var shuffledCards = gridItem.Cards.OrderBy(x => Guid.NewGuid()).ToList();
             gridItem.Cards.Clear();
             gridItem.Cards.AddRange(shuffledCards);
+        }
+    }
+
+    public void AddScore(int valueToAdd, PlayerOptionEnum player)
+    {
+        List<User> users = new();
+        switch (player)
+        {
+            case PlayerOptionEnum.Player1:
+                users = _users.Where(user => user.Role == RoleEnum.Player1).ToList();
+                break;
+            case PlayerOptionEnum.Player2:
+                users = _users.Where(user => user.Role == RoleEnum.Player2).ToList();
+                break;
+            case PlayerOptionEnum.Both:
+                users = _users.Where(user => user.Role == RoleEnum.Player1 || user.Role == RoleEnum.Player2).ToList();
+                break;
+        }
+
+        foreach (var user in users)
+        {
+            user.Score += valueToAdd;
+        }
+    }
+
+    public void SetScore(int value, PlayerOptionEnum player)
+    {
+        List<User> users = new();
+        switch (player)
+        {
+            case PlayerOptionEnum.Player1:
+                users = _users.Where(user => user.Role == RoleEnum.Player1).ToList();
+                break;
+            case PlayerOptionEnum.Player2:
+                users = _users.Where(user => user.Role == RoleEnum.Player2).ToList();
+                break;
+            case PlayerOptionEnum.Both:
+                users = _users.Where(user => user.Role == RoleEnum.Player1 || user.Role == RoleEnum.Player2).ToList();
+                break;
+        }
+
+        foreach (var user in users)
+        {
+            user.Score = value;
         }
     }
 }

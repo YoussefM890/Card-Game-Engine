@@ -13,9 +13,9 @@ public class Room
         Id = roomId;
         Users = new List<User>();
         ManualTriggers = new List<ManualTrigger>();
-
         CardContainerService = new CardContainerService(this);
         RuleService = new RuleService(this);
+        UserService = new UserService(this);
     }
 
     public string Id { get; private set; }
@@ -25,6 +25,7 @@ public class Room
     public List<Rule> Rules { get; private set; }
     public RuleService RuleService { get; private set; }
     public CardContainerService CardContainerService { get; private set; }
+    public UserService UserService { get; private set; }
 
     public List<GridTransferItem> GetTransferGrid(string userId)
     {

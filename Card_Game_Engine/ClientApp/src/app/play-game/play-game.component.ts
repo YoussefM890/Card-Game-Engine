@@ -10,7 +10,7 @@ import {GridItem} from "./namespace/classes/grid-item";
 import {Game} from "./namespace/classes/game";
 import {Action} from './namespace/classes/action';
 import {ActionEnum} from "../_reusable-components/action/namespace/enums/action.enum";
-import {VisibilityOptionsEnum} from "../_reusable-components/parameter/namespace/enums/parameter-value-options.enums";
+import {VisibilityOptionEnum} from "../_reusable-components/parameter/namespace/enums/parameter-value-options.enums";
 import {Parameter} from './namespace/classes/parameter';
 import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/enums/parameter.enums";
 import {TriggerEnum} from "../_reusable-components/trigger/namespace/enums/trigger.enum";
@@ -23,6 +23,7 @@ import {SignalRService} from "../shared/services/signalr.service";
 import {MatGridList} from "@angular/material/grid-list";
 import {UserInfo} from "../shared/models/classes/user-info";
 import {NavComponent} from "../_reusable-components/nav/nav.component";
+import {generateGridDimensionsFromHeight} from "../_reusable-components/grid/namespace/functions";
 
 @Component({
   selector: 'app-play-game',
@@ -45,8 +46,8 @@ import {NavComponent} from "../_reusable-components/nav/nav.component";
   styleUrl: './play-game.component.scss'
 })
 export class PlayGameComponent implements OnInit {
+  game: Game;
   grid: GridItem[] = [];
-  gridWidthStyle = '60%';
   cols: number
   rows: number
   visibilityOptions = play_game.visibilityOptions;
@@ -55,6 +56,9 @@ export class PlayGameComponent implements OnInit {
   itemStyles = null;
   manualTriggers: ManualTrigger[] = [];
   userInfo: UserInfo;
+  isPlayer1 = false;
+  isPlayer2 = false;
+  gridStyles = {};
 
   constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
   }
@@ -68,21 +72,14 @@ export class PlayGameComponent implements OnInit {
     this.listenToGameObject();
     this.listenToUserInfo();
   }
+  protected readonly RoleEnum = RoleEnum;
 
   listenToUserInfo() {
     this.signalrService.userInfo$.subscribe(userInfo => {
       this.userInfo = userInfo;
+      this.isPlayer1 = userInfo.role === RoleEnum.Player1;
+      this.isPlayer2 = userInfo.role === RoleEnum.Player2;
     });
-  }
-
-  positionGrid() {
-    const screenHeight = this.document.documentElement.clientHeight;
-    const screenWidth = this.document.documentElement.clientWidth;
-    const gridHeight = 0.8;
-    const aspectRatio = 1.25; // width to height ratio
-    let gridWidth = (screenHeight * gridHeight * this.cols) /
-      (screenWidth * this.rows * aspectRatio);
-    this.gridWidthStyle = gridWidth * 100 + '%';
   }
 
   startGame() {
@@ -90,16 +87,8 @@ export class PlayGameComponent implements OnInit {
     this.signalrService.invokeExplicitTrigger(TriggerEnum.GameStart);
   }
 
-  listenToGameObject() {
-    this.signalrService.game$.subscribe((gameObject: Game) => {
-      this.grid = [...gameObject.grid];
-      this.manualTriggers = gameObject.manualTriggers;
-      if (this.cols != gameObject.width || this.rows != gameObject.height) {
-        this.cols = gameObject.width;
-        this.rows = gameObject.height;
-        this.positionGrid();
-      }
-    });
+  positionGrid() {
+    this.gridStyles = generateGridDimensionsFromHeight(this.cols, this.rows, 0.8, 1.25, 0.8, 0.05)
   }
 
   onCellClick(item: GridItem) {
@@ -152,22 +141,17 @@ export class PlayGameComponent implements OnInit {
     this.updateItemStyles();
   }
 
-  private moveCard(fromPosition: number, toPosition: number, visibilityOption: play_game.VisibilityOption) {
-    console.log(`Moving card ${fromPosition} to ${toPosition} with visibility ${visibilityOption.display}`);
-    let trueVisibility: string = visibilityOption.value;
-    if (visibilityOption.value === play_game.VisibilityEnum.Private) {
-      this.signalrService.playerRole === RoleEnum.Player2
-        ? trueVisibility = VisibilityOptionsEnum.Player2
-        : trueVisibility = VisibilityOptionsEnum.Player1
-    }
-    const action = new Action(ActionEnum.MoveCard);
-    action.addParameter(new Parameter(ActionParameterEnum.FromPositions, '' + fromPosition));
-    action.addParameter(new Parameter(ActionParameterEnum.ToPosition, '' + toPosition));
-    action.addParameter(new Parameter(ActionParameterEnum.Visibility, trueVisibility));
-    this.signalrService.invokeExplicitAction(action);
-    this.selectedVisibilityOption = null;
-    this.selectedCellId = null;
-    this.updateItemStyles();
+  listenToGameObject() {
+    this.signalrService.game$.subscribe((gameObject: Game) => {
+      this.game = gameObject;
+      this.grid = [...gameObject.grid];
+      this.manualTriggers = gameObject.manualTriggers;
+      if (this.cols != gameObject.width || this.rows != gameObject.height) {
+        this.cols = gameObject.width;
+        this.rows = gameObject.height;
+        this.positionGrid();
+      }
+    });
   }
 
   private updateItemStyles() {
@@ -177,5 +161,23 @@ export class PlayGameComponent implements OnInit {
         new CssStyle(CssStyleEnum.BoxShadow, `0 0 10px 5px ${this.selectedVisibilityOption.background}`)
       ];
     }
+  }
+
+  private moveCard(fromPosition: number, toPosition: number, visibilityOption: play_game.VisibilityOption) {
+    console.log(`Moving card ${fromPosition} to ${toPosition} with visibility ${visibilityOption.display}`);
+    let trueVisibility: string = visibilityOption.value;
+    if (visibilityOption.value === play_game.VisibilityEnum.Private) {
+      this.signalrService.playerRole === RoleEnum.Player2
+        ? trueVisibility = VisibilityOptionEnum.Player2
+        : trueVisibility = VisibilityOptionEnum.Player1
+    }
+    const action = new Action(ActionEnum.MoveCard);
+    action.addParameter(new Parameter(ActionParameterEnum.FromPositions, '' + fromPosition));
+    action.addParameter(new Parameter(ActionParameterEnum.ToPosition, '' + toPosition));
+    action.addParameter(new Parameter(ActionParameterEnum.Visibility, trueVisibility));
+    this.signalrService.invokeExplicitAction(action);
+    this.selectedVisibilityOption = null;
+    this.selectedCellId = null;
+    this.updateItemStyles();
   }
 }

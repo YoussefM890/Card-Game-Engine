@@ -3,14 +3,18 @@
 ![image](https://github.com/user-attachments/assets/5d9e8e9f-5759-4601-8345-6153051b53ae)
 ## Create Game (from v0.18)
 ![image](https://github.com/user-attachments/assets/c941d57a-9c68-473d-8b02-fb5c2eef98c2)
-## Play Game (from v0.18)
-![image](https://github.com/user-attachments/assets/3496f48f-2730-403d-b027-22a2d836b3f9)
+## Play Game (from v0.19)
+![image](https://github.com/user-attachments/assets/8718d4f3-dc93-456b-84f8-c1b3b7f845e7)
 ## Add Manual Triggers (from v0.15)
 ![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
 ## Import Game Setup (from v0.16)
 ![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
 ## Positions Selector (from v0.17)
 ![image](https://github.com/user-attachments/assets/cdaecddf-d298-4324-87f3-8215538a482e)
+
+# v0.19 UI :
+## Play Game
+![image](https://github.com/user-attachments/assets/8718d4f3-dc93-456b-84f8-c1b3b7f845e7)
 
 # v0.18 UI :
 ## Home

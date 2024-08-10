@@ -3,7 +3,11 @@ import {TriggerEnum} from "../enums/trigger.enum";
 import {Parameter} from "../../../parameter/namespace/classes/parameter";
 import {TriggerParameterEnum} from "../../../parameter/namespace/enums/parameter.enums";
 import {ParameterValueTypeEnum} from "../../../parameter/namespace/enums/parameter-value-type.enum";
-import {PositionsRelationOptionsEnum} from "../../../parameter/namespace/enums/parameter-value-options.enums";
+import {
+  PositionsRelationOptionEnum,
+  ScoreTypeOptionEnum,
+  TriggerBehaviorOptionEnum
+} from "../../../parameter/namespace/enums/parameter-value-options.enums";
 import {SelectOption} from "../../../../shared/models/classes/select-option";
 
 const text = ParameterValueTypeEnum.Text;
@@ -35,10 +39,39 @@ export const triggers: Trigger[] = [
       TriggerParameterEnum.EqualTo
     ]),
     new Parameter(TriggerParameterEnum.PositionsRelation, 'Positions Relation (default is Sum)', null, select, [
-      new SelectOption(PositionsRelationOptionsEnum.Sum, 'Sum', 'Sum of the cards counts at the selected positions'),
-      new SelectOption(PositionsRelationOptionsEnum.Any, 'Any', 'Any of the cards counts at the selected positions'),
-      new SelectOption(PositionsRelationOptionsEnum.All, 'All', 'All of the cards counts at the selected positions'),
+      new SelectOption(PositionsRelationOptionEnum.Sum, 'Sum', 'Sum of the cards counts at the selected positions'),
+      new SelectOption(PositionsRelationOptionEnum.Any, 'Any', 'Any of the cards counts at the selected positions'),
+      new SelectOption(PositionsRelationOptionEnum.All, 'All', 'All of the cards counts at the selected positions'),
     ]),
+  ]),
+  new Trigger(TriggerEnum.Score, 'Score', [
+    new Parameter(TriggerParameterEnum.ScoreType, 'Score Type', null, select, [
+      new SelectOption(ScoreTypeOptionEnum.Player1, 'Player 1 Score', 'The current score of Player 1'),
+      new SelectOption(ScoreTypeOptionEnum.Player2, 'Player 2 Score', 'The current score of Player 2'),
+      new SelectOption(ScoreTypeOptionEnum.Highest, 'Highest Score', 'The highest score among both players'),
+      new SelectOption(ScoreTypeOptionEnum.Lowest, 'Lowest Score', 'The lowest score among both players'),
+      new SelectOption(ScoreTypeOptionEnum.Any, 'Any Score', 'Triggers if any player\'s score meets the conditions'),
+      new SelectOption(ScoreTypeOptionEnum.All, 'All Scores', 'Triggers only if both players\' scores meet the conditions'),
+      new SelectOption(ScoreTypeOptionEnum.Difference, 'Score Difference', 'The difference between Player 1 and Player 2 scores (Player 1 - Player 2)'),
     ]),
+    new Parameter(TriggerParameterEnum.EqualTo, 'Equal To =', null, text, [], [
+      TriggerParameterEnum.LessThan,
+      TriggerParameterEnum.GreaterThan,
+      TriggerParameterEnum.NotEqualTo,
+    ]),
+    new Parameter(TriggerParameterEnum.NotEqualTo, 'Not Equal To <>', null, text, [], [
+      TriggerParameterEnum.EqualTo
+    ]),
+    new Parameter(TriggerParameterEnum.LessThan, 'Less Than <', null, text, [], [
+      TriggerParameterEnum.EqualTo
+    ]),
+    new Parameter(TriggerParameterEnum.GreaterThan, 'Greater Than >', null, text, [], [
+      TriggerParameterEnum.EqualTo
+    ]),
+    new Parameter(TriggerParameterEnum.TriggerBehavior, 'Trigger Behavior (default is On Change)', null, select, [
+      new SelectOption(TriggerBehaviorOptionEnum.OnChange, 'On Change', 'Triggers on score change: Player 1 score for Player 1 option, Player 2 score for Player 2 option, either score for other options'),
+      new SelectOption(TriggerBehaviorOptionEnum.Continuous, 'Continuous', 'Triggers continuously while the score meets the conditions'),
+    ]),
+  ])
 ];
 

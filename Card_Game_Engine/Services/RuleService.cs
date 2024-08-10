@@ -7,25 +7,21 @@ namespace Card_Game_Engine.Services;
 public class RuleService
 {
     private readonly ActionService _actionService;
-    private readonly CardContainerService _cardContainerService;
-    private readonly List<GridItem> _grid;
+    private readonly Room _room;
 
     private readonly TriggerService _triggerService;
-    private List<Rule> _rules;
 
     public RuleService(Room room)
     {
-        _cardContainerService = room.CardContainerService;
-        _grid = room.Grid;
-        _actionService = new ActionService(_grid, room.Users);
-        _rules = room.Rules;
+        _room = room;
+        _actionService = new ActionService(room.Grid, room.Users);
         _triggerService = new TriggerService();
     }
 
     public void FireTriggerIfFound(int trigger)
     {
         var allActions = new List<Action>();
-        foreach (var rule in _rules)
+        foreach (var rule in _room.Rules)
         {
             var foundTriggers = rule.Triggers.Where(t => t.Id == (int)trigger).ToList();
             if (foundTriggers.Any())
@@ -40,7 +36,7 @@ public class RuleService
         }
         else
         {
-            Console.WriteLine($"Trigger {trigger} not found.");
+            Console.WriteLine($"No Trigger Found Or Trigger Has No Actions to Process, Trigger: {trigger}");
         }
     }
 
@@ -63,12 +59,20 @@ public class RuleService
 
         while (actionQueue.Count > 0)
         {
-            List<GridItem> cardContainerBeforeAction = _cardContainerService.DeepCopy();
+            var cardContainerBeforeAction = _room.CardContainerService.DeepCopy();
+            var usersBeforeAction = _room.UserService.DeepCopy();
+
             var actionToExecute = actionQueue.Dequeue();
             actionSet.Remove(actionToExecute);
 
             ExecuteAction(actionToExecute);
-            var triggeredActions = GetTriggeredActions(_rules, cardContainerBeforeAction, _grid);
+            var triggeredActions = GetTriggeredActions(
+                _room.Rules,
+                cardContainerBeforeAction,
+                _room.Grid,
+                usersBeforeAction,
+                _room.Users
+            );
 
             foreach (var triggeredAction in triggeredActions)
             {
@@ -93,21 +97,28 @@ public class RuleService
             case (int)ActionEnum.ShuffleDeck:
                 _actionService.ExecuteShuffleDeckAction(action);
                 break;
+            case (int)ActionEnum.AddScore:
+                _actionService.ExecuteAddScoreAction(action);
+                break;
+            case (int)ActionEnum.SetScore:
+                _actionService.ExecuteSetScoreAction(action);
+                break;
         }
     }
 
     private List<Action> GetTriggeredActions(List<Rule> rules, List<GridItem> beforeActionCardContainer,
-        List<GridItem> afterActionCardContainer)
+        List<GridItem> afterActionCardContainer, List<User> beforeActionUsers, List<User> afterActionUsers)
     {
         var triggeredActions = new List<Action>();
 
         foreach (var rule in rules)
         {
-            if (AreTriggersSatisfied(rule.Triggers, beforeActionCardContainer, afterActionCardContainer))
+            if (AreTriggersSatisfied(rule.Triggers, beforeActionCardContainer, afterActionCardContainer,
+                    beforeActionUsers, afterActionUsers))
             {
                 triggeredActions.AddRange(rule.Actions);
                 triggeredActions.AddRange(GetTriggeredActions(rule.Rules, beforeActionCardContainer,
-                    afterActionCardContainer));
+                    afterActionCardContainer, beforeActionUsers, afterActionUsers));
             }
         }
 
@@ -115,7 +126,7 @@ public class RuleService
     }
 
     private bool AreTriggersSatisfied(List<Trigger> triggers, List<GridItem> beforeActionCardContainer,
-        List<GridItem> afterActionCardContainer)
+        List<GridItem> afterActionCardContainer, List<User> beforeActionUsers, List<User> afterActionUsers)
     {
         foreach (var trigger in triggers)
         {
@@ -125,10 +136,12 @@ public class RuleService
                 case (int)TriggerEnum.CardMoved:
                     isTriggered = _triggerService.ExecuteCardMovedTrigger(trigger, beforeActionCardContainer,
                         afterActionCardContainer);
-                    Console.WriteLine(isTriggered ? "CardMoved Fired" : "CardMoved Dit not Fire");
                     break;
                 case (int)TriggerEnum.DeckCardCount:
                     isTriggered = _triggerService.ExecuteDeckCardCountTrigger(trigger, afterActionCardContainer);
+                    break;
+                case (int)TriggerEnum.Score:
+                    isTriggered = _triggerService.ExecuteScoreTrigger(trigger, beforeActionUsers, afterActionUsers);
                     break;
             }
 
