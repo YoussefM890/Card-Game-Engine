@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, startWith, Subscription} from 'rxjs';
 import {mirrorGrid} from "./signalr.functions";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {Game as CreateGame} from "../../create-game/namespace/classes/game";
@@ -24,18 +24,20 @@ export class SignalRService {
 
   private gameSubject = new BehaviorSubject<PlayGame>(new PlayGame());
   private ManualTriggerSubject = new BehaviorSubject<ManualTrigger[]>([]);
-  private userInfoSubject = new BehaviorSubject<UserInfo>(null);
+  public createGameForm: FormGroup;
 
   public game$ = this.gameSubject.asObservable();
   public ManualTrigger$ = this.ManualTriggerSubject.asObservable();
+  private userInfoSubject = new BehaviorSubject<UserInfo>(
+    null
+    // {
+    //   roomId: 'static room id',
+    //   role: RoleEnum.Player1,
+    //   isRoomOwner: true,
+    // }
+  );
   public userInfo$ = this.userInfoSubject.asObservable();
-
-  //   = {
-  //   roomId: 'static room id',
-  //   role: RoleEnum.Player1,
-  //   isRoomOwner: true,
-  // };
-  public createGameForm: FormGroup = null;
+  private manualTriggersSubscription: Subscription;
 
   constructor(private fb: FormBuilder,
               private configService: ConfigService,
@@ -53,23 +55,12 @@ export class SignalRService {
     this.hubConnection.invoke('InvokeExplicitTrigger', trigger);
   }
 
-  private buildCreateGameForm() {
-    this.createGameForm = this.fb.group({
-      rules: this.fb.array([]),
-      width: 9,
-      height: 5,
-      startingDeck: this.fb.array([]),
-      grid: {},
-      manualTriggers: this.fb.array([]),
-    });
-    this.listenToManualTriggers();
-  }
-
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.baseUrl + '/connect')
       .build();
 
+    this.hubConnection.serverTimeoutInMilliseconds = 1200000
     this.hubConnection
       .start()
       .then(() => {
@@ -84,6 +75,11 @@ export class SignalRService {
 
       })
       .catch(err => console.log('Error while starting connection: ' + err));
+  }
+
+  public leaveRoom() {
+    this.hubConnection.invoke('LeaveRoom');
+    this.resetRoom()
   }
 
   public stopConnection = () => {
@@ -116,10 +112,24 @@ export class SignalRService {
     this.hubConnection.invoke('InvokeExplicitAction', action);
   }
 
-  public leaveRoom() {
-    this.userInfoSubject.next(null);
+  private buildCreateGameForm() {
+    this.createGameForm = this.fb.group({
+      rules: this.fb.array([]),
+      width: 9,
+      height: 5,
+      startingDeck: this.fb.array([]),
+      grid: {},
+      manualTriggers: this.fb.array([]),
+    });
+    // this.createGameForm = JsonToForm(defaultGameObject);
+    this.listenToManualTriggers();
+  }
+
+  private resetRoom() {
     this.router.navigate(['/home']);
-    this.hubConnection.invoke('LeaveRoom');
+    this.buildCreateGameForm();
+    this.userInfoSubject.next(null);
+    this.gameSubject.next(new PlayGame());
   }
 
 
@@ -140,7 +150,7 @@ export class SignalRService {
   private receiveUserInfoListener = () => {
     this.hubConnection.on('ReceiveUserInfo', (userInfo: UserInfo) => {
       if (userInfo == null) {
-        this.router.navigate(['/home']);
+        this.resetRoom()
       } else {
         userInfo.isRoomOwner ? this.router.navigate(['/create']) : this.router.navigate(['/play']);
       }
@@ -187,12 +197,18 @@ export class SignalRService {
 
   //other
   private listenToManualTriggers() {
+    if (this.manualTriggersSubscription) {
+      this.manualTriggersSubscription.unsubscribe();
+    }
+
     const manualTriggersArray = this.createGameForm.get('manualTriggers') as FormArray;
-    manualTriggersArray.valueChanges.subscribe(
-      (manualTriggers) => {
+    this.manualTriggersSubscription = manualTriggersArray.valueChanges
+      .pipe(
+        startWith(manualTriggersArray.value) // Emit the current value immediately
+      )
+      .subscribe((manualTriggers) => {
         this.ManualTriggerSubject.next(manualTriggers);
-      }
-    );
+      });
   }
 
   get userInfo(): UserInfo {

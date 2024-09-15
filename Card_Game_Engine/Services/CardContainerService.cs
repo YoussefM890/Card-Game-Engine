@@ -1,7 +1,7 @@
 using System.Text;
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Enums;
-using CreateNamespace = Card_Game_Engine.Models.Custom_Models.Create_Game;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Enums;
+using CreateNamespace = Card_Game_Engine.Models.CreateGame.Classes;
 
 namespace Card_Game_Engine.Services;
 

@@ -1,7 +1,7 @@
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Classes.Actions;
-using Card_Game_Engine.Models.Enums;
-using Card_Game_Engine.Models.Enums.ParameterOptions.ActionOptions;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Classes.Actions;
+using Card_Game_Engine.Models.Global.Enums;
+using Card_Game_Engine.Models.Global.Enums.ParameterOptions.ActionOptions;
 
 namespace Card_Game_Engine.Functions;
 

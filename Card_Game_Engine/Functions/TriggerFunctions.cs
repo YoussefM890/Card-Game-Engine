@@ -1,7 +1,10 @@
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Classes.Triggers;
-using Card_Game_Engine.Models.Enums;
 using Card_Game_Engine.Models.Enums.ParameterOptions.TriggerOptions;
+using Card_Game_Engine.Models.Filter.Enums;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Classes.Triggers;
+using Card_Game_Engine.Models.Global.Enums;
+using Card_Game_Engine.Models.Global.Enums.ParameterOptions.TriggerOptions;
+using Card_Game_Engine.Utils;
 
 namespace Card_Game_Engine.Functions;
 
@@ -30,21 +33,31 @@ public class TriggerFunctions
 
     public static bool IsDeckCardCountMatching(DeckCardCountTrigger triggerParams, List<GridItem> after)
     {
+        // Apply the filter to each GridItem's Cards collection
+        var gridAfterFilter = after;
+        if (!string.IsNullOrEmpty(triggerParams.Filter))
+        {
+            gridAfterFilter = after.Select(gridItem => new GridItem(gridItem.Id)
+            {
+                Cards = FilterUtils.ApplyFilter(gridItem.Cards, triggerParams.Filter, FilterEnum.Card).ToList()
+            }).ToList();
+        }
+
         switch (triggerParams.PositionsRelation)
         {
             case PositionsRelationOptionEnum.Sum:
                 int sum = triggerParams.Positions.Sum(pos =>
-                    after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0);
+                    gridAfterFilter.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0);
                 return CheckConditions(sum, triggerParams);
 
             case PositionsRelationOptionEnum.All:
                 return triggerParams.Positions.All(pos =>
-                    CheckConditions(after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
+                    CheckConditions(gridAfterFilter.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
                         triggerParams));
 
             case PositionsRelationOptionEnum.Any:
                 return triggerParams.Positions.Any(pos =>
-                    CheckConditions(after.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
+                    CheckConditions(gridAfterFilter.FirstOrDefault(gridItem => gridItem.Id == pos)?.Cards.Count ?? 0,
                         triggerParams));
 
             default:

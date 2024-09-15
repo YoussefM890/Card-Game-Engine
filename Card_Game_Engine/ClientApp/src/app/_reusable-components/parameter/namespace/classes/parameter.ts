@@ -1,5 +1,7 @@
 import {ActionParameterEnum, TriggerParameterEnum} from "../enums/parameter.enums";
 import {ParameterValueTypeEnum} from "../enums/parameter-value-type.enum";
+import {FilterEnum} from "../../filter-modal/_namespace/enums/filter.enum";
+import {SelectOption} from "../../../../shared/models/classes/select-option";
 
 export class Parameter {
   id: ActionParameterEnum | TriggerParameterEnum;
@@ -7,7 +9,7 @@ export class Parameter {
   description?: string;
   value?: any;
   type?: ParameterValueTypeEnum;
-  args?: any[];
+  args?: SelectOption[] | FilterEnum;
   cannotBeUsedWith?: number[];
   canBeDuplicated?: boolean;
 
@@ -16,7 +18,7 @@ export class Parameter {
     display: string,
     description = null,
     type = ParameterValueTypeEnum.Text,
-    args = [],
+    args: SelectOption[] | FilterEnum = [],
     cannotBeUsedWith = [],
     canBeDuplicated = false
   ) {

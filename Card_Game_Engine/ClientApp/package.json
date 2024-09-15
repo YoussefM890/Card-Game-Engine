@@ -28,6 +28,7 @@
     "@angularclass/hmr": "^3.0.0",
     "@microsoft/signalr": "^8.0.7",
     "express": "^4.18.2",
+    "ngx-markdown": "^17.1.0",
     "rxjs": "~7.8.0",
     "save-dev": "^0.0.1-security",
     "tslib": "^2.3.0",

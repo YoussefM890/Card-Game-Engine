@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatButton} from "@angular/material/button";
 import {RouterLink, RouterLinkActive} from "@angular/router";
@@ -24,6 +24,7 @@ import {MatGridList} from "@angular/material/grid-list";
 import {UserInfo} from "../shared/models/classes/user-info";
 import {NavComponent} from "../_reusable-components/nav/nav.component";
 import {generateGridDimensionsFromHeight} from "../_reusable-components/grid/namespace/functions";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-play-game',
@@ -45,7 +46,8 @@ import {generateGridDimensionsFromHeight} from "../_reusable-components/grid/nam
   templateUrl: './play-game.component.html',
   styleUrl: './play-game.component.scss'
 })
-export class PlayGameComponent implements OnInit {
+export class PlayGameComponent implements OnInit, OnDestroy {
+  private userInfoSubscription: Subscription;
   game: Game;
   grid: GridItem[] = [];
   cols: number
@@ -72,10 +74,16 @@ export class PlayGameComponent implements OnInit {
     this.listenToGameObject();
     this.listenToUserInfo();
   }
-  protected readonly RoleEnum = RoleEnum;
+
+  ngOnDestroy(): void {
+    if (this.userInfoSubscription) {
+      this.userInfoSubscription.unsubscribe();
+    }
+  }
 
   listenToUserInfo() {
-    this.signalrService.userInfo$.subscribe(userInfo => {
+    this.userInfoSubscription = this.signalrService.userInfo$.subscribe(userInfo => {
+      if (!userInfo) return;
       this.userInfo = userInfo;
       this.isPlayer1 = userInfo.role === RoleEnum.Player1;
       this.isPlayer2 = userInfo.role === RoleEnum.Player2;

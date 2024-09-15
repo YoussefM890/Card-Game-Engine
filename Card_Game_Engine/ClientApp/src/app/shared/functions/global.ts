@@ -1,5 +1,8 @@
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 
+export function isNullUndefinedOrEmpty(value: any): boolean {
+  return value === null || value === undefined || value === '';
+}
 export function getEnumKeys<T>(enumType: T): string[] {
   return Object.keys(enumType).filter(key => isNaN(Number(key)));
 }
@@ -91,5 +94,30 @@ export function CsvToIntSet(csv: string): Set<number> {
 
 export function setToCsv(set: Set<number | string>): string {
   return Array.from(set).join(',');
+}
+
+export function JsonToForm(json: any): FormGroup {
+  const formGroup = new FormGroup({});
+
+  Object.keys(json).forEach(key => {
+    if (json[key] !== null && typeof json[key] === 'object' && !Array.isArray(json[key])) {
+      formGroup.addControl(key, JsonToForm(json[key]));
+    } else if (Array.isArray(json[key])) {
+      const formArray = new FormArray(json[key].map((item: any) => {
+        return typeof item === 'object' ? JsonToForm(item) : new FormControl(item);
+      }));
+      formGroup.addControl(key, formArray);
+    } else {
+      formGroup.addControl(key, new FormControl(json[key]));
+    }
+  });
+
+  return formGroup;
+}
+
+export function removeFirstAndLast(arr: any[]): any[] {
+  arr.shift();
+  arr.pop();
+  return arr;
 }
 

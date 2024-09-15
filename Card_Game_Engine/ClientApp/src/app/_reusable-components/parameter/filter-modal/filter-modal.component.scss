@@ -1,0 +1,45 @@
+.filter-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+
+  select,
+  input {
+    width: 150px;
+  }
+}
+
+.filter-group {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
+.filter-condition {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: .25rem;
+  margin-top: .25rem;
+}
+
+.logical-operators {
+  display: inline-flex;
+
+  > button {
+    margin-right: .5rem;
+  }
+}
+
+
+.group-bracket {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #666;
+}
+
+.btn-remove {
+  color: #ff4444;
+}

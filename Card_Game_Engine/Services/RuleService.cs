@@ -1,6 +1,6 @@
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Enums;
-using Action = Card_Game_Engine.Models.Action;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Enums;
+using Action = Card_Game_Engine.Models.Global.Classes.Action;
 
 namespace Card_Game_Engine.Services;
 
@@ -21,13 +21,20 @@ public class RuleService
     public void FireTriggerIfFound(int trigger)
     {
         var allActions = new List<Action>();
+        var innerRules = new List<Rule>();
         foreach (var rule in _room.Rules)
         {
             var foundTriggers = rule.Triggers.Where(t => t.Id == (int)trigger).ToList();
             if (foundTriggers.Any())
             {
                 allActions.AddRange(rule.Actions);
+                innerRules.AddRange(rule.Rules);
             }
+        }
+
+        if (innerRules.Any())
+        {
+            allActions.AddRange(GetTriggeredActions(innerRules, _room.Grid, _room.Users));
         }
 
         if (allActions.Any())
@@ -69,8 +76,8 @@ public class RuleService
             var triggeredActions = GetTriggeredActions(
                 _room.Rules,
                 cardContainerBeforeAction,
-                _room.Grid,
                 usersBeforeAction,
+                _room.Grid,
                 _room.Users
             );
 
@@ -107,8 +114,11 @@ public class RuleService
     }
 
     private List<Action> GetTriggeredActions(List<Rule> rules, List<GridItem> beforeActionCardContainer,
-        List<GridItem> afterActionCardContainer, List<User> beforeActionUsers, List<User> afterActionUsers)
+        List<User> beforeActionUsers, List<GridItem>? afterActionCardContainer = null,
+        List<User>? afterActionUsers = null)
     {
+        afterActionCardContainer ??= beforeActionCardContainer;
+        afterActionUsers ??= beforeActionUsers;
         var triggeredActions = new List<Action>();
 
         foreach (var rule in rules)
@@ -118,7 +128,7 @@ public class RuleService
             {
                 triggeredActions.AddRange(rule.Actions);
                 triggeredActions.AddRange(GetTriggeredActions(rule.Rules, beforeActionCardContainer,
-                    afterActionCardContainer, beforeActionUsers, afterActionUsers));
+                    beforeActionUsers, afterActionCardContainer, afterActionUsers));
             }
         }
 

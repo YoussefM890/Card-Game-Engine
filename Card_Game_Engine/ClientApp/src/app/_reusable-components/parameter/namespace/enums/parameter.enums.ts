@@ -11,6 +11,7 @@ export enum TriggerParameterEnum {
   PositionsRelation = 9,
   ScoreType = 10,
   TriggerBehavior = 11,
+  Filter = 12,
 }
 
 export enum ActionParameterEnum {

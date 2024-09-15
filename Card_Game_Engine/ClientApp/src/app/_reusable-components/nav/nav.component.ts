@@ -1,13 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {copyToClipboard} from "../../shared/functions/global";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatToolbar} from "@angular/material/toolbar";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatFabButton, MatMiniFabButton} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
 import {SignalRService} from "../../shared/services/signalr.service";
-import {userInfo} from "node:os";
 import {UserInfo} from "../../shared/models/classes/user-info";
+import {Subscription} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {GuideComponent} from "../../guide/guide.component";
 
 @Component({
   selector: 'app-nav',
@@ -17,25 +19,33 @@ import {UserInfo} from "../../shared/models/classes/user-info";
     MatTooltip,
     MatToolbar,
     MatButton,
-    RouterLink
+    RouterLink,
+    MatFabButton,
+    MatMiniFabButton
   ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss'
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
+  userInfoSubscription: Subscription
   @Input() parentComponent: string;
   showRoomId: boolean = false;
   userInfo: UserInfo;
 
-  constructor(private service: SignalRService) {
-  }
+  protected readonly MatTooltip = MatTooltip;
 
   ngOnInit(): void {
     this.listenToUserInfo();
   }
 
+  ngOnDestroy(): void {
+    if (this.userInfoSubscription) {
+      this.userInfoSubscription.unsubscribe();
+    }
+  }
+
   listenToUserInfo() {
-    this.service.userInfo$.subscribe(userInfo => {
+    this.userInfoSubscription = this.service.userInfo$.subscribe(userInfo => {
       this.userInfo = userInfo;
     });
   }
@@ -50,5 +60,18 @@ export class NavComponent implements OnInit {
 
   leaveRoom() {
     this.service.leaveRoom();
+  }
+
+  constructor(private service: SignalRService, private dialog: MatDialog) {
+  }
+
+  openGuide() {
+    this.dialog.open(GuideComponent, {
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      height: '100%',
+      width: '100%',
+      panelClass: 'full-screen-dialog'
+    });
   }
 }

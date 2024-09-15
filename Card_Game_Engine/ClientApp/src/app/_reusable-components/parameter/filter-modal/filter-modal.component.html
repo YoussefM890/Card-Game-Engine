@@ -1,0 +1,80 @@
+<div class="filter-builder">
+  <ng-template #recursiveGroup let-depth="depth" let-group>
+    <span class="group-bracket">(</span>
+    <div [formGroup]="group" [style.background-color]="getGroupColor(depth)" class="filter-group">
+      <ng-container formArrayName="children">
+        @for (node of getChildren(group).controls; track node.value.id; ) {
+          <div [formGroupName]="$index">
+            @if (node.get('id') !== null) {
+              <div class="filter-condition">
+                <select formControlName="id" class="form-select">
+                  @for (condition of filterTemplate.conditions; track condition.id) {
+                    <option [value]="condition.id">{{ condition.name }}</option>
+                  }
+                </select>
+                @if (node.get('id').value !== null) {
+                  <select formControlName="operator" class="form-select">
+                    @for (op of getOperators(node.get('id').value); track op.id) {
+                      <option [value]="op.id">{{ op.display }}</option>
+                    }
+                  </select>
+                }
+                @if (node.get('operator').value !== null) {
+                  @if (isSelectValue(node.get('id').value)) {
+                    <select formControlName="value" class="form-select">
+                      @for (option of getValueOptions(node.get('id').value); track option.value) {
+                        <option [value]="option.value">{{ option.display }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input formControlName="value" type="text" class="form-control">
+                  }
+                }
+                @if (node.get('value').value !== null && $index < group.get('children').length - 1) {
+                  <select formControlName="logicalOperator" class="form-select">
+                    <option [value]="logicalOperatorEnum.AND">AND</option>
+                    <option [value]="logicalOperatorEnum.OR">OR</option>
+                  </select>
+                }
+                @if (node.get('value').value !== null && $index === group.get('children').length - 1) {
+                  <div class="logical-operators">
+                    <button mat-raised-button color="primary" (click)="addCondition(group)">Add Condition</button>
+                    <button mat-raised-button color="primary" (click)="addGroup(group)">Add Group</button>
+                  </div>
+                }
+                @if ($index > 0) {
+                  <button mat-icon-button color="warn" (click)="removeGroup(node, group)">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                  </button>
+                }
+              </div>
+            } @else {
+              <ng-container
+                *ngTemplateOutlet="recursiveGroup; context: { $implicit: node, depth: depth+1 }"></ng-container>
+              @if ($index < group.get('children').length - 1) {
+                <select formControlName="logicalOperator" class="form-select d-inline-block ms-2">
+                  <option [value]="logicalOperatorEnum.AND">AND</option>
+                  <option [value]="logicalOperatorEnum.OR">OR</option>
+                </select>
+              } @else {
+                <div class="logical-operators ms-2 my-2">
+                  <button mat-raised-button color="primary" (click)="addCondition(group)">Add Condition</button>
+                  <button mat-raised-button color="primary" (click)="addGroup(group)">Add Group</button>
+                </div>
+              }
+              <button mat-icon-button color="warn" (click)="removeGroup(node, group)">
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+
+            }
+          </div>
+        }
+      </ng-container>
+    </div>
+    <span class="group-bracket">)</span>
+  </ng-template>
+  <ng-container [formGroup]="filterForm">
+    <ng-container *ngTemplateOutlet="recursiveGroup; context: { $implicit: filterForm,depth:0 }"></ng-container>
+    <button (click)="submit()" color="accent" mat-raised-button>Apply Filter</button>
+  </ng-container>
+</div>

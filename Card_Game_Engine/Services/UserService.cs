@@ -1,5 +1,5 @@
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Enums;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Enums;
 
 namespace Card_Game_Engine.Services;
 

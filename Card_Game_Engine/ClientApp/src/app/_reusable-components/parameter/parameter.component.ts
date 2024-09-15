@@ -12,6 +12,7 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatDialog} from "@angular/material/dialog";
 import {PositionsSelectorModalComponent} from "./positions-selector-modal/positions-selector-modal.component";
 import {CsvToIntSet} from "../../shared/functions/global";
+import {FilterModalComponent} from "./filter-modal/filter-modal.component";
 
 @Component({
   selector: 'app-parameter',
@@ -30,6 +31,7 @@ import {CsvToIntSet} from "../../shared/functions/global";
   styleUrl: './parameter.component.scss',
 })
 export class ParameterComponent implements OnInit {
+  protected readonly Array = Array;
   @Input() parameterForm: FormGroup;
   @Input() availableParameters: Parameter[] = [];
   @Output() parameterChange: EventEmitter<number> = new EventEmitter<number>();
@@ -63,6 +65,22 @@ export class ParameterComponent implements OnInit {
       }
     }).afterClosed().subscribe((positionsString) => {
       this.valueControl.setValue(positionsString);
+    });
+  }
+
+  openFilterSelectorModal(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dialog.open(FilterModalComponent, {
+      width: '1000px',
+      height: '600px',
+      data: {
+        filterType: this.selectedParameter.args,
+        filter: this.valueControl.value
+      }
+    }).afterClosed().subscribe((filter) => {
+      console.log('filter back from modal:', filter)
+      this.valueControl.setValue(filter);
     });
   }
 }

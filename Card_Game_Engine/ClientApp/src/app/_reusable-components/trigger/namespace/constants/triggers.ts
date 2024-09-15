@@ -9,10 +9,12 @@ import {
   TriggerBehaviorOptionEnum
 } from "../../../parameter/namespace/enums/parameter-value-options.enums";
 import {SelectOption} from "../../../../shared/models/classes/select-option";
+import {FilterEnum} from "../../../parameter/filter-modal/_namespace/enums/filter.enum";
 
 const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
 const positions = ParameterValueTypeEnum.Positions;
+const filter = ParameterValueTypeEnum.Filter;
 
 
 export const triggers: Trigger[] = [
@@ -24,6 +26,7 @@ export const triggers: Trigger[] = [
   ]),
   new Trigger(TriggerEnum.DeckCardCount, 'Deck Card Count', [
     new Parameter(TriggerParameterEnum.Positions, 'Positions', null, positions),
+    new Parameter(TriggerParameterEnum.Filter, 'Card Filter', null, filter, FilterEnum.Card),
     new Parameter(TriggerParameterEnum.EqualTo, 'Equal To =', null, text, [], [
       TriggerParameterEnum.LessThan,
       TriggerParameterEnum.GreaterThan,

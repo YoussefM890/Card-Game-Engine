@@ -1,5 +1,4 @@
 import {ColorEnum} from "../shared/models/enums/color.enum";
-import {F} from "@angular/cdk/keycodes";
 
 export namespace play_game {
   export enum VisibilityEnum {
@@ -10,15 +9,13 @@ export namespace play_game {
     Private = "4",
   }
 
-  export const VisibilityEnumView = {
+  export const VisibilityEnumView: Readonly<Record<VisibilityEnum, string>> = {
     [VisibilityEnum.Keep]: "Keep",
     [VisibilityEnum.Cell]: "Cell",
     [VisibilityEnum.Visible]: "Visible",
     [VisibilityEnum.Hidden]: "Hidden",
     [VisibilityEnum.Private]: "Private",
-  } as const;
-
-  export type VisibilityEnumType = keyof typeof VisibilityEnumView;
+  };
 
   export class VisibilityOption {
     value: VisibilityEnum;

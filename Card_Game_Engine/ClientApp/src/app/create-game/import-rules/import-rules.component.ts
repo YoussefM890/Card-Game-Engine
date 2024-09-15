@@ -10,7 +10,7 @@ import {FormArray, FormBuilder, FormGroup, FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {rules} from "./dummy-rules";
+import {gameJson} from "./dummy-rules";
 import {clearFormArray} from "../../shared/functions/global";
 import {MatToolbar} from "@angular/material/toolbar";
 import {SignalRService} from "../../shared/services/signalr.service";
@@ -33,7 +33,7 @@ import {SignalRService} from "../../shared/services/signalr.service";
   styleUrls: ['./import-rules.component.scss']
 })
 export class ImportRulesComponent {
-  rules: string = rules;
+  gameJson: string = gameJson;
   form: FormGroup = this.service.createGameForm;
 
   constructor(
@@ -60,11 +60,10 @@ export class ImportRulesComponent {
     this.form.get('width').setValue(data.width);
     this.form.get('height').setValue(data.height);
     this.form.get('grid').setValue(data.grid);
-    this.form.get('manualTriggers').setValue(data.manualTriggers);
   }
 
   onSubmit() {
-    this.updateForm(JSON.parse(this.rules));
+    this.updateForm(JSON.parse(this.gameJson));
     this.dialogRef.close();
   }
 

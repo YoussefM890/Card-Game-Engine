@@ -1,9 +1,9 @@
 using Card_Game_Engine.Exceptions;
-using Card_Game_Engine.Models.Classes;
-using Card_Game_Engine.Models.Enums;
+using Card_Game_Engine.Models.Global.Classes;
+using Card_Game_Engine.Models.Global.Enums;
 using Card_Game_Engine.Services;
 using Microsoft.AspNetCore.SignalR;
-using Action = Card_Game_Engine.Models.Action;
+using Action = Card_Game_Engine.Models.Global.Classes.Action;
 
 namespace Card_Game_Engine.Controllers;
 
