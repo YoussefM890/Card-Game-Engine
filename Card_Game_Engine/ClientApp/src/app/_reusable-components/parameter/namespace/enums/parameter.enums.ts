@@ -12,6 +12,7 @@ export enum TriggerParameterEnum {
   ScoreType = 10,
   TriggerBehavior = 11,
   Filter = 12,
+  Condition = 13,
 }
 
 export enum ActionParameterEnum {

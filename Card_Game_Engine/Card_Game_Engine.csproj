@@ -28,6 +28,7 @@
     <ItemGroup>
         <Folder Include="ClientApp\src\app\_reusable-components\grid\namespace\classes\"/>
         <Folder Include="ClientApp\src\app\_reusable-components\grid\namespace\constants\"/>
+        <Folder Include="ClientApp\src\app\_reusable-components\parameter\formula-builder-modal\_namespace\classes\"/>
         <Folder Include="wwwroot\"/>
     </ItemGroup>
 

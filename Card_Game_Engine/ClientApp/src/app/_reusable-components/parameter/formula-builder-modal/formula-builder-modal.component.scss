@@ -1,0 +1,33 @@
+.formula-builder {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.formula-output {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
+}
+
+.nested-chain {
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+}
+
+.parameter {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.chain-step {
+  background-color: #f8f9fa;
+}
+
+.param-label {
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Ensure proper spacing when scrolling */
+.formula-builder {
+  padding-top: 80px; /* Make space for fixed formula */
+}

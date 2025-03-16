@@ -15,6 +15,7 @@ const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
 const positions = ParameterValueTypeEnum.Positions;
 const filter = ParameterValueTypeEnum.Filter;
+const formula = ParameterValueTypeEnum.Formula;
 
 
 export const triggers: Trigger[] = [
@@ -75,6 +76,9 @@ export const triggers: Trigger[] = [
       new SelectOption(TriggerBehaviorOptionEnum.OnChange, 'On Change', 'Triggers on score change: Player 1 score for Player 1 option, Player 2 score for Player 2 option, either score for other options'),
       new SelectOption(TriggerBehaviorOptionEnum.Continuous, 'Continuous', 'Triggers continuously while the score meets the conditions'),
     ]),
-  ])
+  ]),
+  new Trigger(TriggerEnum.Formula, 'Formula', [
+    new Parameter(TriggerParameterEnum.Condition, 'Condition', 'The formula to be evaluated', formula),
+  ]),
 ];
 

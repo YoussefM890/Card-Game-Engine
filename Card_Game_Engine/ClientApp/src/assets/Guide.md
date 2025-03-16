@@ -81,6 +81,7 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
   - **Card Moved**: Triggered when a card is moved.
   - **Deck Card Count**: Triggered based on the number of cards in specific positions.
   - **Score**: Triggered based on player scores.
+  - **Formula Trigger**: Triggers when a specified condition evaluates to true.
   - **Manual Triggers**: Any manual triggers you've added will appear here (e.g., "Draw Card (Manual)").
 
 ### Adding Actions
@@ -133,6 +134,13 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
   - **Score Type**: Choose between Player 1, Player 2, Highest, Lowest, Any, All, or Difference.
   - **Comparison**: Choose a comparison (Equal To, Not Equal To, Less Than, Greater Than) and provide a value to compare against.
   - **Trigger Behavior**: Choose when the trigger activates (**On Change**, **Continuous**).
+
+### Formula Trigger
+
+- **Parameter:**
+  - **Condition**: A formula-like expression that must evaluate to `true` for the trigger to activate.
+  - **Example:** `root.positions.at(9).cards.at(0).rank.biggerThan(root.positions.at(14).cards.at(0).rank)`
+  - **Usage:** This trigger allows highly customizable conditions to determine when a rule should be activated.
 
 ### Manual Triggers
 
