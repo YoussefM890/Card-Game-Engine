@@ -8,7 +8,7 @@ using Card_Game_Engine.Utils;
 
 namespace Card_Game_Engine.Functions;
 
-public class TriggerFunctions
+public static class TriggerFunctions
 {
     public static bool IsCardMoved(List<GridItem> before, List<GridItem> after, int? from, int? to, int? cardCount)
     {
@@ -149,6 +149,51 @@ public class TriggerFunctions
         if (triggerParams.GreaterThan.HasValue && value <= triggerParams.GreaterThan.Value)
             return false;
         return true;
+    }
+
+    public static bool IsFormulaMatching(string condition, List<GridItem> afterActionCardContainer,
+        List<User> afterActionUsers)
+    {
+        RootType root = new(afterActionCardContainer, afterActionUsers);
+        return (bool)EvaluateChain(condition, root);
+    }
+
+
+    public static object EvaluateChain(string chain, RootType root)
+    {
+        if (!(chain.Trim().StartsWith("{") && chain.Trim().EndsWith("}")))
+        {
+            return chain;
+        }
+
+        // Remove the outer braces.
+        chain = chain.Substring(2, chain.Length - 3).Trim();
+
+        // Tokenize the chain using our custom delimiters: '(' as group open, ')' as group close, and ';' as separator.
+        List<string> tokens = FormulaUtils.Tokenize(chain, '(', ')', ';');
+
+        // Convert the token list into a structured chain (list of ChainStep).
+        List<ChainStep> chainSteps = FormulaUtils.ConvertChainListToObject(tokens);
+
+        object? current = root;
+        foreach (var step in chainSteps)
+        {
+            // Recursively evaluate each parameter.
+            List<object> evaluatedParams = new List<object>();
+            foreach (var param in step.Parameters)
+            {
+                evaluatedParams.Add(EvaluateChain(param, root));
+            }
+
+            // Invoke the action for the current chain step.
+            current = FormulaUtils.InvokeMethod(current, step.MethodName, evaluatedParams.ToArray());
+            if (current == null)
+            {
+                return false;
+            }
+        }
+
+        return current;
     }
 
     public interface IComparableTrigger

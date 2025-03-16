@@ -46,6 +46,15 @@
           </button>
         </mat-form-field>
       }
+      @case (types.Formula) {
+        <mat-form-field appearance="fill" class="col-5">
+          <mat-label>Value</mat-label>
+          <input matInput formControlName="value" placeholder="Value">
+          <button mat-icon-button matSuffix (click)="openFormulaBuilderModal($event)">
+            <mat-icon>functions</mat-icon>
+          </button>
+        </mat-form-field>
+      }
     }
   }
 </div>

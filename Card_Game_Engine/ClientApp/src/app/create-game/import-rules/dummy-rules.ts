@@ -1787,5 +1787,498 @@ const _chkobba2 =
     ]
   }
 ;
-export const gameJson = JSON.stringify(_chkobba, null, 2);
+
+const _war =
+  {
+    "rules": [
+      {
+        "triggers": [
+          {
+            "id": 0,
+            "parameters": []
+          }
+        ],
+        "actions": [
+          {
+            "id": 3,
+            "parameters": [
+              {
+                "id": 5,
+                "value": "0"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 8,
+                "value": "17"
+              },
+              {
+                "id": 0,
+                "value": "13"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "2"
+              },
+              {
+                "id": 0,
+                "value": "13"
+              }
+            ]
+          }
+        ],
+        "rules": []
+      },
+      {
+        "triggers": [
+          {
+            "id": -3,
+            "parameters": []
+          }
+        ],
+        "actions": [],
+        "rules": [
+          {
+            "triggers": [
+              {
+                "id": 4,
+                "parameters": [
+                  {
+                    "id": 13,
+                    "value": "{;0;2;(;5;);1;2;(;0;);4;6;(;{;0;2;(;10;);1;2;(;0;);4;};);}"
+                  }
+                ]
+              }
+            ],
+            "actions": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 7,
+                    "value": "2,5,10"
+                  },
+                  {
+                    "id": 2,
+                    "value": "2"
+                  },
+                  {
+                    "id": 0,
+                    "value": "0"
+                  }
+                ]
+              }
+            ],
+            "rules": []
+          },
+          {
+            "triggers": [
+              {
+                "id": 4,
+                "parameters": [
+                  {
+                    "id": 13,
+                    "value": "{;0;2;(;9;);1;2;(;0;);4;6;(;{;0;2;(;14;);1;2;(;0;);4;};);}"
+                  }
+                ]
+              }
+            ],
+            "rules": [],
+            "actions": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 7,
+                    "value": "2,9,14,8,13,7,12,6,11,5,10"
+                  },
+                  {
+                    "id": 2,
+                    "value": "2"
+                  },
+                  {
+                    "id": 0,
+                    "value": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "triggers": [
+              {
+                "id": 4,
+                "parameters": [
+                  {
+                    "id": 13,
+                    "value": "{;0;2;(;10;);1;2;(;0;);4;6;(;{;0;2;(;5;);1;2;(;0;);4;};);}"
+                  }
+                ]
+              }
+            ],
+            "actions": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 7,
+                    "value": "17,10,5"
+                  },
+                  {
+                    "id": 2,
+                    "value": "17"
+                  },
+                  {
+                    "id": 0,
+                    "value": "0"
+                  }
+                ]
+              }
+            ],
+            "rules": []
+          },
+          {
+            "triggers": [
+              {
+                "id": 4,
+                "parameters": [
+                  {
+                    "id": 13,
+                    "value": "{;0;2;(;14;);1;2;(;0;);4;6;(;{;0;2;(;9;);1;2;(;0;);4;};);}"
+                  }
+                ]
+              }
+            ],
+            "rules": [],
+            "actions": [
+              {
+                "id": 2,
+                "parameters": [
+                  {
+                    "id": 7,
+                    "value": "17,9,14,8,13,7,12,6,11,5,10"
+                  },
+                  {
+                    "id": 2,
+                    "value": "17"
+                  },
+                  {
+                    "id": 0,
+                    "value": "0"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "triggers": [
+          {
+            "id": -1,
+            "parameters": []
+          },
+          {
+            "id": -2,
+            "parameters": []
+          }
+        ],
+        "rules": [],
+        "actions": [
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 7,
+                "value": "17,10,11,12,13,14,9,8,7,6,5,2"
+              },
+              {
+                "id": 2,
+                "value": "0"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "parameters": [
+              {
+                "id": 5,
+                "value": "0"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 1,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "2"
+              },
+              {
+                "id": 0,
+                "value": "13"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "parameters": [
+              {
+                "id": 7,
+                "value": "0"
+              },
+              {
+                "id": 2,
+                "value": "17"
+              },
+              {
+                "id": 0,
+                "value": "13"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "triggers": [
+          {
+            "id": -1,
+            "parameters": []
+          }
+        ],
+        "rules": [],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "0"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "triggers": [
+          {
+            "id": -2,
+            "parameters": []
+          }
+        ],
+        "rules": [],
+        "actions": [
+          {
+            "id": 4,
+            "parameters": [
+              {
+                "id": 10,
+                "value": "1"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "width": 5,
+    "height": 4,
+    "startingDeck": [
+      {
+        "value": 1,
+        "suit": 1
+      },
+      {
+        "value": 1,
+        "suit": 4
+      },
+      {
+        "value": 2,
+        "suit": 1
+      },
+      {
+        "value": 2,
+        "suit": 4
+      },
+      {
+        "value": 3,
+        "suit": 1
+      },
+      {
+        "value": 3,
+        "suit": 4
+      },
+      {
+        "value": 4,
+        "suit": 1
+      },
+      {
+        "value": 4,
+        "suit": 4
+      },
+      {
+        "value": 5,
+        "suit": 1
+      },
+      {
+        "value": 5,
+        "suit": 4
+      },
+      {
+        "value": 6,
+        "suit": 1
+      },
+      {
+        "value": 6,
+        "suit": 4
+      },
+      {
+        "value": 7,
+        "suit": 1
+      },
+      {
+        "value": 7,
+        "suit": 4
+      },
+      {
+        "value": 8,
+        "suit": 1
+      },
+      {
+        "value": 8,
+        "suit": 4
+      },
+      {
+        "value": 9,
+        "suit": 1
+      },
+      {
+        "value": 9,
+        "suit": 4
+      },
+      {
+        "value": 10,
+        "suit": 1
+      },
+      {
+        "value": 10,
+        "suit": 4
+      },
+      {
+        "value": 11,
+        "suit": 1
+      },
+      {
+        "value": 11,
+        "suit": 4
+      },
+      {
+        "value": 12,
+        "suit": 1
+      },
+      {
+        "value": 12,
+        "suit": 4
+      },
+      {
+        "value": 13,
+        "suit": 1
+      },
+      {
+        "value": 13,
+        "suit": 4
+      }
+    ],
+    "grid": {
+      "2": {
+        "id": 2,
+        "visibility": 5
+      },
+      "5": {
+        "id": 5,
+        "visibility": 2
+      },
+      "6": {
+        "id": 6,
+        "visibility": 3
+      },
+      "7": {
+        "id": 7,
+        "visibility": 3
+      },
+      "8": {
+        "id": 8,
+        "visibility": 3
+      },
+      "9": {
+        "id": 9,
+        "visibility": 2
+      },
+      "10": {
+        "id": 10,
+        "visibility": 2
+      },
+      "11": {
+        "id": 11,
+        "visibility": 3
+      },
+      "12": {
+        "id": 12,
+        "visibility": 3
+      },
+      "13": {
+        "id": 13,
+        "visibility": 3
+      },
+      "14": {
+        "id": 14,
+        "visibility": 2
+      },
+      "17": {
+        "id": 17,
+        "visibility": 4
+      }
+    },
+    "manualTriggers": [
+      {
+        "id": -1,
+        "name": "Player 1 Wins",
+        "description": "",
+        "visibility": 2
+      },
+      {
+        "id": -2,
+        "name": "Player 2 Wins",
+        "description": "",
+        "visibility": 2
+      },
+      {
+        "id": -3,
+        "name": "Next Step",
+        "description": "Proceed",
+        "visibility": 2
+      }
+    ]
+  }
+
+export const gameJson = JSON.stringify(_war, null, 2);
 

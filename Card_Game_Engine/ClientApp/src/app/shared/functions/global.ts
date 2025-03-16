@@ -121,3 +121,67 @@ export function removeFirstAndLast(arr: any[]): any[] {
   return arr;
 }
 
+
+/**
+ * Splits an input string into tokens while respecting nested delimiters.
+ *
+ * @param {string} input - The input string to be tokenized.
+ * @param {string} open - The opening character that increases depth (e.g., `(`, `{`, `[`).
+ * @param {string} close - The closing character that decreases depth (e.g., `)`, `}`, `]`).
+ * @param {string} separator - The character used to split tokens at depth level 0.
+ * @returns {string[]} - An array of tokens extracted from the input string.
+ *
+ * The function iterates through the input string and:
+ * - Splits at the `separator` only if it is at **depth level 0** (not inside nested brackets).
+ * - Increments `depth` when encountering an `open` character.
+ * - Decrements `depth` when encountering a `close` character.
+ * - Collects characters into a token until a valid split point is reached.
+ * - Returns an array of extracted tokens.
+ *
+ */
+export function tokenize(input: string, open: string, close: string, separator: string): string[] {
+  const tokens: string[] = [];
+  let token = '';
+  let depth = 0;
+  for (let i = 0; i < input.length; i++) {
+    const c = input[i];
+    if (c === separator && depth === 0) {
+      tokens.push(token);
+      token = '';
+      continue;
+    }
+    token += c;
+    if (c === open) {
+      depth++;
+    } else if (c === close) {
+      depth--;
+    }
+  }
+  tokens.push(token);
+  return tokens;
+}
+
+/**
+ * Trims specified characters from both the start and end of the given string.
+ *
+ * @param {string} str - The input string to be trimmed.
+ * @param {string[]} chars - An array of characters to remove from both ends.
+ * @returns {string} - The trimmed string with specified characters removed from the edges.
+ *
+ */
+export function trim(str: string, chars: string[]): string {
+  if (!str) return str; // Handle empty string edge case
+  const charSet = new Set(chars); // Use a Set for O(1) lookup
+
+  let start = 0, end = str.length - 1;
+
+  while (start <= end && charSet.has(str[start])) {
+    start++;
+  }
+
+  while (end >= start && charSet.has(str[end])) {
+    end--;
+  }
+
+  return str.slice(start, end + 1);
+}

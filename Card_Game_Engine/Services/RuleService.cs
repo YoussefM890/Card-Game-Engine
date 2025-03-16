@@ -153,6 +153,10 @@ public class RuleService
                 case (int)TriggerEnum.Score:
                     isTriggered = _triggerService.ExecuteScoreTrigger(trigger, beforeActionUsers, afterActionUsers);
                     break;
+                case (int)TriggerEnum.Formula:
+                    isTriggered = _triggerService.ExecuteFormulaTrigger(trigger, beforeActionCardContainer,
+                        afterActionCardContainer, beforeActionUsers, afterActionUsers);
+                    break;
             }
 
             if (isTriggered)

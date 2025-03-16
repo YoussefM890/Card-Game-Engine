@@ -1,0 +1,74 @@
+<div class="formula-builder p-3 bg-light rounded-3">
+
+  <div class="formula-output mb-3 p-3 bg-white rounded sticky-top" style="top: 10px; z-index: 1000">
+    <strong>Formula:</strong>
+    <code class="d-block mt-1 text-primary">{{ displayChain(chainControl.value) }}</code>
+  </div>
+
+  <ng-template #chainTemplate let-form>
+    <div [formGroup]="form" class="d-flex flex-column gap-2 w-100">
+      <div class="d-flex flex-column gap-3 w-100" formArrayName="chain">
+        @for (step of getFormArray(form, 'chain').controls; let i = $index; track step) {
+          <div [formGroupName]="i" class="chain-step card p-3 w-100">
+            <div class="d-flex align-items-start gap-2 flex-wrap w-100">
+              <!-- Method select -->
+              <select formControlName="methodId"
+                      (change)="onMethodChange(getFormArray(form,'chain'), i)"
+                      class="form-select form-select-sm" style="min-width: 200px">
+                <option [value]="null">Select method</option>
+                @for (method of getMethodsForStep(getFormArray(form, 'chain'), i); track method.id) {
+                  <option [value]="method.id">{{ method.display }}</option>
+                }
+              </select>
+
+              <div formArrayName="parameters" class="parameters d-flex align-items-center gap-2 flex-wrap">
+                @for (param of getParameters(getFormArray(form, 'chain'), i); let j = $index; track param) {
+                  <div [formGroupName]="j" class="parameter card p-2 bg-white">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="param-label badge bg-secondary">
+                          {{ param.value.metadata.name }}:
+                        </span>
+
+                      @if (param.get('mode').value === 'input') {
+                        <div class="d-flex align-items-center gap-2">
+                          <input formControlName="inputValue"
+                                 type="text"
+                                 class="form-control form-control-sm"
+                                 style="width: 120px"
+                                 placeholder="Value">
+                          <button (click)="toggleParameterMode(getFormArray(form,'chain'), i, j)"
+                                  class="btn btn-sm btn-outline-primary">
+                            ➔ Chain
+                          </button>
+                        </div>
+                      } @else {
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="nested-chain card p-2 bg-light w-100">
+                            <ng-container *ngTemplateOutlet="chainTemplate; context: { $implicit: param }">
+                            </ng-container>
+                          </div>
+                          <button (click)="toggleParameterMode(getFormArray(form,'chain'), i, j)"
+                                  class="btn btn-sm btn-outline-secondary">
+                            ➔ Input
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="mb-3">
+    <ng-container *ngTemplateOutlet="chainTemplate; context: { $implicit: formulaForm }"></ng-container>
+  </div>
+
+  <div class="mt-4">
+    <button (click)="submit()" class="btn btn-primary">Apply Formula</button>
+  </div>
+</div>

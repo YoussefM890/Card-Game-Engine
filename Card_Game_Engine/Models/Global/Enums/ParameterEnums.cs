@@ -15,6 +15,7 @@ public enum TriggerParameterEnum
     ScoreType = 10,
     TriggerBehaviour = 11,
     Filter = 12,
+    Condition = 13,
 }
 
 public enum ActionParameterEnum

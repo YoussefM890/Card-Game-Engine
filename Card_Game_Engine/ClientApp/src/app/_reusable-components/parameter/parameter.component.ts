@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {PositionsSelectorModalComponent} from "./positions-selector-modal/positions-selector-modal.component";
 import {CsvToIntSet} from "../../shared/functions/global";
 import {FilterModalComponent} from "./filter-modal/filter-modal.component";
+import {FormulaBuilderModalComponent} from "./formula-builder-modal/formula-builder-modal.component";
 
 @Component({
   selector: 'app-parameter',
@@ -81,6 +82,21 @@ export class ParameterComponent implements OnInit {
     }).afterClosed().subscribe((filter) => {
       console.log('filter back from modal:', filter)
       this.valueControl.setValue(filter);
+    });
+  }
+
+  openFormulaBuilderModal(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dialog.open(FormulaBuilderModalComponent, {
+      width: '1300px',
+      height: '800px',
+      data: {
+        formula: this.valueControl.value
+      }
+    }).afterClosed().subscribe((formula) => {
+      console.log('formula back from modal:', formula)
+      this.valueControl.setValue(formula);
     });
   }
 }

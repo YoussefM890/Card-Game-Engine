@@ -89,4 +89,14 @@ public class TriggerService
 
         return TriggerFunctions.IsScoreMatching(triggerParams, beforeActionUsers, afterActionUsers);
     }
+
+    public bool ExecuteFormulaTrigger(Trigger trigger, List<GridItem> beforeActionCardContainer,
+        List<GridItem> afterActionCardContainer, List<User> beforeActionUsers, List<User> afterActionUsers)
+    {
+        var condition = RetrievalUtils.GetStringParameterValue(trigger.Parameters, TriggerParameterEnum.Condition);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNullOrEmpty("Invalid Formula trigger parameters.", condition);
+
+        return TriggerFunctions.IsFormulaMatching(condition!, afterActionCardContainer, afterActionUsers);
+    }
 }
