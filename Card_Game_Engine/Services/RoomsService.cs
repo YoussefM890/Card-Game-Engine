@@ -1,6 +1,5 @@
 using Card_Game_Engine.Exceptions;
 using Card_Game_Engine.Models.Global.Classes;
-using Card_Game_Engine.Models.Global.Enums;
 
 namespace Card_Game_Engine.Services;
 
@@ -13,6 +12,7 @@ public class RoomsService
         _rooms = new Dictionary<string, Room>();
     }
 
+
     public string CreateRoom(string userId)
     {
         var maxRooms = 3;
@@ -23,34 +23,23 @@ public class RoomsService
 
         var roomId = Guid.NewGuid().ToString();
         _rooms.Add(roomId, new Room(roomId));
-        _rooms.Last().Value.Users.Add(new User(userId, true, RoleEnum.Player1));
+        _rooms.Last().Value.Users.Add(new User(userId, true, "User 1"));
         Console.WriteLine("room Created");
-        // Console.WriteLine(string.Join(", ", _rooms.Select(room => room.Value.Id)));
         return roomId;
     }
 
-    public RoleEnum JoinRoom(string roomId, string userId)
+    public void JoinRoom(string roomId, string userId)
     {
         if (_rooms.ContainsKey(roomId))
         {
             var usersCount = _rooms[roomId].Users.Count;
-            if (usersCount >= 3)
+            if (usersCount >= 5)
             {
                 throw new MaxUsersPerRoomException();
             }
 
-            switch (usersCount)
-            {
-                case 1:
-                    _rooms[roomId].Users.Add(new User(userId, false, RoleEnum.Player2));
-                    break;
-                default:
-                    _rooms[roomId].Users.Add(new User(userId, false, RoleEnum.Spectator));
-                    break;
-            }
-
-            Console.WriteLine("rooms " + _rooms.ToString());
-            return _rooms[roomId].Users.Last().Role;
+            string userName = "User" + (usersCount + 1);
+            _rooms[roomId].Users.Add(new User(userId, false, userName));
         }
         else
         {
@@ -94,27 +83,6 @@ public class RoomsService
         }
 
         return userToRemove;
-    }
-
-
-    private void SetRoomOwner(string roomId)
-    {
-        if (_rooms.TryGetValue(roomId, out var room) && room.Users.Any())
-        {
-            var oldestUser = room.Users.OrderBy(user => user.JoinedAt).First();
-            oldestUser.IsRoomOwner = true;
-        }
-    }
-
-    public List<User> GetAllUsersInTheSameRoom(string userId)
-    {
-        var room = GetRoomByUserId(userId);
-        if (room == null)
-        {
-            return new List<User>();
-        }
-
-        return room.Users;
     }
 
     public List<User> GetOtherUsersInTheSameRoom(string userId)

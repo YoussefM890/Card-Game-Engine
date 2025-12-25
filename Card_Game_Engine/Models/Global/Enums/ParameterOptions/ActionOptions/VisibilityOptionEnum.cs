@@ -6,6 +6,5 @@ public enum VisibilityOptionEnum
     Cell, //have the same visibility as the grid item
     Visible = 2,
     Hidden = 3,
-    Player1 = 4,
-    Player2 = 5,
+    Private = 4, //visible only to the player who moved it
 }

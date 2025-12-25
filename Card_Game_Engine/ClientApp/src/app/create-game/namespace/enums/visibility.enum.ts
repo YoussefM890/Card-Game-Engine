@@ -1,15 +1,13 @@
 export enum VisibilityEnum {
-  Visible = 2,
-  Hidden = 3,
-  Player1 = 4,
-  Player2 = 5,
+  All = 2,
+  None = 3,
+  Specific = 4,
 }
 
 export const VisibilityEnumView = {
-  [VisibilityEnum.Visible]: "Visible",
-  [VisibilityEnum.Hidden]: "Hidden",
-  [VisibilityEnum.Player1]: "Player 1",
-  [VisibilityEnum.Player2]: "Player 2",
+  [VisibilityEnum.All]: "All Players",
+  [VisibilityEnum.None]: "No Players",
+  [VisibilityEnum.Specific]: "Specific Players",
 } as const;
 
 export type VisibilityEnumType = keyof typeof VisibilityEnumView;

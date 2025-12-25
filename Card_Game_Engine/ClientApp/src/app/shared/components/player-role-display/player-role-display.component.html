@@ -1,0 +1,31 @@
+<div class="player-role-display-compact">
+  <!-- Compact vertical scoreboard with roles -->
+  <div class="scoreboard">
+    @for (assignment of assignedUsers; track assignment.userId) {
+      <div class="player-card"
+           [class.current-user]="isCurrentUser(assignment)"
+           [matTooltip]="getPlayerForAssignment(assignment)?.description || ''">
+        <div class="player-header">
+          <mat-icon class="player-icon">{{ isCurrentUser(assignment) ? 'person' : 'sports_esports' }}</mat-icon>
+          <span class="player-role">{{ getPlayerForAssignment(assignment)?.role || 'Unknown' }}</span>
+          @if (isCurrentUser(assignment)) {
+            <mat-chip class="you-badge">YOU</mat-chip>
+          }
+        </div>
+        <div class="player-info">
+          <span class="user-name">{{ assignment.userName }}</span>
+          <span class="score">{{ getPlayerScore(assignment) }} pts</span>
+        </div>
+      </div>
+    }
+
+    <!-- Spectators count (if any) -->
+    @if (spectatorCount > 0) {
+      <div class="spectators-badge"
+           [matTooltip]="'Spectators: ' + spectatorCount">
+        <mat-icon>visibility</mat-icon>
+        <span>{{ spectatorCount }}</span>
+      </div>
+    }
+  </div>
+</div>

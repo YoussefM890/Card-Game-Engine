@@ -1,0 +1,62 @@
+<mat-toolbar class="d-flex justify-content-between">
+  <span>Edit Players</span>
+  <span class="flex-spacer"></span>
+  <button mat-button mat-dialog-close="">&times;</button>
+</mat-toolbar>
+
+<div [formGroup]="form">
+  <table [dataSource]="dataSource" class="mat-elevation-z8" formArrayName="players" mat-table>
+
+    <ng-container matColumnDef="role">
+      <th *matHeaderCellDef mat-header-cell>Role</th>
+      <td *matCellDef="let element; let i = index" mat-cell>
+        <mat-form-field appearance="fill">
+          <mat-label>Role</mat-label>
+          <input [formControl]="element.get('role')" matInput>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th *matHeaderCellDef mat-header-cell> Description</th>
+      <td *matCellDef="let element; let i = index" mat-cell>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <input [formControl]="element.get('description')" matInput>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="side">
+      <th *matHeaderCellDef mat-header-cell> Perspective</th>
+      <td *matCellDef="let element; let i = index" mat-cell>
+        <mat-form-field appearance="fill">
+          <mat-label>Perspective</mat-label>
+          <mat-select [formControl]="element.get('perspective')">
+            @for (option of perspectiveOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.display }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th *matHeaderCellDef mat-header-cell> Delete</th>
+      <td *matCellDef="let element; let i = index" mat-cell>
+        <button (click)="removePlayer(i)" [disabled]="playersArray.length <= 1" color="warn" mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  </table>
+  <div class="w-100 d-flex justify-content-between">
+    <button (click)="addPlayer()" [disabled]="playersArray.length >= 6" class="m-3" color="primary" mat-raised-button>
+      Add Player
+    </button>
+    <button (click)="onSubmit()" class="m-3" color="accent" mat-raised-button>Submit</button>
+  </div>
+</div>

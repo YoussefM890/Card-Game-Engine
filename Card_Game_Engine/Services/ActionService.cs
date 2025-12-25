@@ -11,16 +11,18 @@ namespace Card_Game_Engine.Services;
 public class ActionService
 {
     private readonly ActionFunctions _actionFunctions;
-    private readonly List<GridItem> _grid;
+    private readonly Room _room;
 
-    public ActionService(List<GridItem> grid, List<User> users)
+    public ActionService(Room room)
     {
-        _grid = grid;
-        _actionFunctions = new ActionFunctions(grid, users);
+        _room = room;
+        _actionFunctions = new ActionFunctions(room);
     }
 
+    private List<GridItem> _grid => _room.Grid;
 
-    public void ExecuteMoveCardAction(Action action)
+
+    public void ExecuteMoveCardAction(Action action, string? userId = null)
     {
         var fromPosition = RetrievalUtils.GetIntParameterValue(action.Parameters, ActionParameterEnum.FromPosition);
         var fromPositionsString =
@@ -69,7 +71,7 @@ public class ActionService
 
         MoveCardAction actionParams = new(fromPosition, fromPositions, toPosition, toPositions, cardCount!.Value,
             (VisibilityOptionEnum)visibility!);
-        _actionFunctions.MoveCards(actionParams);
+        _actionFunctions.MoveCards(actionParams, userId);
     }
 
 
@@ -88,16 +90,21 @@ public class ActionService
     public void ExecuteAddScoreAction(Action action)
     {
         var valueToAdd = RetrievalUtils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Value, 1);
-        var player = RetrievalUtils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Player);
-        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid AddScore action parameters.", valueToAdd, player);
-        _actionFunctions.AddScore(valueToAdd!.Value, (PlayerOptionEnum)player!.Value);
+        var playersString = RetrievalUtils.GetStringParameterValue(action.Parameters, ActionParameterEnum.Players);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid AddScore action value parameters.", valueToAdd);
+        ExceptionHandlingUtils.ThrowExceptionIfAllNullOrEmpty("Invalid AddScore Players parameters.", playersString);
+        var players = ParsingUtils.CsvToIntList(playersString, "AddScore Players");
+        _actionFunctions.AddScore(valueToAdd!.Value, players!);
     }
 
     public void ExecuteSetScoreAction(Action action)
     {
         var value = RetrievalUtils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Value, 0);
-        var player = RetrievalUtils.GetIntParameterValue(action.Parameters, ActionParameterEnum.Player);
-        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid SetScore action parameters.", value, player);
-        _actionFunctions.SetScore(value!.Value, (PlayerOptionEnum)player!.Value);
+        var playersString = RetrievalUtils.GetStringParameterValue(action.Parameters, ActionParameterEnum.Players);
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid AddScore action value parameters.", value);
+        ExceptionHandlingUtils.ThrowExceptionIfAllNullOrEmpty("Invalid AddScore Players parameters.", playersString);
+        var players = ParsingUtils.CsvToIntList(playersString, "SetScore Players");
+        _actionFunctions.SetScore(value!.Value, players!);
     }
 }

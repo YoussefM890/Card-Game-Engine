@@ -25,4 +25,5 @@ public class Card
     public string Name { get; set; }
     public CardVisibilityEnum Visibility { get; set; }
     public bool IsPlayable { get; set; }
+    public List<int> VisibleTo { get; set; } = new List<int>(); // List of player IDs who can see this card
 }

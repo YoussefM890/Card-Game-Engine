@@ -64,3 +64,9 @@
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.player-sidebar {
+  min-width: 200px;
+  max-width: 250px;
+  margin-left: 16px;
+}

@@ -1,0 +1,110 @@
+<div class="player-assignment-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>people</mat-icon>
+    Assign Players
+  </h2>
+
+  <mat-dialog-content>
+    <!-- Participants List -->
+    <div class="section">
+      <h3>Room Participants</h3>
+      <mat-list>
+        @for (participant of participants; track participant.userId) {
+          <mat-list-item class="participant-item">
+            <div class="participant-row">
+              <!-- User Info -->
+              <div class="user-info">
+                <mat-icon matListItemIcon>person</mat-icon>
+                <div matListItemTitle class="user-details">
+                  <span class="user-name">{{ participant.userName }}</span>
+                  @if (participant.isRoomOwner) {
+                    <mat-chip class="owner-chip">Admin</mat-chip>
+                  }
+                </div>
+              </div>
+
+              <!-- Player Assignment -->
+              <div class="assignment-controls">
+                <mat-form-field appearance="outline" class="player-select">
+                  <mat-label>Select Player</mat-label>
+                  <mat-select [value]="getAssignment(participant.userId)"
+                              (selectionChange)="onAssignmentChange(participant.userId, $event.value)">
+                    <mat-option [value]="null">
+                      <mat-icon>visibility</mat-icon>
+                      Spectator
+                    </mat-option>
+                    @for (player of getAvailablePlayersForUser(participant.userId); track player.id) {
+                      <mat-option [value]="player.id">
+                        <mat-icon>sports_esports</mat-icon>
+                        {{ player.role }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-list>
+
+      @if (participants.length === 0) {
+        <div class="empty-state">
+          <mat-icon>info</mat-icon>
+          <p>No users in the room yet</p>
+        </div>
+      }
+    </div>
+
+    <!-- Available Players -->
+    @if (allPlayers.length > 0) {
+      <div class="section available-players-section">
+        <h3>All Players ({{ allPlayers.length }})</h3>
+        <div class="available-players-grid">
+          @for (player of allPlayers; track player.id) {
+            <div class="available-player-card">
+              <mat-icon>sports_esports</mat-icon>
+              <div class="player-info">
+                <span class="player-role">{{ player.role }}</span>
+                @if (player.description) {
+                  <span class="player-desc">{{ player.description }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Assignment Summary -->
+    <div class="section summary-section">
+      <div class="summary-card">
+        <div class="summary-item">
+          <mat-icon>people</mat-icon>
+          <span>{{ participants.length }} Users</span>
+        </div>
+        <div class="summary-item">
+          <mat-icon>sports_esports</mat-icon>
+          <span>{{ getAssignedCount() }} Players Assigned</span>
+        </div>
+        <div class="summary-item">
+          <mat-icon>visibility</mat-icon>
+          <span>{{ getSpectatorCount() }} Spectators</span>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button (click)="onCancel()" mat-button>
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button (click)="onSave()"
+            color="primary"
+            mat-raised-button>
+      <mat-icon>check</mat-icon>
+      Save & Apply
+    </button>
+  </mat-dialog-actions>
+</div>

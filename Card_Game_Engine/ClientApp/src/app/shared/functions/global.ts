@@ -36,17 +36,28 @@ export function clearFormArray(formArray: FormArray) {
   }
 }
 
+/**
+ * Replaces all controls in the given FormArray with new ones built from the provided array.
+ * Ensures that valueChanges only emits once by suppressing intermediate emissions.
+ * Useful for resetting or reloading the form without triggering multiple change events.
+ *
+ * @param formArray - The FormArray to update.
+ * @param arrayValue - The new values to populate the FormArray with.
+ */
 export function recreateFormArray(formArray: FormArray, arrayValue: any[]) {
-  clearFormArray(formArray);
-  arrayValue.forEach(value => {
-    const group = {};
+  const controls = arrayValue.map(value => {
+    const group: Record<string, FormControl> = {};
     Object.keys(value).forEach(key => {
       group[key] = new FormControl(value[key]);
     });
-    const control = new FormGroup(group);
-    formArray.push(control);
+    return new FormGroup(group);
   });
+
+  formArray.clear({emitEvent: false});
+  controls.forEach(control => formArray.push(control, {emitEvent: false}));
+  formArray.updateValueAndValidity({emitEvent: true});
 }
+
 
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text).then(() => {

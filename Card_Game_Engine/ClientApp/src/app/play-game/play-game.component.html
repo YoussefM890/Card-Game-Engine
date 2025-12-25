@@ -1,50 +1,60 @@
 <div class="max d-flex flex-column">
   <app-nav [parentComponent]="'play-game'"></app-nav>
   <div class="p-2 max">
-    <div class="max d-flex flex-column justify-content-between">
-      <div class="d-flex justify-content-between">
-        <div>
+    <div class="w-100 d-flex justify-content-between">
+      <div class="d-flex justify-content-between flex-grow-1">
+        <div class="d-flex gap-2 mb-2">
           @if (userInfo.isRoomOwner) {
-            <button (click)="startGame()" color="accent" mat-raised-button>Start Game</button>
+            <button (click)="startGame()" color="accent" mat-raised-button>
+              <mat-icon>play_arrow</mat-icon>
+              Start Game
+            </button>
+            <button (click)="openPlayerAssignmentDialog()" color="primary" mat-raised-button>
+              <mat-icon>people</mat-icon>
+              Assign Players
+            </button>
           }
         </div>
-        <div>
-            <span [style.color]="isPlayer1 ? 'green' : 'black'">
-              {{ (isPlayer1 ? 'Your Score: ' : 'Player 1 Score: ') + game.player1Score }}
-            </span>
-          <span [style.color]="isPlayer2 ? 'green' : 'black'" class="ms-5">
-              {{ (isPlayer2 ? 'Your Score: ' : 'Player 2 Score: ') + game.player2Score }}
-            </span>
-        </div>
-        <div>
-          <mat-chip-set>
+        <div class="d-flex justify-content-end">
+          @if (manualTriggers.length > 0) {
+            <h4 class="me-2">Manual Triggers: </h4>
+          }
+          <div class="d-flex gap-2 ">
             @for (trigger of manualTriggers; track trigger.id) {
-              <mat-chip
+              <button
+                mat-raised-button
+                color="warn"
                 [matTooltip]="trigger.description"
                 (click)="invokeTrigger(trigger.id)"
               >{{ trigger.name }}
-              </mat-chip>
+              </button>
             }
-          </mat-chip-set>
+          </div>
+
         </div>
       </div>
-      <div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
-        @for (option of visibilityOptions; track option) {
-          <div class="example-box"
-               cdkDrag cdkDragLockAxis="y"
-               [cdkDragDisabled]="option.disabled"
-               (click)="toggleOption(option)"
-               [style.background]=option.background
-               [style.color]=option.color
-               [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
-               [matTooltip]="option.description"
-          >
-            {{ option.display }}
-          </div>
-        }
+
+      <!-- Vertical Player Role Display with Scores on the Right -->
+      <div class="player-sidebar">
+        <app-player-role-display [game]="game"></app-player-role-display>
       </div>
-      <div></div>
     </div>
+    <div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
+      @for (option of visibilityOptions; track option) {
+        <div class="example-box"
+             cdkDrag cdkDragLockAxis="y"
+             [cdkDragDisabled]="option.disabled"
+             (click)="toggleOption(option)"
+             [style.background]=option.background
+             [style.color]=option.color
+             [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
+             [matTooltip]="option.description"
+        >
+          {{ option.display }}
+        </div>
+      }
+    </div>
+    <div></div>
   </div>
 </div>
 

@@ -1,0 +1,129 @@
+.player-role-display-compact {
+  .scoreboard {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .player-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 12px;
+      background: white;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      width: 100%;
+
+      &:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      &.current-user {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #FFD700;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+
+        .player-icon {
+          color: #FFD700;
+        }
+
+        .player-role {
+          font-weight: 700;
+        }
+
+        .user-name {
+          opacity: 0.9;
+        }
+
+        .score {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+        }
+      }
+
+      .player-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+
+        .player-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: #667eea;
+        }
+
+        .player-role {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #333;
+          flex: 1;
+        }
+
+        .you-badge {
+          height: 20px;
+          font-size: 0.65rem;
+          font-weight: 700;
+          background: #FFD700;
+          color: #333;
+          padding: 0 6px;
+        }
+      }
+
+      .player-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+
+        .user-name {
+          font-size: 0.75rem;
+          color: #666;
+          font-weight: 500;
+        }
+
+        .score {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #4CAF50;
+          background: #E8F5E9;
+          padding: 2px 8px;
+          border-radius: 12px;
+        }
+      }
+    }
+
+    .spectators-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      background: #9E9E9E;
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: help;
+      width: 100%;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

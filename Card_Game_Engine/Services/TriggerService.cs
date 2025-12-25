@@ -1,5 +1,4 @@
 using Card_Game_Engine.Functions;
-using Card_Game_Engine.Models.Enums.ParameterOptions.TriggerOptions;
 using Card_Game_Engine.Models.Global.Classes;
 using Card_Game_Engine.Models.Global.Classes.Triggers;
 using Card_Game_Engine.Models.Global.Enums;
@@ -61,42 +60,108 @@ public class TriggerService
         return TriggerFunctions.IsDeckCardCountMatching(triggerParams, after);
     }
 
-    public bool ExecuteScoreTrigger(Trigger trigger, List<User> beforeActionUsers, List<User> afterActionUsers)
+
+    public bool ExecuteScoreSingleTrigger(Trigger trigger, List<Player> beforePlayers, List<Player> afterPlayers)
     {
-        var scoreType = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.ScoreType);
+        var playerId = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.Player);
         var equalTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.EqualTo);
         var lessThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.LessThan);
         var greaterThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.GreaterThan);
         var notEqualTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.NotEqualTo);
-        var triggerBehaviour = RetrievalUtils.GetIntParameterValue(trigger.Parameters,
-            TriggerParameterEnum.TriggerBehaviour,
+        var behaviour = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.TriggerBehavior,
             (int)TriggerBehaviourOptionEnum.OnChange);
 
-        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid Score trigger parameters: ScoreType is missing.",
-            scoreType);
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNull("Invalid Score(Single) trigger: Player is missing.", playerId);
         ExceptionHandlingUtils.ThrowExceptionIfAllNull(
-            "Invalid Score trigger parameters: No comparison value provided.", equalTo,
-            lessThan, greaterThan, notEqualTo);
+            "Invalid Score(Single) trigger: No comparison provided.",
+            equalTo, lessThan, greaterThan, notEqualTo);
 
-        ScoreTrigger triggerParams = new(
-            (ScoreTypeOptionEnum)scoreType!.Value,
-            (TriggerBehaviourOptionEnum)triggerBehaviour!.Value,
+        var p = new ScoreSingleTrigger(
+            playerId!.Value,
+            (TriggerBehaviourOptionEnum)behaviour!.Value,
             equalTo,
             lessThan,
             greaterThan,
             notEqualTo
         );
 
-        return TriggerFunctions.IsScoreMatching(triggerParams, beforeActionUsers, afterActionUsers);
+        return TriggerFunctions.IsScoreSingleMatching(p, beforePlayers, afterPlayers);
+    }
+
+    public bool ExecuteScoreGroupTrigger(Trigger trigger, List<Player> beforePlayers, List<Player> afterPlayers)
+    {
+        var playersCsv = RetrievalUtils.GetStringParameterValue(trigger.Parameters, TriggerParameterEnum.Players);
+        var aggregate = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.Aggregate);
+        var equalTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.EqualTo);
+        var lessThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.LessThan);
+        var greaterThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.GreaterThan);
+        var notEqualTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.NotEqualTo);
+        var behaviour = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.TriggerBehavior,
+            (int)TriggerBehaviourOptionEnum.OnChange);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNullOrEmpty(
+            "Invalid Score(Group) trigger: Players or Aggregate missing.", playersCsv);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNull(
+            "Invalid Score(Group) trigger: Aggregate is missing.", aggregate);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAllNull(
+            "Invalid Score(Group) trigger: No comparison provided.",
+            equalTo, lessThan, greaterThan, notEqualTo);
+
+        var playerIds = ParsingUtils.CsvToIntList(playersCsv!);
+
+        var p = new ScoreGroupTrigger(
+            playerIds!,
+            (AggregateOptionEnum)aggregate!.Value,
+            (TriggerBehaviourOptionEnum)behaviour!.Value,
+            equalTo,
+            lessThan,
+            greaterThan,
+            notEqualTo
+        );
+
+        return TriggerFunctions.IsScoreGroupMatching(p, beforePlayers, afterPlayers);
+    }
+
+    public bool ExecuteScorePairTrigger(Trigger trigger, List<Player> beforePlayers, List<Player> afterPlayers)
+    {
+        var playerAId = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.PlayerA);
+        var playerBId = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.PlayerB);
+        var equalTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.EqualTo);
+        var lessThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.LessThan);
+        var greaterThan = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.GreaterThan);
+        var notEqualTo = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.NotEqualTo);
+        var behaviour = RetrievalUtils.GetIntParameterValue(trigger.Parameters, TriggerParameterEnum.TriggerBehavior,
+            (int)TriggerBehaviourOptionEnum.OnChange);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAnyNull(
+            "Invalid Score(Pair) trigger: Player A or B is missing.", playerAId, playerBId);
+
+        ExceptionHandlingUtils.ThrowExceptionIfAllNull(
+            "Invalid Score(Pair) trigger: No comparison provided.",
+            equalTo, lessThan, greaterThan, notEqualTo);
+
+        var p = new ScorePairTrigger(
+            playerAId!.Value,
+            playerBId!.Value,
+            (TriggerBehaviourOptionEnum)behaviour!.Value,
+            equalTo,
+            lessThan,
+            greaterThan,
+            notEqualTo
+        );
+
+        return TriggerFunctions.IsScorePairMatching(p, beforePlayers, afterPlayers);
     }
 
     public bool ExecuteFormulaTrigger(Trigger trigger, List<GridItem> beforeActionCardContainer,
-        List<GridItem> afterActionCardContainer, List<User> beforeActionUsers, List<User> afterActionUsers)
+        List<GridItem> afterActionCardContainer, List<Player> beforeActionPlayers, List<Player> afterActionPlayers)
     {
         var condition = RetrievalUtils.GetStringParameterValue(trigger.Parameters, TriggerParameterEnum.Condition);
 
         ExceptionHandlingUtils.ThrowExceptionIfAnyNullOrEmpty("Invalid Formula trigger parameters.", condition);
 
-        return TriggerFunctions.IsFormulaMatching(condition!, afterActionCardContainer, afterActionUsers);
+        return TriggerFunctions.IsFormulaMatching(condition!, afterActionCardContainer, afterActionPlayers);
     }
 }

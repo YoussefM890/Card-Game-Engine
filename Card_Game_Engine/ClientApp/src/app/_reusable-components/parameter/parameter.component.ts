@@ -43,13 +43,44 @@ export class ParameterComponent implements OnInit {
   }
 
 
+  // Get the display value for multiselect (array) or regular value
+  get displayValue() {
+    const value = this.valueControl.value;
+    if (this.selectedParameter?.type === ParameterValueTypeEnum.MultiSelect && typeof value === 'string') {
+      // Convert CSV to array for display only
+      if (!value || value.trim() === '') {
+        return [];
+      }
+      return value.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v));
+    }
+    return value;
+  }
+
+  // TODO: this issue will have to be fixed in another way this is just a workaround
+
   ngOnInit(): void {
     this.selectedParameter = this.availableParameters.find(p => p.id === this.parameterForm.value.id);
+
+    // REMOVED: Don't modify the form value
+    // Just ensure it's a string (empty string if null/undefined)
+    if (this.selectedParameter?.type === ParameterValueTypeEnum.MultiSelect) {
+      const currentValue = this.valueControl.value;
+      if (currentValue === null || currentValue === undefined) {
+        this.valueControl.setValue('', {emitEvent: false});
+      }
+    }
+  }
+
+  // TODO: this issue will have to be fixed in another way this is just a workaround (all 3 TODOs are related to the same issue)
+
+  // Convert array back to CSV when multiselect value changes
+  onMultiSelectChange(selectedValues: number[]) {
+    const csvString = selectedValues && selectedValues.length > 0 ? selectedValues.join(',') : '';
+    this.valueControl.setValue(csvString);
   }
 
   onParameterChange(paramId: number) {
     this.selectedParameter = this.availableParameters.find(p => p.id === paramId);
-    this.valueControl.setValue(null);
     this.parameterChange.emit(paramId);
   }
 

@@ -12,10 +12,15 @@ public enum TriggerParameterEnum
     EqualTo = 7,
     NotEqualTo = 8,
     PositionsRelation = 9,
-    ScoreType = 10,
-    TriggerBehaviour = 11,
+    ScoreMode = 10,
+    TriggerBehavior = 11,
     Filter = 12,
     Condition = 13,
+    PlayerA = 14,
+    PlayerB = 15,
+    Aggregate = 16,
+    Player = 17,
+    Players = 18,
 }
 
 public enum ActionParameterEnum
@@ -30,5 +35,5 @@ public enum ActionParameterEnum
     FromPositions = 7,
     ToPositions = 8,
     Value = 9,
-    Player = 10,
+    Players = 10,
 }

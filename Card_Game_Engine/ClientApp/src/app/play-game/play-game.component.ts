@@ -10,7 +10,6 @@ import {GridItem} from "./namespace/classes/grid-item";
 import {Game} from "./namespace/classes/game";
 import {Action} from './namespace/classes/action';
 import {ActionEnum} from "../_reusable-components/action/namespace/enums/action.enum";
-import {VisibilityOptionEnum} from "../_reusable-components/parameter/namespace/enums/parameter-value-options.enums";
 import {Parameter} from './namespace/classes/parameter';
 import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/enums/parameter.enums";
 import {TriggerEnum} from "../_reusable-components/trigger/namespace/enums/trigger.enum";
@@ -18,13 +17,18 @@ import {MatChip, MatChipSet} from "@angular/material/chips";
 import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
 import {CssStyle} from "../shared/models/classes/css-style";
 import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
-import {RoleEnum} from "../shared/models/enums/role.enum";
 import {SignalRService} from "../shared/services/signalr.service";
 import {MatGridList} from "@angular/material/grid-list";
 import {UserInfo} from "../shared/models/classes/user-info";
 import {NavComponent} from "../_reusable-components/nav/nav.component";
 import {generateGridDimensionsFromHeight} from "../_reusable-components/grid/namespace/functions";
 import {Subscription} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  PlayerAssignmentDialogComponent
+} from "../shared/components/player-assignment-dialog/player-assignment-dialog.component";
+import {MatIcon} from "@angular/material/icon";
+import {PlayerRoleDisplayComponent} from "../shared/components/player-role-display/player-role-display.component";
 
 @Component({
   selector: 'app-play-game',
@@ -42,6 +46,8 @@ import {Subscription} from "rxjs";
     MatChipSet,
     MatGridList,
     NavComponent,
+    MatIcon,
+    PlayerRoleDisplayComponent,
   ],
   templateUrl: './play-game.component.html',
   styleUrl: './play-game.component.scss'
@@ -58,11 +64,13 @@ export class PlayGameComponent implements OnInit, OnDestroy {
   itemStyles = null;
   manualTriggers: ManualTrigger[] = [];
   userInfo: UserInfo;
-  isPlayer1 = false;
-  isPlayer2 = false;
   gridStyles = {};
 
-  constructor(@Inject(DOCUMENT) private document: Document, private signalrService: SignalRService) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private signalrService: SignalRService,
+    private dialog: MatDialog
+  ) {
   }
 
   @HostListener('window:resize', ['$event'])
@@ -85,8 +93,6 @@ export class PlayGameComponent implements OnInit, OnDestroy {
     this.userInfoSubscription = this.signalrService.userInfo$.subscribe(userInfo => {
       if (!userInfo) return;
       this.userInfo = userInfo;
-      this.isPlayer1 = userInfo.role === RoleEnum.Player1;
-      this.isPlayer2 = userInfo.role === RoleEnum.Player2;
     });
   }
 
@@ -174,11 +180,6 @@ export class PlayGameComponent implements OnInit, OnDestroy {
   private moveCard(fromPosition: number, toPosition: number, visibilityOption: play_game.VisibilityOption) {
     console.log(`Moving card ${fromPosition} to ${toPosition} with visibility ${visibilityOption.display}`);
     let trueVisibility: string = visibilityOption.value;
-    if (visibilityOption.value === play_game.VisibilityEnum.Private) {
-      this.signalrService.playerRole === RoleEnum.Player2
-        ? trueVisibility = VisibilityOptionEnum.Player2
-        : trueVisibility = VisibilityOptionEnum.Player1
-    }
     const action = new Action(ActionEnum.MoveCard);
     action.addParameter(new Parameter(ActionParameterEnum.FromPositions, '' + fromPosition));
     action.addParameter(new Parameter(ActionParameterEnum.ToPosition, '' + toPosition));
@@ -187,5 +188,19 @@ export class PlayGameComponent implements OnInit, OnDestroy {
     this.selectedVisibilityOption = null;
     this.selectedCellId = null;
     this.updateItemStyles();
+  }
+
+
+  openPlayerAssignmentDialog(): void {
+    const dialogRef = this.dialog.open(PlayerAssignmentDialogComponent, {
+      width: '700px',
+      maxWidth: '90vw',
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // No need to start game here, it's already running
+      console.log('Player assignment dialog closed');
+    });
   }
 }

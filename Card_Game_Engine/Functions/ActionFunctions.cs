@@ -7,22 +7,27 @@ namespace Card_Game_Engine.Functions;
 
 public class ActionFunctions
 {
-    private readonly List<GridItem> _grid;
-    private readonly List<User> _users;
+    private readonly Room _room;
 
-    public ActionFunctions(List<GridItem> grid, List<User> users)
+    public ActionFunctions(Room room)
     {
-        _grid = grid;
-        _users = users;
+        _room = room;
     }
 
-    public void MoveCards(MoveCardAction action)
+    private List<GridItem> _grid => _room.Grid;
+    private List<User> _users => _room.Users;
+    private List<Player> _players => _room.Players;
+
+
+    public void MoveCards(MoveCardAction action, string? userId = null)
     {
         // Handle moving cards
         List<int> fromPositions = action.FromPositions ?? new List<int> { action.FromPosition!.Value };
         List<int> toPositions = action.ToPositions ?? new List<int> { action.ToPosition!.Value };
         List<Card> movedCards = new();
 
+        // Get the player ID of the user who invoked this action (for Private visibility)
+        int? currentPlayerId = userId != null ? _room.GetPlayerIdForUser(userId) : null;
 
         foreach (var fromPosition in fromPositions)
         {
@@ -80,18 +85,21 @@ public class ActionFunctions
                         break;
                     case VisibilityOptionEnum.Cell:
                         card.Visibility = (CardVisibilityEnum)toGridItem.Visibility;
+                        card.VisibleTo = toGridItem.VisibleTo;
                         break;
                     case VisibilityOptionEnum.Visible:
                         card.Visibility = CardVisibilityEnum.Visible;
+                        card.VisibleTo.Clear();
                         break;
                     case VisibilityOptionEnum.Hidden:
                         card.Visibility = CardVisibilityEnum.Hidden;
+                        card.VisibleTo.Clear();
                         break;
-                    case VisibilityOptionEnum.Player1:
-                        card.Visibility = CardVisibilityEnum.Player1;
-                        break;
-                    case VisibilityOptionEnum.Player2:
-                        card.Visibility = CardVisibilityEnum.Player2;
+                    case VisibilityOptionEnum.Private:
+                        card.Visibility = CardVisibilityEnum.Specific;
+                        card.VisibleTo.Clear();
+                        if (currentPlayerId.HasValue)
+                            card.VisibleTo.Add(currentPlayerId.Value);
                         break;
                 }
 
@@ -111,47 +119,23 @@ public class ActionFunctions
         }
     }
 
-    public void AddScore(int valueToAdd, PlayerOptionEnum player)
+    public void AddScore(int valueToAdd, List<int> playerIds)
     {
         List<User> users = new();
-        switch (player)
+        foreach (var playerId in playerIds)
         {
-            case PlayerOptionEnum.Player1:
-                users = _users.Where(user => user.Role == RoleEnum.Player1).ToList();
-                break;
-            case PlayerOptionEnum.Player2:
-                users = _users.Where(user => user.Role == RoleEnum.Player2).ToList();
-                break;
-            case PlayerOptionEnum.Both:
-                users = _users.Where(user => user.Role == RoleEnum.Player1 || user.Role == RoleEnum.Player2).ToList();
-                break;
-        }
-
-        foreach (var user in users)
-        {
-            user.Score += valueToAdd;
+            Player player = _players.First(p => p.Id == playerId);
+            player.Score += valueToAdd;
         }
     }
 
-    public void SetScore(int value, PlayerOptionEnum player)
+    public void SetScore(int value, List<int> playerIds)
     {
         List<User> users = new();
-        switch (player)
+        foreach (var playerId in playerIds)
         {
-            case PlayerOptionEnum.Player1:
-                users = _users.Where(user => user.Role == RoleEnum.Player1).ToList();
-                break;
-            case PlayerOptionEnum.Player2:
-                users = _users.Where(user => user.Role == RoleEnum.Player2).ToList();
-                break;
-            case PlayerOptionEnum.Both:
-                users = _users.Where(user => user.Role == RoleEnum.Player1 || user.Role == RoleEnum.Player2).ToList();
-                break;
-        }
-
-        foreach (var user in users)
-        {
-            user.Score = value;
+            Player player = _players.First(p => p.Id == playerId);
+            player.Score = value;
         }
     }
 }

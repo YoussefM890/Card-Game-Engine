@@ -55,6 +55,18 @@
           </button>
         </mat-form-field>
       }
+      @case (types.MultiSelect) {
+        <mat-form-field appearance="fill" class="col-5">
+          <mat-label>Value</mat-label>
+          <mat-select [value]="displayValue" (selectionChange)="onMultiSelectChange($event.value)" multiple>
+            @if (Array.isArray(selectedParameter.args)) {
+              @for (option of selectedParameter.args; track option.value) {
+                <mat-option [matTooltip]="option.description" [value]="option.value">{{ option.display }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+      }
     }
   }
 </div>

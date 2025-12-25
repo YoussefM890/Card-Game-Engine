@@ -23,10 +23,23 @@ public class GameEngineController : Hub
         await base.OnConnectedAsync();
     }
 
+    public string GetConnectionId()
+    {
+        return Context.ConnectionId;
+    }
+
     public override async Task OnDisconnectedAsync(Exception exception)
     {
+        var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
         var participants = this._roomsService.GetOtherUsersInTheSameRoom(Context.ConnectionId);
         _roomsService.RemoveUserIfInRoom(Context.ConnectionId);
+
+        // Broadcast updated room state to remaining users
+        if (room != null && participants.Any())
+        {
+            await BroadcastRoomState(room);
+        }
+
         foreach (var participant in participants)
         {
             await Clients.Client(participant.Id).SendAsync("UserDisconnected", Context.ConnectionId);
@@ -41,7 +54,12 @@ public class GameEngineController : Hub
         try
         {
             var roomId = _roomsService.CreateRoom(Context.ConnectionId);
-            await Clients.Caller.SendAsync("ReceiveUserInfo", new UserInfo(roomId, RoleEnum.Player1, true));
+            var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
+
+            await Clients.Caller.SendAsync("ReceiveUserInfo", new UserInfo(roomId, RoleEnum.Spectator, true));
+
+            // Send initial room state
+            await BroadcastRoomState(room!);
         }
         catch (MaxRoomsReachedException e)
         {
@@ -53,13 +71,20 @@ public class GameEngineController : Hub
     {
         try
         {
-            var userRole = _roomsService.JoinRoom(roomId, Context.ConnectionId);
-            await Clients.Caller.SendAsync("ReceiveUserInfo", new UserInfo(roomId, userRole, false));
-            var participants = this._roomsService.GetOtherUsersInTheSameRoom(Context.ConnectionId);
-            foreach (var participant in participants)
+            _roomsService.JoinRoom(roomId, Context.ConnectionId);
+            var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
+
+            // Send user info to the joining user
+            await Clients.Caller.SendAsync("ReceiveUserInfo", new UserInfo(roomId));
+
+            // Send game object to the joining user if game exists
+            if (room!.Players.Any())
             {
-                await Clients.Client(participant.Id).SendAsync("UserJoinedRoom", Context.ConnectionId);
+                await BroadcastGameObjectToUser(room, Context.ConnectionId);
             }
+
+            // Broadcast updated room state to all users in the room
+            await BroadcastRoomState(room);
         }
         catch (RoomDoesNotExistException e)
         {
@@ -74,48 +99,68 @@ public class GameEngineController : Hub
     public async Task LeaveRoom()
     {
         Console.WriteLine("LeaveRoom called");
-        var participants = this._roomsService.GetOtherUsersInTheSameRoom(Context.ConnectionId);
+        var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
         var removedUser = _roomsService.RemoveUserIfInRoom(Context.ConnectionId);
-        foreach (var participant in participants.Where(p => p.Id != Context.ConnectionId))
+
+        if (removedUser!.IsRoomOwner)
         {
-            if (removedUser!.IsRoomOwner)
+            // Room owner left - notify all remaining users
+            var participants = room!.Users;
+            foreach (var participant in participants)
             {
                 await Clients.Client(participant.Id).SendAsync("ReceiveAlert",
                     new Alert("Room Owner Left The Room", AlertTypeEnum.Warning));
                 await Clients.Client(participant.Id).SendAsync("ReceiveUserInfo", null);
             }
-            else
-            {
-                await Clients.Client(participant.Id).SendAsync("ReceiveAlert",
-                    new Alert("User Left The Room", AlertTypeEnum.Info));
-            }
+        }
+        else
+        {
+            // Regular user left - broadcast updated room state
+            await BroadcastRoomState(room!);
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert("You left the room", AlertTypeEnum.Info));
         }
     }
 
     public async Task CreateGame(CreateGame createGame)
     {
+        Console.WriteLine("CreateGame called");
         var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
-        room!.UpdateRules(createGame.Rules);
-        room.ManualTriggers = (createGame.ManualTriggers);
-        room.CardContainerService.ClearAndCreateEmptyGrid(createGame.Width, createGame.Height, createGame.Grid);
+
+        // Initialize grid FIRST before setting starting deck
+        room!.CardContainerService.ClearAndCreateEmptyGrid(createGame.Width, createGame.Height, createGame.Grid);
+
+        // Now set the starting deck
         room.CardContainerService.SetStartingDeck(createGame.StartingDeck, createGame.StartingPosition);
-        // Console.WriteLine(_databaseService.CardContainerService.ToString());
+
+        // Set other properties
+        room.Players = createGame.Players;
+        room.ManualTriggers = createGame.ManualTriggers;
+        room.UpdateRules(createGame.Rules);
+
+        // Broadcast updated room state AND game object (so players update in real-time)
+        await BroadcastRoomState(room);
+        await BroadcastGameObject(room);
+
+        await Clients.Caller.SendAsync("ReceiveAlert",
+            new Alert("Game updated successfully", AlertTypeEnum.Success));
     }
 
     public async Task InvokeExplicitAction(Action action)
     {
         Console.WriteLine("InvokeExplicitAction called!");
         var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
-        room!.RuleService.ProcessActions(new List<Action> { action });
+        room!.RuleService.ProcessActions(new List<Action> { action }, Context.ConnectionId);
         var width = room.CardContainerService.GetWidth();
         var height = room.CardContainerService.GetHeight();
-        var scores = room.UserService.GetScores();
+        var players = room.Players;
+        var userAssignments = GetUserAssignments(room);
 
         foreach (var user in room.Users)
         {
             var transferGrid = room.GetTransferGrid(user.Id);
             var manualTriggers = room.GetManualTriggersByUser(user.Id);
-            GameObject gameObject = new(transferGrid, scores[0], scores[1], width, height, manualTriggers);
+            GameObject gameObject = new(transferGrid, width, height, manualTriggers, players, userAssignments);
             await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
         }
     }
@@ -124,17 +169,140 @@ public class GameEngineController : Hub
     {
         // Console.WriteLine("InvokeExplicitTrigger called!");
         var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
-        room!.RuleService.FireTriggerIfFound(triggerId);
+        room!.RuleService.FireTriggerIfFound(triggerId, Context.ConnectionId);
         var width = room.CardContainerService.GetWidth();
         var height = room.CardContainerService.GetHeight();
-        var scores = room.UserService.GetScores();
+        var players = room.Players;
+        var userAssignments = GetUserAssignments(room);
 
         foreach (var user in room.Users)
         {
             var transferGrid = room.GetTransferGrid(user.Id);
             var manualTriggers = room.GetManualTriggersByUser(user.Id);
-            GameObject gameObject = new(transferGrid, scores[0], scores[1], width, height, manualTriggers);
+            GameObject gameObject = new(transferGrid, width, height, manualTriggers, players, userAssignments);
             await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
         }
+    }
+
+    public async Task AssignPlayerToUser(string userId, int playerId)
+    {
+        var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
+        var currentUser = room!.GetUser(Context.ConnectionId);
+
+        // Only room owner can assign players
+        if (currentUser == null || !currentUser.IsRoomOwner)
+        {
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert("Only the room owner can assign players", AlertTypeEnum.Error));
+            return;
+        }
+
+        // Check if player exists
+        var player = room.GetPlayer(playerId);
+        if (player == null)
+        {
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert($"Player with ID {playerId} does not exist", AlertTypeEnum.Error));
+            return;
+        }
+
+        // Check if user exists in room
+        var targetUser = room.GetUser(userId);
+        if (targetUser == null)
+        {
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert($"User not found in room", AlertTypeEnum.Error));
+            return;
+        }
+
+        // Assign player
+        room.AssignPlayerToUser(userId, playerId);
+
+        // Broadcast updated room state AND game object
+        await BroadcastRoomState(room);
+        await BroadcastGameObject(room);
+    }
+
+    public async Task UnassignPlayerFromUser(string userId)
+    {
+        var room = _roomsService.GetRoomByUserId(Context.ConnectionId);
+        var currentUser = room!.GetUser(Context.ConnectionId);
+
+        // Only room owner can unassign players
+        if (currentUser == null || !currentUser.IsRoomOwner)
+        {
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert("Only the room owner can unassign players", AlertTypeEnum.Error));
+            return;
+        }
+
+        // Check if user exists in room
+        var targetUser = room.GetUser(userId);
+        if (targetUser == null)
+        {
+            await Clients.Caller.SendAsync("ReceiveAlert",
+                new Alert($"User not found in room", AlertTypeEnum.Error));
+            return;
+        }
+
+        // Unassign player
+        room.UnassignPlayerFromUser(userId);
+
+        // Broadcast updated room state AND game object
+        await BroadcastRoomState(room);
+        await BroadcastGameObject(room);
+    }
+
+    // Helper method to broadcast room state to all users
+    private async Task BroadcastRoomState(Room room)
+    {
+        var roomState = room.GetRoomState();
+        foreach (var user in room.Users)
+        {
+            await Clients.Client(user.Id).SendAsync("ReceiveRoomState", roomState);
+        }
+    }
+
+    // Helper method to broadcast game object to all users
+    private async Task BroadcastGameObject(Room room)
+    {
+        var width = room.CardContainerService.GetWidth();
+        var height = room.CardContainerService.GetHeight();
+        var players = room.Players;
+        var userAssignments = GetUserAssignments(room);
+
+        foreach (var user in room.Users)
+        {
+            var transferGrid = room.GetTransferGrid(user.Id);
+            var manualTriggers = room.GetManualTriggersByUser(user.Id);
+            GameObject gameObject = new(transferGrid, width, height, manualTriggers, players, userAssignments);
+            await Clients.Client(user.Id).SendAsync("ReceiveGameObject", gameObject);
+        }
+    }
+
+    // Helper method to send game object to a specific user
+    private async Task BroadcastGameObjectToUser(Room room, string userId)
+    {
+        var width = room.CardContainerService.GetWidth();
+        var height = room.CardContainerService.GetHeight();
+        var players = room.Players;
+        var userAssignments = GetUserAssignments(room);
+
+        var transferGrid = room.GetTransferGrid(userId);
+        var manualTriggers = room.GetManualTriggersByUser(userId);
+        GameObject gameObject = new(transferGrid, width, height, manualTriggers, players, userAssignments);
+        await Clients.Client(userId).SendAsync("ReceiveGameObject", gameObject);
+    }
+
+    // Helper method to get user assignments for GameObject (maps from existing RoomUserPlayer)
+    private List<UserPlayerAssignmentDto> GetUserAssignments(Room room)
+    {
+        return room.Users.Select(user => new UserPlayerAssignmentDto
+        {
+            UserId = user.Id,
+            UserName = user.Name,
+            PlayerId = room.UserPlayerAssociations.FirstOrDefault(a => a.UserId == user.Id)?.PlayerId,
+            IsRoomOwner = user.IsRoomOwner
+        }).ToList();
     }
 }

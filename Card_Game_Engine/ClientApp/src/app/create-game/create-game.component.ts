@@ -25,7 +25,13 @@ import {CardComponent} from "../_reusable-components/card/card.component";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
-import {copyToClipboard, filterDictBySize, getEnumValues, recreateFormArray} from '../shared/functions/global';
+import {
+  copyToClipboard,
+  filterDictBySize,
+  getEnumValues,
+  JsonToForm,
+  recreateFormArray
+} from '../shared/functions/global';
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {CardNameEnum} from "../_reusable-components/card/namespace/enums/card-name.enum";
 import {SuitEnum, suitsList} from "./namespace/enums/suit.enum";
@@ -48,6 +54,13 @@ import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
 import {UserInfo} from "../shared/models/classes/user-info";
 import {SignalRService} from "../shared/services/signalr.service";
 import {NavComponent} from "../_reusable-components/nav/nav.component";
+import {Game} from "./namespace/classes/game";
+import {EditPlayersComponent} from "./edit-players/edit-players.component";
+import {perspectiveOptions} from "./namespace/constants/perspective-options";
+import {Player} from "./namespace/classes/player";
+import {PerspectiveOption} from "./namespace/classes/perspective-option";
+import {playersColors} from "../shared/models/enums/color.enum";
+import {VisibilityEnum} from "./namespace/enums/visibility.enum";
 
 @Component({
   selector: 'app-create-game',
@@ -88,8 +101,9 @@ import {NavComponent} from "../_reusable-components/nav/nav.component";
 })
 export class CreateGameComponent implements OnInit {
   gameForm: FormGroup;
-  visibilityOptions = visibilityOptions;
-  selectedVisibilityOption = this.visibilityOptions[0];
+  visibilityOptions: VisibilityOption[] = visibilityOptions;
+  perspectiveOptions: PerspectiveOption[] = perspectiveOptions
+  selectedVisibilityOption: VisibilityOption = this.visibilityOptions[0];
   itemStyles: Record<number, CssStyle[]> = {};
   suitsForm: FormGroup;
   suits = suitsList.slice(0, 4);
@@ -97,6 +111,7 @@ export class CreateGameComponent implements OnInit {
   selectedCards: GlobalCard[] = [];
   userInfo: UserInfo
   showRoomId = false;
+  players: Player[] = [];
 
   constructor(private fb: FormBuilder,
               private signalrService: SignalRService,
@@ -106,18 +121,16 @@ export class CreateGameComponent implements OnInit {
     this.gameForm = this.signalrService.createGameForm;
   }
 
+  get playersArray() {
+    return this.gameForm.get('players') as FormArray;
+  }
+
   get rules(): FormArray {
     return this.gameForm.get('rules') as FormArray;
   }
 
-  //region define the default deck
-
-
-  ngOnInit() {
-    this.createSuitsForm()
-    this.fillDisplay(this.gameForm);
-    this.listenToUserInfo();
-    console.log(this.gameForm.value);
+  get startingDeckArray() {
+    return this.gameForm.get('startingDeck') as FormArray;
   }
 
   listenToUserInfo() {
@@ -132,7 +145,7 @@ export class CreateGameComponent implements OnInit {
       width: '600px',
       height: '700px',
     }).afterClosed().subscribe(() => {
-      this.fillDisplay(this.gameForm)
+      this.fillSelectedCards(this.gameForm.value.startingDeck);
     });
   }
 
@@ -153,12 +166,35 @@ export class CreateGameComponent implements OnInit {
     });
   }
 
-  fillGridStyles(grid: Record<number, GridItem>) {
-    this.itemStyles = Object.keys(grid).reduce((acc, key) => {
-      const visibilityOption = this.visibilityOptions.find(option => option.value === grid[key].visibility);
-      acc[key] = this.getStyles(visibilityOption);
-      return acc;
-    }, {} as Record<number, CssStyle[]>);
+  listenToPlayers() {
+    this.signalrService.Players$.subscribe(players => {
+      console.log("players changed", players)
+      this.players = players;
+      const baseOptions = visibilityOptions.filter(
+        option => option.value !== VisibilityEnum.Specific
+      );
+
+      const playerOptions = players.map((player, index) =>
+        new VisibilityOption(
+          player.id,
+          player.role,
+          playersColors[index].color,
+          playersColors[index].background,
+          `make the card visible to ${player.role}`
+        )
+      );
+      this.visibilityOptions = [...baseOptions, ...playerOptions];
+      this.selectedVisibilityOption = this.visibilityOptions[0];
+      this.updateGridForm();
+    });
+  }
+
+  ngOnInit() {
+    this.listenToPlayers();
+    this.createSuitsForm()
+    this.fillDisplay(this.gameForm);
+    this.listenToUserInfo();
+    console.log(this.gameForm.value);
   }
 
 
@@ -180,15 +216,13 @@ export class CreateGameComponent implements OnInit {
     return control as FormGroup;
   }
 
-  onSubmit() {
-    const formAsString = JSON.stringify(this.gameForm.value, null, 2);
-    copyToClipboard(formAsString)
-    console.log(this.gameForm.value.rules);
-    const form = this.gameForm.value;
-    form.grid = filterDictBySize<number, GridItem>(form.grid, form.width * form.height);
-    this.signalrService.createGame(form);
-    this.router.navigate(['/play']);
+  fillGridStyles(grid: Record<number, GridItem>) {
+    this.itemStyles = Object.keys(grid).reduce((acc, key) => {
+      acc[key] = this.getStylesForGridItem(grid[key]);
+      return acc;
+    }, {} as Record<number, CssStyle[]>);
   }
+
   get suitsFormArray() {
     return this.suitsForm.get('suits') as FormArray;
   }
@@ -236,28 +270,153 @@ export class CreateGameComponent implements OnInit {
     this.heightControl.setValue(this.heightControl.value + delta);
   }
 
-  changeCellVisibility(index: number) {
-    const grid = this.gameForm.get('grid').value;
-    if (grid.hasOwnProperty(index)) {
-      const currentVisibility = grid[index].visibility;
-      if (currentVisibility === this.selectedVisibilityOption.value) {
-        delete grid[index];
-        delete this.itemStyles[index];
-      } else {
-        grid[index].visibility = this.selectedVisibilityOption.value;
-        this.itemStyles[index] = this.getStyles(this.selectedVisibilityOption);
+  updateGridForm() {
+    console.log("players at updateGridForm", this.players);
+    const currentGrid = this.gameForm.get("grid").value as Record<number, GridItem>;
+    console.log("grid before", currentGrid);
+
+    // Work with plain object
+    for (let key in currentGrid) {
+      const item = currentGrid[key];
+      item.visibleTo = item.visibleTo.filter(id => this.players.some(p => p.id === id));
+
+      if (item.visibleTo.length === 0 && item.visibility === VisibilityEnum.Specific) {
+        item.visibility = VisibilityEnum.None;
+      } else if (item.visibleTo.length === this.players.length && item.visibility === VisibilityEnum.Specific) {
+        // item.visibility = VisibilityEnum.All;
+        // item.visibleTo = [];
       }
-    } else {
-      grid[index] = {id: index, visibility: this.selectedVisibilityOption.value};
-      this.itemStyles[index] = this.getStyles(this.selectedVisibilityOption);
     }
+
+    console.log("grid after", currentGrid);
+
+    // Convert back to FormGroup
+    this.gameForm.setControl('grid', JsonToForm(currentGrid));
+    this.fillGridStyles(currentGrid);
   }
 
-  getStyles(selectedVisibilityOption: VisibilityOption) {
-    return [
-      new CssStyle(CssStyleEnum.BoxShadow, `0 0 10px ${selectedVisibilityOption.color}`),
-      new CssStyle(CssStyleEnum.BackgroundColor, selectedVisibilityOption.background)
-    ];
+  onSubmit() {
+    const formAsString = JSON.stringify(this.gameForm.value, null, 2);
+    copyToClipboard(formAsString)
+    const form = this.gameForm.value as Game;
+    form.grid = filterDictBySize<number, GridItem>(form.grid, form.width * form.height);
+    this.signalrService.createGame(form);
+    this.router.navigate(['/play']);
+  }
+
+  changeCellVisibility(index: number) {
+    const grid = this.gameForm.get('grid').value as Record<number, GridItem>;
+    const selected = this.selectedVisibilityOption;
+    const isSpecific = selected.value < 0;
+
+    // Use negative numeric IDs
+    const allPlayerIds = this.players.map(p => p.id); // [-1, -2, -3, ...]
+
+    let existing = grid[index];
+    if (!existing) {
+      existing = {
+        id: index,
+        visibility: isSpecific ? VisibilityEnum.Specific : selected.value,
+        visibleTo: isSpecific ? [selected.value] : []
+      };
+    } else {
+      if (selected.value === VisibilityEnum.All) {
+        if (existing.visibility === VisibilityEnum.All) {
+          delete grid[index];
+          delete this.itemStyles[index];
+          // Convert back to form
+          this.gameForm.setControl('grid', JsonToForm(grid));
+          return;
+        }
+        existing.visibility = VisibilityEnum.All;
+        existing.visibleTo = [];
+
+      } else if (selected.value === VisibilityEnum.None) {
+        if (existing.visibility === VisibilityEnum.None) {
+          delete grid[index];
+          delete this.itemStyles[index];
+          // Convert back to form
+          this.gameForm.setControl('grid', JsonToForm(grid));
+          return;
+        }
+        existing.visibility = VisibilityEnum.None;
+        console.log("here");
+        existing.visibleTo = [];
+      } else if (isSpecific) {
+        if (existing.visibility === VisibilityEnum.All) {
+          existing.visibility = VisibilityEnum.Specific;
+          existing.visibleTo = allPlayerIds.filter(id => id !== selected.value);
+        } else if (existing.visibility === VisibilityEnum.None) {
+          existing.visibility = VisibilityEnum.Specific;
+          existing.visibleTo = [selected.value];
+        } else { // Specific
+          if (existing.visibleTo.includes(selected.value)) {
+            existing.visibleTo = existing.visibleTo.filter(id => id !== selected.value);
+          } else {
+            existing.visibleTo.push(selected.value);
+          }
+        }
+      }
+    }
+
+    // Grouping
+    if (existing.visibility === VisibilityEnum.Specific) {
+      if (existing.visibleTo.length === allPlayerIds.length) {
+        // existing.visibility = VisibilityEnum.All;
+        // existing.visibleTo = [];
+      } else if (existing.visibleTo.length === 0) {
+        existing.visibility = VisibilityEnum.None;
+        existing.visibleTo = [];
+      }
+    }
+
+    grid[index] = existing;
+    this.itemStyles[index] = this.getStylesForGridItem(existing);
+
+    // Convert the mutated grid back to a FormGroup
+    this.gameForm.setControl('grid', JsonToForm(grid));
+  }
+
+  getStylesForGridItem(item: GridItem): CssStyle[] {
+    const styles: CssStyle[] = [];
+
+    if (item.visibility === VisibilityEnum.All) {
+      const option = this.visibilityOptions.find(opt => opt.value === VisibilityEnum.All);
+      if (option) {
+        styles.push(new CssStyle(CssStyleEnum.Background, option.background));
+        styles.push(new CssStyle(CssStyleEnum.BoxShadow, '0 0 5px 2px ' + option.color));
+      }
+    } else if (item.visibility === VisibilityEnum.None) {
+      const option = this.visibilityOptions.find(opt => opt.value === VisibilityEnum.None);
+      if (option) {
+        styles.push(new CssStyle(CssStyleEnum.Background, option.background));
+        styles.push(new CssStyle(CssStyleEnum.BoxShadow, '0 0 5px 2px ' + option.color));
+      }
+    } else if (item.visibility === VisibilityEnum.Specific) {
+      const themes = item.visibleTo
+        .map(playerId => {
+          const opt = this.visibilityOptions.find(opt => opt.value === playerId);
+          return opt ? {background: opt.background, color: opt.color} : null;
+        })
+
+      // console.log("updating grid display")
+      if (themes.length === 1) {
+        styles.push(new CssStyle(CssStyleEnum.Background, themes[0].background));
+        styles.push(new CssStyle(CssStyleEnum.BoxShadow, '0 0 5px 2px ' + themes[0].color));
+      } else if (themes.length > 1) {
+        const sliceSize = 100 / themes.length;
+        const segments = themes.map((theme, i) => {
+          const start = (i * sliceSize).toFixed(2);
+          const end = ((i + 1) * sliceSize).toFixed(2);
+          return `${theme.background} ${start}% ${end}%`;
+        });
+        const gradient = `conic-gradient(${segments.join(', ')})`;
+        styles.push(new CssStyle(CssStyleEnum.Background, gradient));
+        styles.push(new CssStyle(CssStyleEnum.BoxShadow, '0 0 5px 2px ' + themes[0].color));
+      }
+    }
+    // console.log("styles for grid item", item, styles)
+    return styles;
   }
 
   addManualTrigger() {
@@ -265,7 +424,8 @@ export class CreateGameComponent implements OnInit {
       width: '1000px',
       height: '700px',
       data: {
-        manualTriggers: this.manualTriggersArray.value
+        manualTriggers: this.manualTriggersArray.value,
+        players: this.playersArray.value
       }
     }).afterClosed().subscribe((newButtons) => {
       if (newButtons) {
@@ -277,13 +437,19 @@ export class CreateGameComponent implements OnInit {
   }
 
   getManualTriggerStyles(trigger: ManualTrigger) {
-    const option = this.visibilityOptions.find(option => option.value === trigger.visibility);
+    //TODO: fix this
+    // const option = this.visibilityOptions.find(option => option.value === trigger.visibleTo);
+    // return {
+    //   [CssStyleEnum.BackgroundColor]: option.background,
+    //   //this color is not applying idk why
+    //   [CssStyleEnum.Color]: option.color
+    // };
     return {
-      [CssStyleEnum.BackgroundColor]: option.background,
-      //this color is not applying idk why
-      [CssStyleEnum.Color]: option.color
+      [CssStyleEnum.BackgroundColor]: "green",
+      [CssStyleEnum.Color]: "black"
     };
   }
+
 
   get widthControl() {
     return this.gameForm.get('width');
@@ -293,8 +459,28 @@ export class CreateGameComponent implements OnInit {
     return this.gameForm.get('height');
   }
 
-  get startingDeckArray() {
-    return this.gameForm.get('startingDeck') as FormArray;
+  getPlayersStyles(trigger: Player) {
+    const option = this.perspectiveOptions.find(option => option.value === trigger.perspective);
+    return {
+      [CssStyleEnum.BackgroundColor]: option.background,
+      //this color is not applying idk why
+      [CssStyleEnum.Color]: option.color
+    };
+  }
+
+  openEditPlayers() {
+    this.dialog.open(EditPlayersComponent, {
+      width: '1000px',
+      height: '700px',
+      data: {
+        players: this.playersArray.value
+      }
+    }).afterClosed().subscribe((newPlayers) => {
+      if (newPlayers) {
+        recreateFormArray(this.playersArray, newPlayers);
+      }
+      console.log(this.gameForm.value)
+    });
   }
 
 }

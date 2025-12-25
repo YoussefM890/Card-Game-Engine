@@ -10,4 +10,5 @@ public class CreateGame
     public int Width { get; set; }
     public int Height { get; set; }
     public List<CreateNamespace.ManualTrigger> ManualTriggers { get; set; } = new();
+    public List<Player> Players { get; set; } = new();
 }

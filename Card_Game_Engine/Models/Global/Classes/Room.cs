@@ -12,24 +12,27 @@ public class Room
         Rules = new List<Rule>();
         Id = roomId;
         Users = new List<User>();
+        Players = new List<Player>();
         ManualTriggers = new List<ManualTrigger>();
         CardContainerService = new CardContainerService(this);
         RuleService = new RuleService(this);
-        UserService = new UserService(this);
+        PlayerService = new PlayerService(this);
     }
 
     public string Id { get; private set; }
     public List<GridItem> Grid { get; private set; }
     public List<User> Users { get; private set; }
+    public List<Player> Players { get; set; }
     public List<ManualTrigger> ManualTriggers { get; set; }
     public List<Rule> Rules { get; private set; }
+    public List<RoomUserPlayer> UserPlayerAssociations { get; set; } = new List<RoomUserPlayer>();
     public RuleService RuleService { get; private set; }
     public CardContainerService CardContainerService { get; private set; }
-    public UserService UserService { get; private set; }
+    public PlayerService PlayerService { get; private set; }
 
     public List<GridTransferItem> GetTransferGrid(string userId)
     {
-        var userIndex = Users.FindIndex(u => u.Id == userId); // Finding the index of the user in the list
+        var playerId = GetPlayerIdForUser(userId);
 
         return Grid.Select(item =>
         {
@@ -38,24 +41,7 @@ public class Room
 
             if (topCard != null)
             {
-                bool isFaceUp = true;
-
-                // Determine card visibility based on the new visibility enums
-                switch (topCard.Visibility)
-                {
-                    case CardVisibilityEnum.Visible:
-                        isFaceUp = true;
-                        break;
-                    case CardVisibilityEnum.Hidden:
-                        isFaceUp = false;
-                        break;
-                    case CardVisibilityEnum.Player1:
-                        isFaceUp = userIndex != 1;
-                        break;
-                    case CardVisibilityEnum.Player2:
-                        isFaceUp = userIndex != 0;
-                        break;
-                }
+                bool isFaceUp = DetermineCardVisibility(topCard, item, playerId);
 
                 topCardTransfer = new CardTransfer(
                     topCard.Id,
@@ -74,23 +60,52 @@ public class Room
         }).ToList();
     }
 
+    private bool DetermineCardVisibility(Card card, GridItem gridItem, int? playerId)
+    {
+        switch (card.Visibility)
+        {
+            case CardVisibilityEnum.Visible:
+                return true;
+
+            case CardVisibilityEnum.Hidden:
+                return false;
+
+            case CardVisibilityEnum.Cell:
+                // Dynamically resolve based on grid item visibility
+                return gridItem.Visibility == GridItemVisibility.Visible;
+
+            case CardVisibilityEnum.Specific:
+                // Check if the current player can see this card
+                if (playerId == null)
+                    return false;
+
+                // First check card-specific visibility
+                return card.VisibleTo.Contains(playerId.Value);
+
+                // If no specific visibility is set, default to hidden
+                return false;
+
+            default:
+                return true;
+        }
+    }
+
     public List<ManualTrigger> GetManualTriggersByUser(string userId)
     {
-        var userIndex = Users.FindIndex(u => u.Id == userId);
-        return ManualTriggers.Where(trigger =>
-        {
-            switch (trigger.Visibility)
-            {
-                case GridItemVisibility.Visible:
-                    return true;
-                case GridItemVisibility.Player1:
-                    return userIndex == 0;
-                case GridItemVisibility.Player2:
-                    return userIndex == 1;
-                default:
-                    return false;
-            }
-        }).ToList();
+        // If the user has no assigned player, they see nothing (e.g., spectators)
+        var playerId = GetPlayerIdForUser(userId);
+        if (playerId == null)
+            return new List<ManualTrigger>();
+
+        return GetManualTriggersByPlayer(playerId.Value);
+    }
+
+    public List<ManualTrigger> GetManualTriggersByPlayer(int playerId)
+    {
+        // VisibleTo is a List<string> of player IDs
+        return ManualTriggers
+            .Where(t => t.VisibleTo.Contains(playerId))
+            .ToList();
     }
 
     public void UpdateRules(List<Rule> newRules)
@@ -105,6 +120,22 @@ public class Room
         Grid.AddRange(newGrid);
     }
 
+    // Get the PlayerId for a given UserId
+    public int? GetPlayerIdForUser(string userId)
+    {
+        return UserPlayerAssociations
+            .FirstOrDefault(a => a.UserId == userId)
+            ?.PlayerId;
+    }
+
+    // Get the UserId for a given PlayerId
+    public string? GetUserIdForPlayer(int playerId)
+    {
+        return UserPlayerAssociations
+            .FirstOrDefault(a => a.PlayerId == playerId)
+            ?.UserId;
+    }
+
     public override string ToString()
     {
         var gridItems = string.Join(", ", Grid.Select(g => g.ToString()));
@@ -114,5 +145,77 @@ public class Room
 
         return
             $"RoomId: {Id}, Grid: [{gridItems}], Users: [{users}], ManualTriggers: [{manualTriggers}], Rules: [{rules}], RuleService: {RuleService}, CardContainerService: {CardContainerService}";
+    }
+
+    public Player? GetPlayer(int id)
+    {
+        return Players.FirstOrDefault(p => p.Id == id);
+    }
+
+    public User? GetUser(string id)
+    {
+        return Users.FirstOrDefault(u => u.Id == id);
+    }
+
+    // Assign a player to a user
+    public void AssignPlayerToUser(string userId, int playerId)
+    {
+        // Remove any existing assignment for this user
+        UnassignPlayerFromUser(userId);
+
+        // Remove any existing assignment for this player
+        var existingAssignment = UserPlayerAssociations.FirstOrDefault(a => a.PlayerId == playerId);
+        if (existingAssignment != null)
+        {
+            UserPlayerAssociations.Remove(existingAssignment);
+        }
+
+        // Create new assignment
+        UserPlayerAssociations.Add(new RoomUserPlayer
+        {
+            RoomId = Id,
+            UserId = userId,
+            PlayerId = playerId
+        });
+
+        // Update user role
+        var user = GetUser(userId);
+        if (user != null)
+        {
+            user.Role = RoleEnum.Player;
+        }
+    }
+
+    // Unassign player from a user
+    public void UnassignPlayerFromUser(string userId)
+    {
+        var assignment = UserPlayerAssociations.FirstOrDefault(a => a.UserId == userId);
+        if (assignment != null)
+        {
+            UserPlayerAssociations.Remove(assignment);
+        }
+
+        // Update user role to spectator
+        var user = GetUser(userId);
+        if (user != null)
+        {
+            user.Role = RoleEnum.Spectator;
+        }
+    }
+
+    // Get room state with all participants
+    public RoomState GetRoomState()
+    {
+        var participants = Users.Select(user =>
+        {
+            var playerId = GetPlayerIdForUser(user.Id);
+            Player? assignedPlayer = playerId.HasValue ? GetPlayer(playerId.Value) : null;
+            return new RoomParticipant(user.Id, user.Name, user.IsRoomOwner, assignedPlayer);
+        }).ToList();
+
+        var assignedPlayerIds = UserPlayerAssociations.Select(a => a.PlayerId).ToHashSet();
+        var availablePlayers = Players.Where(p => !assignedPlayerIds.Contains(p.Id)).ToList();
+
+        return new RoomState(Id, participants, availablePlayers);
     }
 }

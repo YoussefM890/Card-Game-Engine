@@ -5,14 +5,14 @@ namespace Card_Game_Engine.Utils;
 
 public class RootType
 {
-    public RootType(List<GridItem> cardContainer, List<User> users)
+    public RootType(List<GridItem> cardContainer, List<Player> players)
     {
         CardContainer = cardContainer;
-        Users = users;
+        Players = players;
     }
 
     public List<GridItem> CardContainer { get; }
-    public List<User> Users { get; }
+    public List<Player> Players { get; }
 }
 
 public record ChainStep(string MethodName, List<string> Parameters);

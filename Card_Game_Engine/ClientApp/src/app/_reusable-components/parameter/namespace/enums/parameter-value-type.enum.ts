@@ -4,4 +4,5 @@ export enum ParameterValueTypeEnum {
   Positions = 2,
   Filter = 3,
   Formula = 4,
+  MultiSelect = 5,
 }

@@ -1,12 +1,16 @@
 # Current UI
 ## Home (from v0.18)
 ![image](https://github.com/user-attachments/assets/5d9e8e9f-5759-4601-8345-6153051b53ae)
-## Create Game (from v0.18)
-![image](https://github.com/user-attachments/assets/c941d57a-9c68-473d-8b02-fb5c2eef98c2)
-## Play Game (from v0.19)
-![image](https://github.com/user-attachments/assets/8718d4f3-dc93-456b-84f8-c1b3b7f845e7)
-## Add Manual Triggers (from v0.15)
-![image](https://github.com/user-attachments/assets/053fcb2e-1ffa-4b87-9912-954014f79cd8)
+## Create Game (from v0.22)
+![image](https://github.com/user-attachments/assets/02c2d4df-ea1d-4a12-b53c-b0aa35c2b2f1)
+## Play Game (from v0.22)
+![image](https://github.com/user-attachments/assets/16321f13-3f34-433b-bb14-1e4c2a44518b)
+## Add Manual Triggers (from v0.22)
+![image](https://github.com/user-attachments/assets/1f8b6401-63d4-487f-8583-6d8d001930e1)
+## Edit Players (from v0.22)
+![image](https://github.com/user-attachments/assets/8b57f8ea-2606-4b2f-9767-c7eee86e92b3)
+## Assign Players (from v0.22)
+![image](https://github.com/user-attachments/assets/0033a935-e0f6-4810-a04c-6ff49e5c3e40)
 ## Import Game Setup (from v0.16)
 ![image](https://github.com/user-attachments/assets/f6285799-2301-416b-b24e-ea6838302a1f)
 ## Positions Selector (from v0.17)
@@ -20,21 +24,40 @@
 
 # Card Game Engine (CGE) Guide
 
-Welcome to the **Card Game Engine (CGE)**! This guide will help you navigate the process of creating and playing custom card games with ease.
+Welcome to the **Card Game Engine (CGE)**! This guide will help you navigate the process of creating and playing custom multiplayer card games with ease.
 
 ---
 
 ## Getting Started
 
-### Accessing CGE
-- **Open CGE**: Launch the provided URL in your web browser.
-- **No Installation Required**: Simply access the URL—no need to install anything.
-
 ### Creating a Room
 
 1. **Create a Room**: Click on the `Create Room` button.
 2. **Note the Room ID**: Your unique Room ID will appear at the top of the screen.
-3. **Invite a Friend**: Share the Room ID with a friend to join as Player 2.
+3. **Invite Friends**: Share the Room ID with friends to have them join the room.
+
+### Setting Up Players
+
+#### Understanding Players vs Users
+
+In CGE, **players** and **users** are separate concepts:
+- **Players**: Game positions created by the room creator (e.g., "Dealer", "Player 1", "North", "South"). These are permanent parts of your game setup.
+- **Users**: People who connect to your room (shown as User 1, User 2, etc.). They can be assigned to players or remain as spectators.
+
+#### Defining Players
+
+1. **Edit Players**: Click the `Edit Players` button during game setup.
+2. **Add Players**: Click `Add Player` to create a new player.
+3. **Configure Each Player**:
+- **Name/Role**: Enter a name or role identifier (defaults to "Player 1", "Player 2", etc.). This can describe the role (e.g., "Dealer", "Attacker") or just be a player number.
+- **Description**: Add an optional description of the player.
+- **Perspective**: Choose the viewing angle for this player:
+    - **Top**: Views the grid from the top
+    - **Bottom**: Views the grid from the bottom
+    - **Left**: Views the grid from the left side
+    - **Right**: Views the grid from the right side
+
+4. **Maximum Players**: You can create up to 6 players.
 
 ### Setting Up the Game Board
 
@@ -49,20 +72,31 @@ Welcome to the **Card Game Engine (CGE)**! This guide will help you navigate the
 
 - **Set Grid Size**: Adjust the `Width` and `Height` controls to set your desired grid size (e.g., 9x5).
 - **Grid Reference**: Each cell in the grid is numbered, making it easier to reference in your game rules.
-- **Set Cell Visibility**: Define the default visibility for each cell:
-    - **Visibility Options**:
-        - **Visible to All (Green)**: Cells are visible to all players.
-        - **Visible to Player 1 (Blue)**: Cells are visible only to Player 1.
-        - **Visible to Player 2 (Yellow)**: Cells are visible only to Player 2.
-        - **Hidden (Red)**: Cells are hidden from both players.
-    - **How to Set Visibility**:
-        1. **Select Visibility**: Click on the desired visibility option from the list next to the grid.
-        2. **Apply to Cells**: Click on the cells in the grid to apply the selected visibility. The cell will be colored according to the visibility setting.
-        3. **Default Visibility**: If no color is set, cells are visible by default.
 
-#### Set Card Visibility
+#### Set Cell Visibility
 
-- **Visibility Options**: Define visibility for different areas—Visible, Hidden, Player 1, or Player 2.
+Define which players can see each cell by default:
+
+1. **Visibility Options**: You'll see a list of buttons representing:
+- **All Players (Green)**: Cell is visible to all players
+- **No Players (Red)**: Cell is hidden from all players
+- **Individual Players**: Each player you created (shown with unique gradient colors)
+
+2. **Apply Visibility to Cells**:
+- Click on a visibility option button to select it
+- Click on grid cells to apply that visibility setting
+- Cells use gradient conic coloring to show which players can see them
+
+3. **Multi-Player Visibility**:
+- You can make a cell visible to multiple specific players
+- Select a player option button (it stays selected)
+- Click on cells to toggle that player's visibility:
+    - If the player isn't in the cell's visibility list, clicking adds them (their color appears in the gradient)
+    - If the player is already in the cell's visibility list, clicking removes them (their color disappears from the gradient)
+- The cell's color displays a gradient combining all assigned player colors
+
+4. **Modifying Visibility**:
+- To remove a player from "All Players" visibility: Select that specific player and click the green cell. It will now be visible to all players *except* that one.
 
 ### Adding Manual Triggers
 
@@ -70,21 +104,16 @@ Manual triggers allow you to create custom buttons that can trigger actions duri
 
 1. **Add Manual Trigger**: Click on the `Add Manual Trigger` button in the top-left bar.
 2. **Configure Manual Trigger**:
-
 - **Name**: Enter a name for the manual trigger button.
 - **Description**: Provide a brief description of what the trigger does.
-- **Visibility**: Set who can see and use the trigger:
-    - **Visible to All (Green)**: Both players can see and use the trigger.
-    - **Visible to Player 1 (Blue)**: Only Player 1 can see and use the trigger.
-    - **Visible to Player 2 (Yellow)**: Only Player 2 can see and use the trigger.
-    - **Hidden (Red)**: The trigger is hidden from both players.
+- **Visible To**: Multi-select which players can see and use the trigger. You can select multiple players, making the trigger visible only to those players.
 
 3. **Limit**: You can add up to 6 manual triggers.
 
 ### Using Manual Triggers in Rules
 
 - Each manual trigger you create will appear as a trigger option in your rules, with its name followed by "(Manual)".
-- You can select these manual triggers when setting up your game rules, allowing players to trigger specific actions by clicking the manual trigger buttons during gameplay.
+- You can select these manual triggers when setting up your game rules, allowing assigned players to trigger specific actions by clicking the manual trigger buttons during gameplay.
 
 ---
 
@@ -92,7 +121,7 @@ Manual triggers allow you to create custom buttons that can trigger actions duri
 
 ### Overview
 
-Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**. You can create multiple rules to design complex game logic.
+Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**. You can create multiple rules to design complex game logic that works with any number of players.
 
 ### Adding a Rule
 
@@ -104,7 +133,9 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
     - **Game Start**: Triggered when the game begins.
     - **Card Moved**: Triggered when a card is moved.
     - **Deck Card Count**: Triggered based on the number of cards in specific positions.
-    - **Score**: Triggered based on player scores.
+    - **Score (Single Player)**: Triggered based on a specific player's score.
+    - **Score (Group Aggregate)**: Triggered based on aggregate calculations across multiple players (Max, Min, Sum, Average, Any, All).
+    - **Score (Pairwise Difference)**: Triggered based on the difference between two players' scores.
     - **Formula Trigger**: Triggers when a specified condition evaluates to true.
     - **Manual Triggers**: Any manual triggers you've added will appear here (e.g., "Draw Card (Manual)").
 
@@ -152,12 +183,40 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
         - **Any**: The trigger activates if any one of the selected positions meets the condition.
         - **All**: The trigger activates only if all selected positions meet the condition.
 
-### Score
+### Score (Single Player)
 
 - **Parameters**:
-    - **Score Type**: Choose between Player 1, Player 2, Highest, Lowest, Any, All, or Difference.
-    - **Comparison**: Choose a comparison (Equal To, Not Equal To, Less Than, Greater Than) and provide a value to compare against.
-    - **Trigger Behavior**: Choose when the trigger activates (**On Change**, **Continuous**).
+    - **Player**: Select a specific player from your defined players.
+    - **Comparison**: Choose a comparison operator (Equal To, Not Equal To, Less Than, Greater Than) and provide a value to compare against.
+    - **Trigger Behavior**: Choose when the trigger activates:
+        - **On Change**: Triggers when the selected player's score changes and meets the condition.
+        - **Continuous**: Triggers continuously while the score meets the condition.
+
+### Score (Group Aggregate)
+
+- **Parameters**:
+    - **Players**: Multi-select multiple players to monitor.
+    - **Aggregate**: Choose how to aggregate the scores:
+        - **Max (Highest)**: Uses the highest score among selected players.
+        - **Min (Lowest)**: Uses the lowest score among selected players.
+        - **Sum**: Adds all selected players' scores together.
+        - **Average**: Calculates the average of all selected players' scores.
+        - **Any**: Trigger activates if any selected player meets the condition.
+        - **All**: Trigger activates only if all selected players meet the condition.
+    - **Comparison**: Choose a comparison operator and provide a value.
+    - **Trigger Behavior**: Choose when the trigger activates:
+        - **On Change**: Triggers when the aggregate value changes and meets the condition.
+        - **Continuous**: Triggers continuously while the aggregate meets the condition.
+
+### Score (Pairwise Difference)
+
+- **Parameters**:
+    - **Player A**: Select the first player.
+    - **Player B**: Select the second player.
+    - **Comparison**: Choose a comparison operator and provide a value to compare against Score(A) - Score(B).
+    - **Trigger Behavior**: Choose when the trigger activates:
+        - **On Change**: Triggers when the difference changes and meets the condition.
+        - **Continuous**: Triggers continuously while the difference meets the condition.
 
 ### Formula Trigger
 
@@ -166,12 +225,11 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
     - **Example:** `root.positions.at(9).cards.at(0).rank.biggerThan(root.positions.at(14).cards.at(0).rank)`
     - **Usage:** This trigger allows highly customizable conditions to determine when a rule should be activated.
 
-
 ### Manual Triggers
 
 - **Parameters**:
     - **Trigger Name**: Select the manual trigger you've created (e.g., "Draw Card (Manual)").
-    - **Description**: These triggers activate when the corresponding manual trigger button is clicked during gameplay.
+    - **Description**: These triggers activate when the corresponding manual trigger button is clicked during gameplay by a user assigned to a player that can see the trigger.
 
 ---
 
@@ -191,9 +249,9 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
     - **Visibility**:
         - **Keep**: The card retains its current visibility state.
         - **Cell**: The card adopts the visibility setting of the destination cell.
-        - **Visible to All (Green)**: The card is visible to both players, regardless of cell visibility.
+        - **Visible to All (Green)**: The card is visible to all players, regardless of cell visibility.
         - **Private (Yellow)**: The card is visible only to the player who moved it.
-        - **Hidden (Red)**: The card is hidden from both players.
+        - **Hidden (Red)**: The card is hidden from all players.
 
 ### Add Score
 
@@ -213,74 +271,112 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 
 - **Start Simple**: Begin with basic rules and gradually add complexity.
 - **Use Inner Rules**: Apply inner rules for conditions requiring "AND" logic.
-- **Test Thoroughly**: Regularly test your rules to ensure they work as intended.
+- **Test Thoroughly**: Regularly test your rules to ensure they work as intended with different numbers of players.
 - **Understand Logic**: Remember, multiple triggers within a rule work as "OR" logic, while inner rules enable "AND" logic.
 - **Avoid Infinite Loops**: Be cautious when creating rules that could trigger each other indefinitely. Currently, the system does not prevent infinite loops automatically.
 - **Duplicate Actions**: For the same game state, an action with the same name and parameters will only execute once, even if you've added it multiple times in your rules.
 
 ---
 
+## Assigning Users to Players
+
+### Before Starting the Game
+
+1. **Navigate to Play**: Once your game setup is complete, click `Navigate To Play`.
+2. **Open Assignment Dialog**: In the play area, click the `Assign Players` button.
+3. **View Connected Users**: You'll see a list of all users connected to the room (shown as User 1, User 2, etc.).
+4. **Assign Users to Players**:
+- Each user can be assigned to one of your defined players
+- Select a player from the dropdown next to each user
+- Or leave them unassigned to remain as spectators
+5. **Flexible Assignment**:
+- Only the room creator can assign users to players
+- Assignments can be changed at any time, even during gameplay
+- If a user leaves, they'll be automatically unassigned
+- You can assign a different user to that player and continue the game
+- The game is tied to players, not to specific users
+
+### Understanding Spectators
+
+- **Default State**: All users start as spectators until assigned to a player
+- **Spectator View**: Spectators can watch the game but cannot interact with it
+- **Becoming a Player**: A spectator becomes an active player once assigned to a player by the room creator
+
+---
+
 ## Starting the Game
 
-1. **Ready to Play**: Once your rules are set, click `Navigate To Play` to begin.
-2. **Player Assignment**: The room creator becomes Player 1, and the friend who joined becomes Player 2.
-3. **Invite Another Player**: After creating the game, you can invite another player to play with you (currently only 2-player games are allowed).
-4. **Automatic Transition**: After submitting the game setup, you will be automatically transferred to the play game page.
-5. **Start Game**: Click the `Start Game` button to begin the game.
-6. **Scores and Manual Triggers**: The scores are displayed on the top bar (middle), and manual triggers are on the top bar (right side). Note: The manual triggers will display after starting the game.
+1. **Start Game**: Click the `Start Game` button to begin playing.
+2. **No Assignment Required**: The game can start even if not all players are assigned to users. Unassigned players simply won't have anyone controlling them until someone is assigned.
+3. **Player Perspectives**: Each assigned user will see the grid rotated according to their player's perspective setting.
 
 ---
 
 ## During Gameplay
 
+### Viewing the Interface
+
+- **Scoreboard**: On the right side, you'll see scores displayed vertically for all players, along with:
+    - The player name
+    - The assigned user's name (if assigned)
+    - Current score
+- **Manual Triggers**: Displayed on the top bar (right side) after the game starts. Only manual triggers visible to your assigned player will be shown.
+- **Spectator Count**: The number of spectators is displayed in the interface.
+
 ### Viewing Decks
 
-- Players can see the top card of each deck.
+- Players can see the top card of each deck (based on visibility settings for their player).
 
 ### Moving Cards
 
 1. **Select a Card**: Click on the position where the card is located (currently, you can only move the top card).
 2. **Choose Visibility**: On the left middle side of the screen, you will see five visibility options:
-
 - **Cell (Blue)**: The card will take the same visibility as the destination cell defined in the game setup. This is the default and most commonly used option.
 - **Keep (Gray)**: The card will keep its current visibility state.
-- **Visible to All (Green)**: The card will be visible to both players, regardless of cell visibility.
-- **Private (Yellow)**: The card will be visible only to you.
-- **Hidden (Red)**: The card will be hidden from both players.
+- **Visible to All (Green)**: The card will be visible to all players, regardless of cell visibility.
+- **Private (Yellow)**: The card will be visible only to your player (the player you're assigned to).
+- **Hidden (Red)**: The card will be hidden from all players.
 
 3. **Set Visibility**:
-
 - **Select Visibility**: Before moving the card, select the desired visibility option from the list on the left middle side of the screen.
 - **Visual Indicator**: When you select a card, it will have a shadow indicating the selected visibility option.
 - **Move the Card**: Click on the destination to move the card there with the selected visibility.
 
-4. **Manual Triggers**: Use manual triggers to perform custom actions you've defined.
+4. **Use Manual Triggers**: Click on manual trigger buttons (if visible to your player) to perform custom actions you've defined.
 
 ---
 
 ## Ending the Game
 
-- **Exit the Room**: Use the `Leave Room` button to exit when finished.
+- **Leave Room**: Use the `Leave Room` button to exit when finished.
+- **Unassignment**: When you leave, you'll be unassigned from your player automatically.
 
 ---
 
 ## Notes
 
-1. **No Constraints on Moves**: Currently, the game lacks constraints, so anyone can move any card at any time. The rules of the game should be agreed upon between the two players.
+1. **No Constraints on Moves**: Currently, the game lacks constraints, so anyone can move any card at any time. The rules of the game should be agreed upon between the players.
 2. **Inner Rules Evaluation**: Inner rules trigger based on the initial state of the parent rule, meaning they do not consider any actions executed by the parent action during that execution cycle.
 3. **Be Careful with Infinite Loops**: The system does not prevent infinite loops automatically. Ensure your rules do not create unintended loops.
 4. **Duplicate Actions Execution**: For the same game state, an action with the same name and parameters will only execute once, even if you've added it multiple times in your rules.
+5. **Game Continuity**: The game is tied to players, not users. If a user disconnects, another user can be assigned to that player, and the game continues seamlessly.
 
 ---
 
 ## Additional Notes
 
-- **Game Customization**: CGE offers extensive customization but does not enforce specific game rules. Players must adhere to agreed-upon rules to ensure fair play.
+- **Game Customization**: CGE offers extensive customization for multiplayer games but does not enforce specific game rules. Players must adhere to agreed-upon rules to ensure fair play.
+- **Flexible Player Count**: You can create games for any number of players (up to 6), making CGE suitable for various card game types.
 - **Feedback and Suggestions**: If you have ideas for new features or improvements, consider reaching out to the CGE development team.
 
 ---
 
-Enjoy building and playing your custom games with CGE!
+Enjoy building and playing your custom multiplayer games with CGE!
+# v0.22 UI :
+## Assign Players
+![image](https://github.com/user-attachments/assets/0033a935-e0f6-4810-a04c-6ff49e5c3e40)
+## Edit Players
+![image](https://github.com/user-attachments/assets/8b57f8ea-2606-4b2f-9767-c7eee86e92b3)
 
 # v0.21 UI :
 ## Formula Builder

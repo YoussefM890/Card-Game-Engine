@@ -11,9 +11,9 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {gameJson} from "./dummy-rules";
-import {clearFormArray} from "../../shared/functions/global";
 import {MatToolbar} from "@angular/material/toolbar";
 import {SignalRService} from "../../shared/services/signalr.service";
+import {ManualTrigger} from "../namespace/classes/manual-trigger";
 
 @Component({
   selector: 'app-import-rules',
@@ -46,20 +46,33 @@ export class ImportRulesComponent {
 
   // Step 4: Main form creation function
   updateForm(data: any) {
-    // Clear existing form arrays
-    clearFormArray(this.form.get('rules') as FormArray);
-    clearFormArray(this.form.get('startingDeck') as FormArray);
-    clearFormArray(this.form.get('manualTriggers') as FormArray);
+    // Clear existing form arrays without emitting events
+    const playersArray = this.form.get('players') as FormArray;
+    const rulesArray = this.form.get('rules') as FormArray;
+    const startingDeckArray = this.form.get('startingDeck') as FormArray;
+    const manualTriggersArray = this.form.get('manualTriggers') as FormArray;
 
-    // Set new values for form arrays
-    data.rules.forEach(rule => (this.form.get('rules') as FormArray).push(this.createRuleFormGroup(rule)));
-    data.startingDeck.forEach(card => (this.form.get('startingDeck') as FormArray).push(this.createCardFormGroup(card)));
-    data.manualTriggers.forEach(trigger => (this.form.get('manualTriggers') as FormArray).push(this.createManualTriggerFormGroup(trigger)));
+    playersArray.clear({emitEvent: false});
+    rulesArray.clear({emitEvent: false});
+    startingDeckArray.clear({emitEvent: false});
+    manualTriggersArray.clear({emitEvent: false});
+
+    // Push new values without emitting events
+    data.players.forEach(player => playersArray.push(this.createPlayerFormGroup(player), {emitEvent: false}));
+    data.rules.forEach(rule => rulesArray.push(this.createRuleFormGroup(rule), {emitEvent: false}));
+    data.startingDeck.forEach(card => startingDeckArray.push(this.createCardFormGroup(card), {emitEvent: false}));
+    data.manualTriggers.forEach(trigger => manualTriggersArray.push(this.createManualTriggerFormGroup(trigger), {emitEvent: false}));
 
     // Set new values for simple form controls
     this.form.get('width').setValue(data.width);
     this.form.get('height').setValue(data.height);
-    this.form.get('grid').setValue(data.grid);
+    this.form.setControl('grid', this.fb.control(data.grid));
+
+    // Emit a single event after all updates are complete
+    playersArray.updateValueAndValidity({emitEvent: true});
+    rulesArray.updateValueAndValidity({emitEvent: true});
+    startingDeckArray.updateValueAndValidity({emitEvent: true});
+    manualTriggersArray.updateValueAndValidity({emitEvent: true});
   }
 
   onSubmit() {
@@ -71,7 +84,7 @@ export class ImportRulesComponent {
   private createParameterFormGroup(parameter: any): FormGroup {
     return this.fb.group({
       id: parameter.id,
-      value: parameter.value
+      value: [parameter.value]
     });
   }
 
@@ -109,12 +122,22 @@ export class ImportRulesComponent {
   }
 
   // Create a manual trigger FormGroup
-  private createManualTriggerFormGroup(trigger: any): FormGroup {
+  private createManualTriggerFormGroup(trigger: ManualTrigger): FormGroup {
     return this.fb.group({
       id: trigger.id,
       name: trigger.name,
       description: trigger.description,
-      visibility: trigger.visibility
+      visibleTo: this.fb.array(trigger.visibleTo || []),
+    });
+  }
+
+  // Create a player FormGroup
+  private createPlayerFormGroup(player: any): FormGroup {
+    return this.fb.group({
+      id: player.id,
+      role: player.role,
+      description: player.description,
+      perspective: player.perspective
     });
   }
 }

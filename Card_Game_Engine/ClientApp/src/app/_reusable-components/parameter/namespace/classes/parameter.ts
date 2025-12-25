@@ -10,7 +10,7 @@ export class Parameter {
   value?: any;
   type?: ParameterValueTypeEnum;
   args?: SelectOption[] | FilterEnum;
-  cannotBeUsedWith?: number[];
+  cannotBeUsedWith?: TriggerParameterEnum[] | ActionParameterEnum[];
   canBeDuplicated?: boolean;
 
   constructor(
@@ -19,7 +19,7 @@ export class Parameter {
     description = null,
     type = ParameterValueTypeEnum.Text,
     args: SelectOption[] | FilterEnum = [],
-    cannotBeUsedWith = [],
+    cannotBeUsedWith: TriggerParameterEnum[] | ActionParameterEnum[] = [],
     canBeDuplicated = false
   ) {
     this.id = id;

@@ -9,12 +9,28 @@
               <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
             </div>
             <div>
+              <button (click)="openEditPlayers()" class="me-1" color="primary" mat-raised-button>Edit Players</button>
               <button (click)="addManualTrigger()" class="me-1" color="primary" mat-raised-button>
                 {{ manualTriggersArray.length === 0 ? 'Add' : 'Edit' }} Manual Triggers
               </button>
               <button (click)="importRules()" class="me-1" color="primary" mat-raised-button>Import Game Setup</button>
             </div>
           </div>
+          @if (playersArray.controls.length > 0) {
+            <div class="d-flex align-items-center gap-3 m-2">
+              <span>Players :</span>
+              <mat-chip-set class="example-chip">
+                @for (trigger of playersArray.value; track trigger.id) {
+                  <mat-chip
+                    class="example-box"
+                    [ngStyle]="getPlayersStyles(trigger)"
+                    [matTooltip]="trigger.description"
+                  >{{ trigger.role }}
+                  </mat-chip>
+                }
+              </mat-chip-set>
+            </div>
+          }
           @if (manualTriggersArray.controls.length > 0) {
             <div class="d-flex align-items-center gap-3 m-2">
               <span>Manual Triggers :</span>
@@ -83,18 +99,22 @@
                 </div>
               </div>
             </div>
-            <mat-button-toggle-group [(ngModel)]="selectedVisibilityOption" aria-label="visibility" name="visibility"
-                                     vertical>
+            <div class="button-group p-3">
               @for (visibility of visibilityOptions; track visibility.value) {
-                <mat-button-toggle [value]="visibility"
-                                   [style.color]="visibility.color"
-                                   [style.background-color]="visibility.background"
-                                   class="font-weight-bold"
+                <button [style.color]="visibility.color"
+                        [style.background-color]="visibility.background"
+                        mat-raised-button
+                        class="visibility-button-toggle"
+                        (click)="selectedVisibilityOption = visibility"
+                        [ngStyle]="{
+                          'box-shadow': selectedVisibilityOption.value === visibility.value ? '0 0 5px 2px' + visibility.color : 'none',
+                          'z-index': selectedVisibilityOption.value === visibility.value ? '1' : '0'
+                        }"
                 >
                   {{ visibility.display }}
-                </mat-button-toggle>
+                </button>
               }
-            </mat-button-toggle-group>
+            </div>
           </div>
         </mat-grid-tile>
       </mat-grid-list>

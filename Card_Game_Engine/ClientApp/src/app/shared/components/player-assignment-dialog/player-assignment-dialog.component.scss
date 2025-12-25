@@ -1,0 +1,202 @@
+.player-assignment-dialog {
+  min-width: 600px;
+  max-width: 800px;
+
+  h2[mat-dialog-title] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: #667eea;
+    }
+  }
+
+  mat-dialog-content {
+    padding: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .participant-item {
+      padding: 12px 0;
+      height: auto !important;
+    }
+
+    .participant-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 16px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+
+      mat-icon {
+        color: #666;
+      }
+    }
+
+    .user-details {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-name {
+      font-weight: 500;
+    }
+
+    .owner-chip {
+      background-color: #FF9800;
+      color: white;
+      font-size: 0.7rem;
+      height: 22px;
+    }
+
+    .assignment-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-select {
+      min-width: 200px;
+      margin: 0;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      color: #999;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 12px;
+      }
+    }
+
+    .available-players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .available-player-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+
+      mat-icon {
+        color: #667eea;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-role {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .player-desc {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .summary-card {
+      display: flex;
+      justify-content: space-around;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 8px;
+      color: white;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+
+      span {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+  }
+}
+
+@media (max-width: 768px) {
+  .player-assignment-dialog {
+    min-width: unset;
+    width: 100%;
+
+    .participant-row {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+
+    .assignment-controls, .player-select {
+      width: 100%;
+    }
+
+    .available-players-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .summary-card {
+      flex-direction: column !important;
+      gap: 16px;
+    }
+  }
+}

@@ -32,7 +32,7 @@ import {TriggerService} from "./namespace/trigger.service";
 export class TriggerComponent implements OnInit {
   @Input() triggerForm: FormGroup;
   triggers: Trigger[];
-  triggersObject: any;
+  triggersObject: { [key: string]: Trigger };
   parameters: Parameter[][]
 
   constructor(private fb: FormBuilder, private triggerService: TriggerService) {

@@ -5,12 +5,12 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {ParameterComponent} from "../parameter/parameter.component";
 import {MatIcon} from "@angular/material/icon";
-import {clearFormArray} from "../../shared/functions/global";
+import {clearFormArray, ListToObject} from "../../shared/functions/global";
 import {Action} from "./namespace/classes/action";
-import {actions, actionsObject} from "./namespace/constants/actions";
 import {Parameter} from "../parameter/namespace/classes/parameter";
 import {ActionParameterEnum} from "../parameter/namespace/enums/parameter.enums";
 import {getAvailableParameters} from "../_namespace/functions";
+import {ActionService} from "./namespace/action.service";
 
 @Component({
   selector: 'app-action',
@@ -31,10 +31,11 @@ import {getAvailableParameters} from "../_namespace/functions";
 })
 export class ActionComponent implements OnInit {
   @Input() actionForm: FormGroup;
-  actions: Action[] = actions;
+  actions: Action[];
+  actionsObject: { [key: string]: Action };
   parameters: Parameter[][];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private actionService: ActionService) {
   }
 
   get parametersArray() {
@@ -42,6 +43,7 @@ export class ActionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.listenToActions()
     this.updateParameters()
   }
 
@@ -62,7 +64,7 @@ export class ActionComponent implements OnInit {
     this.parameters = []
     let usedParameters = new Set<ActionParameterEnum>()
     for (let i = 0; i < this.parametersArray.length; i++) {
-      const availableParameters = actionsObject[this.actionForm.value.id]?.parameters;
+      const availableParameters = this.actionsObject[this.actionForm.value.id]?.parameters;
       this.parameters.push(getAvailableParameters(availableParameters, usedParameters));
       const parameterId = this.parametersArray.at(i).value.id;
       if (parameterId != null) usedParameters.add(parameterId);
@@ -77,6 +79,14 @@ export class ActionComponent implements OnInit {
   onActionChange() {
     clearFormArray(this.parametersArray);
     this.updateParameters();
+  }
+
+  listenToActions() {
+    this.actionService.actions$.subscribe(actions => {
+      this.actions = actions;
+      this.actionsObject = ListToObject(actions, 'id');
+      this.updateParameters()
+    });
   }
 
 }

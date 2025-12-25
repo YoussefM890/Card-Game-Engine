@@ -26,24 +26,30 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="visibility">
-      <th *matHeaderCellDef mat-header-cell> Visibility</th>
-      <td *matCellDef="let element; let i = index" mat-cell>
-        <mat-form-field appearance="fill">
-          <mat-label>Visibility</mat-label>
-          <mat-select [formControl]="element.get('visibility')">
-            @for (option of visibilityOptions; track option.value) {
-              <mat-option [value]="option.value">{{ option.display }}</mat-option>
+    <ng-container matColumnDef="visibleTo">
+      <th *matHeaderCellDef mat-header-cell>Visible&nbsp;to</th>
+      <td *matCellDef="let row" mat-cell>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Visible to</mat-label>
+          <mat-select
+            [formControl]="row.get('visibleTo')"
+            multiple
+          >
+            @for (player of players; track player.id) {
+              <mat-option [value]="player.id">
+                {{ player.role ?? player.id }}
+              </mat-option>
             }
           </mat-select>
         </mat-form-field>
       </td>
     </ng-container>
 
+
     <ng-container matColumnDef="delete">
       <th *matHeaderCellDef mat-header-cell> Delete</th>
       <td *matCellDef="let element; let i = index" mat-cell>
-        <button (click)="removeManualTrigger(i)" [disabled]="manualTriggersArray.length <= 1" color="warn"
+        <button (click)="removeManualTrigger(i)" color="warn"
                 mat-icon-button>
           <mat-icon>delete</mat-icon>
         </button>

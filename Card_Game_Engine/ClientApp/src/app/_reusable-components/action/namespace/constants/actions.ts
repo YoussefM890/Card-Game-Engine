@@ -1,5 +1,4 @@
-import {ListToObject} from "../../../../shared/functions/global";
-import {PlayerOptionEnum, VisibilityOptionEnum} from "../../../parameter/namespace/enums/parameter-value-options.enums";
+import {VisibilityOptionEnum} from "../../../parameter/namespace/enums/parameter-value-options.enums";
 import {Parameter} from "../../../parameter/namespace/classes/parameter";
 import {ActionParameterEnum} from "../../../parameter/namespace/enums/parameter.enums";
 import {ParameterValueTypeEnum} from "../../../parameter/namespace/enums/parameter-value-type.enum";
@@ -11,6 +10,7 @@ import {SelectOption} from "../../../../shared/models/classes/select-option";
 const text = ParameterValueTypeEnum.Text;
 const select = ParameterValueTypeEnum.Select;
 const positions = ParameterValueTypeEnum.Positions;
+const multiSelect = ParameterValueTypeEnum.MultiSelect;
 export const actions: Action[] = [
   new Action(ActionEnum.ShuffleDeck, "Shuffle Deck", [
     new Parameter(ActionParameterEnum.AtPositions, "At Positions", null, positions),
@@ -36,27 +36,20 @@ export const actions: Action[] = [
       new SelectOption(VisibilityOptionEnum.Cell, "Cell", "Set the visibility of the card to the visibility of the cell\""),
       new SelectOption(VisibilityOptionEnum.Visible, "Visible", "Visible to all players"),
       new SelectOption(VisibilityOptionEnum.Hidden, "Hidden", "Hidden from all players"),
-      new SelectOption(VisibilityOptionEnum.Player1, "Player 1", "Visible to player 1 only"),
-      new SelectOption(VisibilityOptionEnum.Player2, "Player 2", "Visible to player 2 only"),
+    ], [
+      ActionParameterEnum.VisibleTo,
     ]),
+    new Parameter(ActionParameterEnum.VisibleTo, "Visible To", "Players who can see the card after the action (hidden to others)", multiSelect, [], [
+      ActionParameterEnum.Visibility
+    ])
   ]),
   new Action(ActionEnum.AddScore, "Add Score", [
-    new Parameter(ActionParameterEnum.Value, "Value To Add (default is 1)", null),
-    new Parameter(ActionParameterEnum.Player, "Player", null, select, [
-      new SelectOption(PlayerOptionEnum.Player1, "Player 1",),
-      new SelectOption(PlayerOptionEnum.Player2, "Player 2",),
-      new SelectOption(PlayerOptionEnum.Both, "Both Players",),
-    ]),
+    new Parameter(ActionParameterEnum.Players, "Players", null, multiSelect),
+    new Parameter(ActionParameterEnum.Value, "Value To Add (default is 1)"),
   ]),
   new Action(ActionEnum.SetScore, "Set Score", [
+    new Parameter(ActionParameterEnum.Players, "Players", null, multiSelect),
     new Parameter(ActionParameterEnum.Value, "New Score (default is 1)", null),
-    new Parameter(ActionParameterEnum.Player, "Player", null, select, [
-      new SelectOption(PlayerOptionEnum.Player1, "Player 1",),
-      new SelectOption(PlayerOptionEnum.Player2, "Player 2",),
-      new SelectOption(PlayerOptionEnum.Both, "Both Players",),
-    ]),
   ]),
 ];
-
-export const actionsObject = ListToObject(actions, 'id');
 

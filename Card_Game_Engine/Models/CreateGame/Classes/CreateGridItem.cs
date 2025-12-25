@@ -6,4 +6,5 @@ public class GridItem
 {
     public int Id { get; set; }
     public GridItemVisibility Visibility { get; set; }
+    public List<int> VisibleTo { get; set; } = new();
 }

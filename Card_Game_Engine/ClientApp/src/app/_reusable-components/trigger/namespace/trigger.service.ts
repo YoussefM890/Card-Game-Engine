@@ -4,6 +4,9 @@ import {Trigger} from "./classes/trigger";
 import {triggers} from "./constants/triggers";
 import {ManualTrigger} from "../../../create-game/namespace/classes/manual-trigger";
 import {SignalRService} from "../../../shared/services/signalr.service";
+import {TriggerEnum} from "./enums/trigger.enum";
+import {TriggerParameterEnum} from "../../parameter/namespace/enums/parameter.enums";
+import {SelectOption} from "../../../shared/models/classes/select-option";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,7 @@ export class TriggerService {
 
   constructor(private signalRService: SignalRService) {
     this.listenToManualTriggers();
+    this.listenToPlayers();
   }
 
   listenToManualTriggers() {
@@ -26,22 +30,27 @@ export class TriggerService {
     );
   }
 
+  listenToPlayers() {
+    this.signalRService.Players$.subscribe((players) => {
+      const playerSelectionOptions: SelectOption[] =
+        players.map(p => new SelectOption(p.id, p.role));
 
-  // addTrigger(trigger: Trigger) {
-  //   const currentTriggers = this.triggersSubject.value;
-  //   this.triggersSubject.next([...currentTriggers, trigger]);
-  //   this.updateManualTriggerOptions();
-  // }
-  //
-  // private updateManualTriggerOptions() {
-  //   const currentTriggers = this.triggersSubject.value;
-  //   const manualTrigger = currentTriggers.find(t => t.type === TriggerEnum.Manual);
-  //   if (manualTrigger) {
-  //     const triggerNames = currentTriggers
-  //       .filter(t => t.type !== TriggerEnum.Manual)
-  //       .map(t => t.name);
-  //     manualTrigger.parameters[0].options = triggerNames;
-  //   }
-  //   this.triggersSubject.next(currentTriggers);
-  // }
+      const setArgs = (triggerId: TriggerEnum, paramId: TriggerParameterEnum) => {
+        const trig = this.triggersSubject.value.find(t => t.id === triggerId);
+        const param = trig?.parameters.find(p => p.id === paramId);
+        if (param) param.args = playerSelectionOptions;
+      };
+
+      // Score (Single Player): Player
+      setArgs(TriggerEnum.ScoreSingle, TriggerParameterEnum.Player);
+
+      // Score (Pairwise Difference): PlayerA, PlayerB
+      setArgs(TriggerEnum.ScorePair, TriggerParameterEnum.PlayerA);
+      setArgs(TriggerEnum.ScorePair, TriggerParameterEnum.PlayerB);
+
+      // Score (Group Aggregate): Players (multi-select)
+      setArgs(TriggerEnum.ScoreGroup, TriggerParameterEnum.Players);
+    });
+  }
+
 }

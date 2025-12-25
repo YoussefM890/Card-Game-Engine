@@ -1,8 +1,6 @@
-using Card_Game_Engine.Models.Enums.ParameterOptions.TriggerOptions;
 using Card_Game_Engine.Models.Filter.Enums;
 using Card_Game_Engine.Models.Global.Classes;
 using Card_Game_Engine.Models.Global.Classes.Triggers;
-using Card_Game_Engine.Models.Global.Enums;
 using Card_Game_Engine.Models.Global.Enums.ParameterOptions.TriggerOptions;
 using Card_Game_Engine.Utils;
 
@@ -78,65 +76,111 @@ public static class TriggerFunctions
         return true;
     }
 
-    public static bool IsScoreMatching(ScoreTrigger triggerParams, List<User> beforeActionUsers,
-        List<User> afterActionUsers)
+    public static bool IsScoreSingleMatching(
+        ScoreSingleTrigger triggerParams,
+        List<Player> beforeActionPlayers,
+        List<Player> afterActionPlayers)
     {
-        var beforePlayer1Score = beforeActionUsers.Find(user => user.Role == RoleEnum.Player1)?.Score ?? 0;
-        var beforePlayer2Score = beforeActionUsers.Find(user => user.Role == RoleEnum.Player2)?.Score ?? 0;
-        var afterPlayer1Score = afterActionUsers.Find(user => user.Role == RoleEnum.Player1)?.Score ?? 0;
-        var afterPlayer2Score = afterActionUsers.Find(user => user.Role == RoleEnum.Player2)?.Score ?? 0;
+        var before = GetScore(beforeActionPlayers, triggerParams.PlayerId);
+        var after = GetScore(afterActionPlayers, triggerParams.PlayerId);
 
         if (triggerParams.TriggerBehaviour == TriggerBehaviourOptionEnum.OnChange)
         {
-            bool scoreChanged = false;
-            switch (triggerParams.ScoreType)
-            {
-                case ScoreTypeOptionEnum.Player1:
-                    scoreChanged = beforePlayer1Score != afterPlayer1Score;
-                    break;
-                case ScoreTypeOptionEnum.Player2:
-                    scoreChanged = beforePlayer2Score != afterPlayer2Score;
-                    break;
-                case ScoreTypeOptionEnum.Highest:
-                case ScoreTypeOptionEnum.Lowest:
-                case ScoreTypeOptionEnum.Any:
-                case ScoreTypeOptionEnum.All:
-                case ScoreTypeOptionEnum.Difference:
-                    scoreChanged = (beforePlayer1Score != afterPlayer1Score) ||
-                                   (beforePlayer2Score != afterPlayer2Score);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid ScoreType");
-            }
-
-            if (!scoreChanged)
-            {
-                return false;
-            }
+            if (before == after) return false;
         }
 
-        switch (triggerParams.ScoreType)
+        return CheckConditions(after, triggerParams);
+    }
+
+    public static bool IsScoreGroupMatching(
+        ScoreGroupTrigger triggerParams,
+        List<Player> beforeActionPlayers,
+        List<Player> afterActionPlayers)
+    {
+        // OnChange gate: if none of the involved players changed, bail.
+        if (triggerParams.TriggerBehaviour == TriggerBehaviourOptionEnum.OnChange)
         {
-            case ScoreTypeOptionEnum.Player1:
-                return CheckConditions(afterPlayer1Score, triggerParams);
-            case ScoreTypeOptionEnum.Player2:
-                return CheckConditions(afterPlayer2Score, triggerParams);
-            case ScoreTypeOptionEnum.Highest:
-                return CheckConditions(Math.Max(afterPlayer1Score, afterPlayer2Score), triggerParams);
-            case ScoreTypeOptionEnum.Lowest:
-                return CheckConditions(Math.Min(afterPlayer1Score, afterPlayer2Score), triggerParams);
-            case ScoreTypeOptionEnum.Any:
-                return CheckConditions(afterPlayer1Score, triggerParams) ||
-                       CheckConditions(afterPlayer2Score, triggerParams);
-            case ScoreTypeOptionEnum.All:
-                return CheckConditions(afterPlayer1Score, triggerParams) &&
-                       CheckConditions(afterPlayer2Score, triggerParams);
-            case ScoreTypeOptionEnum.Difference:
-                return CheckConditions(afterPlayer1Score - afterPlayer2Score, triggerParams);
+            var anyChanged = triggerParams.PlayerIds.Any(id =>
+                GetScore(beforeActionPlayers, id) != GetScore(afterActionPlayers, id));
+            if (!anyChanged) return false;
+        }
+
+        switch (triggerParams.Aggregate)
+        {
+            case AggregateOptionEnum.Any:
+                // Any individual score satisfies the comparison
+                return triggerParams.PlayerIds.Any(id =>
+                    CheckConditions(GetScore(afterActionPlayers, id), triggerParams));
+
+            case AggregateOptionEnum.All:
+                // All individual scores satisfy the comparison
+                return triggerParams.PlayerIds.All(id =>
+                    CheckConditions(GetScore(afterActionPlayers, id), triggerParams));
+
+            case AggregateOptionEnum.Max:
+            {
+                var value = triggerParams.PlayerIds
+                    .Select(id => GetScore(afterActionPlayers, id))
+                    .DefaultIfEmpty(0)
+                    .Max();
+                return CheckConditions(value, triggerParams);
+            }
+
+            case AggregateOptionEnum.Min:
+            {
+                var value = triggerParams.PlayerIds
+                    .Select(id => GetScore(afterActionPlayers, id))
+                    .DefaultIfEmpty(0)
+                    .Min();
+                return CheckConditions(value, triggerParams);
+            }
+
+            case AggregateOptionEnum.Sum:
+            {
+                var value = triggerParams.PlayerIds
+                    .Select(id => GetScore(afterActionPlayers, id))
+                    .Sum();
+                return CheckConditions(value, triggerParams);
+            }
+
+            case AggregateOptionEnum.Avg:
+            {
+                var scores = triggerParams.PlayerIds
+                    .Select(id => GetScore(afterActionPlayers, id))
+                    .ToList();
+                var avg = scores.Count == 0 ? 0 : (int)Math.Round(scores.Average());
+                return CheckConditions(avg, triggerParams);
+            }
+
             default:
-                throw new ArgumentException("Invalid ScoreType");
+                throw new ArgumentOutOfRangeException(nameof(triggerParams.Aggregate),
+                    $"Unknown aggregate: {triggerParams.Aggregate}");
         }
     }
+
+    public static bool IsScorePairMatching(
+        ScorePairTrigger triggerParams,
+        List<Player> beforeActionPlayers,
+        List<Player> afterActionPlayers)
+    {
+        var beforeA = GetScore(beforeActionPlayers, triggerParams.PlayerAId);
+        var beforeB = GetScore(beforeActionPlayers, triggerParams.PlayerBId);
+        var afterA = GetScore(afterActionPlayers, triggerParams.PlayerAId);
+        var afterB = GetScore(afterActionPlayers, triggerParams.PlayerBId);
+
+        if (triggerParams.TriggerBehaviour == TriggerBehaviourOptionEnum.OnChange)
+        {
+            var changed = (beforeA != afterA) || (beforeB != afterB);
+            if (!changed) return false;
+        }
+
+        var diff = afterA - afterB;
+        return CheckConditions(diff, triggerParams);
+    }
+
+
+    private static int GetScore(List<Player> players, int playerId)
+        => players.FirstOrDefault(p => p.Id == playerId)?.Score ?? 0;
 
     private static bool CheckConditions<T>(int value, T triggerParams) where T : IComparableTrigger
     {
@@ -152,9 +196,9 @@ public static class TriggerFunctions
     }
 
     public static bool IsFormulaMatching(string condition, List<GridItem> afterActionCardContainer,
-        List<User> afterActionUsers)
+        List<Player> afterActionPlayers)
     {
-        RootType root = new(afterActionCardContainer, afterActionUsers);
+        RootType root = new(afterActionCardContainer, afterActionPlayers);
         return (bool)EvaluateChain(condition, root);
     }
 
