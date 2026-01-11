@@ -1,32 +1,55 @@
-<mat-toolbar class="text-center px-0 d-flex justify-content-between">
-  <div class="d-flex align-items-center h-100">
+<mat-toolbar class="nav-toolbar">
+  <div class="nav-left">
     @if (parentComponent === 'create-game') {
-      <button [routerLink]="['/play']" color="primary" mat-raised-button class="corner-button">Navigate To Play</button>
+      <button [routerLink]="['/play']" class="nav-btn" color="primary" mat-raised-button>
+        <mat-icon class="hide-mobile">play_arrow</mat-icon>
+        <span class="hide-mobile">Play Game</span>
+        <mat-icon class="hide-desktop">play_arrow</mat-icon>
+      </button>
     } @else {
       @if (userInfo.isRoomOwner) {
-        <button [routerLink]="['/create']" color="primary" mat-raised-button class="corner-button">Navigate To Create
+        <button [routerLink]="['/create']" class="nav-btn" color="primary" mat-raised-button>
+          <mat-icon class="hide-mobile">edit</mat-icon>
+          <span class="hide-mobile">Create Game</span>
+          <mat-icon class="hide-desktop">edit</mat-icon>
         </button>
       }
     }
-    <button (click)="openGuide()" aria-label="Guide" class="ms-1" mat-mini-fab matTooltip="Open Guide">
-      <mat-icon (click)="openGuide()">help_outline</mat-icon>
+    <button (click)="openGuide()" aria-label="Guide" class="guide-btn" mat-mini-fab matTooltip="Open Guide">
+      <mat-icon>help_outline</mat-icon>
+    </button>
+    <button (click)="toggleTheme()" [matTooltip]="themeService.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+            aria-label="Toggle theme" class="theme-btn"
+            mat-mini-fab>
+      <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
   </div>
-  <div>
-    Room Id:
-    @if (showRoomId) {
-      <span>{{ userInfo.roomId }}</span>
-    } @else {
-      <span>{{ getHiddenRoomId() }}</span>
-    }
-    <mat-icon (click)="copyRoomId()" class="clickable-icon ms-2" [matTooltip]="'Copy Room Id'">content_copy</mat-icon>
-    <mat-icon
-      (click)="showRoomId = !showRoomId"
-      class="clickable-icon ml-2"
-      [matTooltip]="showRoomId ? 'Hide Room Id' : 'Show Room Id'"
-    >
-      {{ showRoomId ? 'visibility_off' : 'visibility' }}
-    </mat-icon>
+
+  <div class="nav-center">
+    <div class="room-info">
+      <mat-icon class="room-icon">meeting_room</mat-icon>
+      <span class="room-label hide-mobile">Room:</span>
+      <span class="room-id">
+        @if (showRoomId) {
+          {{ userInfo.roomId }}
+        } @else {
+          {{ getHiddenRoomId() }}
+        }
+      </span>
+      <div class="room-actions">
+        <mat-icon (click)="copyRoomId()" class="action-icon" matTooltip="Copy Room ID">content_copy</mat-icon>
+        <mat-icon (click)="showRoomId = !showRoomId" [matTooltip]="showRoomId ? 'Hide Room ID' : 'Show Room ID'"
+                  class="action-icon">
+          {{ showRoomId ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </div>
+    </div>
   </div>
-  <button (click)="leaveRoom()" color="warn" mat-raised-button class="corner-button">Leave Room</button>
+
+  <div class="nav-right">
+    <button (click)="leaveRoom()" class="nav-btn leave-btn" color="warn" mat-raised-button>
+      <mat-icon>logout</mat-icon>
+      <span class="hide-mobile">Leave</span>
+    </button>
+  </div>
 </mat-toolbar>

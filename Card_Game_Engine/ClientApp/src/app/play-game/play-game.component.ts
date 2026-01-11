@@ -1,7 +1,6 @@
 import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
 import {MatButton} from "@angular/material/button";
-import {RouterLink, RouterLinkActive} from "@angular/router";
 import {DOCUMENT, NgStyle} from "@angular/common";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -13,12 +12,10 @@ import {ActionEnum} from "../_reusable-components/action/namespace/enums/action.
 import {Parameter} from './namespace/classes/parameter';
 import {ActionParameterEnum} from "../_reusable-components/parameter/namespace/enums/parameter.enums";
 import {TriggerEnum} from "../_reusable-components/trigger/namespace/enums/trigger.enum";
-import {MatChip, MatChipSet} from "@angular/material/chips";
 import {ManualTrigger} from "../create-game/namespace/classes/manual-trigger";
 import {CssStyle} from "../shared/models/classes/css-style";
 import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
 import {SignalRService} from "../shared/services/signalr.service";
-import {MatGridList} from "@angular/material/grid-list";
 import {UserInfo} from "../shared/models/classes/user-info";
 import {NavComponent} from "../_reusable-components/nav/nav.component";
 import {generateGridDimensionsFromHeight} from "../_reusable-components/grid/namespace/functions";
@@ -36,15 +33,10 @@ import {PlayerRoleDisplayComponent} from "../shared/components/player-role-displ
   imports: [
     GridComponent,
     MatButton,
-    RouterLink,
-    RouterLinkActive,
     CdkDropList,
     CdkDrag,
     NgStyle,
     MatTooltip,
-    MatChip,
-    MatChipSet,
-    MatGridList,
     NavComponent,
     MatIcon,
     PlayerRoleDisplayComponent,
@@ -102,7 +94,7 @@ export class PlayGameComponent implements OnInit, OnDestroy {
   }
 
   positionGrid() {
-    this.gridStyles = generateGridDimensionsFromHeight(this.cols, this.rows, 0.8, 1.25, 0.8, 0.05)
+    this.gridStyles = generateGridDimensionsFromHeight(this.cols, this.rows, 0.8, 1.25, 0.8, 0)
   }
 
   onCellClick(item: GridItem) {

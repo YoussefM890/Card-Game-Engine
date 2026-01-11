@@ -1,16 +1,37 @@
 .cards-container {
   position: relative;
   height: 100%;
-  //overflow-x: auto; /* Allows scrolling on x-axis if cards overflow */
-  width: 100%; /* Assuming you want it to take the full width of its parent */
+  width: 100%;
+  min-height: 60px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--gray-300);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: var(--primary-300);
+    background: var(--gray-100);
+  }
 }
 
 .card-container {
   box-sizing: border-box;
   position: absolute;
-  height: 100%; /* Set your desired height */
+  height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    z-index: 10;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .cards-container {
+    min-height: 50px;
+  }
 }

@@ -1,73 +1,108 @@
-<div class="max d-flex flex-column">
+<div class="play-game-container">
   <app-nav [parentComponent]="'play-game'"></app-nav>
-  <div class="p-2 max">
-    <div class="w-100 d-flex justify-content-between">
-      <div class="d-flex justify-content-between flex-grow-1">
-        <div class="d-flex gap-2 mb-2">
+
+  <div class="play-game-content">
+    <!-- Left Side: Controls + Grid -->
+    <div class="main-area">
+      <!-- Control Bar -->
+      <div class="control-bar">
+        <div class="control-left">
           @if (userInfo.isRoomOwner) {
-            <button (click)="startGame()" color="accent" mat-raised-button>
+            <button (click)="startGame()" class="control-btn start-btn" color="accent" mat-raised-button>
               <mat-icon>play_arrow</mat-icon>
-              Start Game
+              <span>Start Game</span>
             </button>
-            <button (click)="openPlayerAssignmentDialog()" color="primary" mat-raised-button>
+            <button (click)="openPlayerAssignmentDialog()" class="control-btn" color="primary" mat-raised-button>
               <mat-icon>people</mat-icon>
-              Assign Players
+              <span>Assign Players</span>
             </button>
           }
         </div>
-        <div class="d-flex justify-content-end">
-          @if (manualTriggers.length > 0) {
-            <h4 class="me-2">Manual Triggers: </h4>
-          }
-          <div class="d-flex gap-2 ">
-            @for (trigger of manualTriggers; track trigger.id) {
-              <button
-                mat-raised-button
-                color="warn"
-                [matTooltip]="trigger.description"
-                (click)="invokeTrigger(trigger.id)"
-              >{{ trigger.name }}
-              </button>
-            }
-          </div>
 
+        <div class="control-center">
+          @if (manualTriggers.length > 0) {
+            <div class="triggers-container">
+              <span class="triggers-label hide-mobile">
+                <mat-icon>touch_app</mat-icon>
+                Triggers:
+              </span>
+              <div class="triggers-list">
+                @for (trigger of manualTriggers; track trigger.id) {
+                  <button
+                    (click)="invokeTrigger(trigger.id)"
+                    [matTooltip]="trigger.description"
+                    class="trigger-btn"
+                    mat-raised-button
+                  >
+                    <mat-icon class="hide-mobile">bolt</mat-icon>
+                    {{ trigger.name }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
         </div>
       </div>
 
-      <!-- Vertical Player Role Display with Scores on the Right -->
-      <div class="player-sidebar">
+      <!-- Game Area -->
+      <div class="game-area">
+        <!-- Visibility Options Panel -->
+        <div class="visibility-panel">
+          <div class="panel-title">
+            <mat-icon>visibility</mat-icon>
+            <span class="hide-mobile">View Layers</span>
+          </div>
+          <div (cdkDropListDropped)="drop($event)" cdkDropList class="visibility-list">
+            @for (option of visibilityOptions; track option) {
+              <div (click)="toggleOption(option)"
+                   [cdkDragDisabled]="option.disabled" [class.disabled]="option.disabled"
+                   [matTooltipPosition]="'right'"
+                   [matTooltip]="option.description"
+                   [style.background]=option.background
+                   [style.color]=option.color
+                   cdkDrag
+                   cdkDragLockAxis="y"
+                   class="visibility-item"
+              >
+                <mat-icon [class.hide-mobile]="true" class="drag-handle">drag_indicator</mat-icon>
+                <span class="visibility-label">{{ option.display }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Game Grid -->
+        @if (grid.length > 0) {
+          <div class="grid-container">
+            <app-grid
+              (cellClick)="onCellClick($event)"
+              [cols]="cols"
+              [grid]="grid"
+              [itemStyles]="itemStyles"
+              [ngStyle]="gridStyles"
+              [rows]="rows"
+              class="game-grid"
+            ></app-grid>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>casino</mat-icon>
+            <h3>No Game Started</h3>
+            <p>Start the game to see the playing field</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Side: Player Scoreboard -->
+    <div class="player-panel">
+      <div class="panel-title">
+        <mat-icon>people</mat-icon>
+        <span>Players</span>
+      </div>
+      <div class="player-list">
         <app-player-role-display [game]="game"></app-player-role-display>
       </div>
     </div>
-    <div (cdkDropListDropped)="drop($event)" cdkDropList class="example-list">
-      @for (option of visibilityOptions; track option) {
-        <div class="example-box"
-             cdkDrag cdkDragLockAxis="y"
-             [cdkDragDisabled]="option.disabled"
-             (click)="toggleOption(option)"
-             [style.background]=option.background
-             [style.color]=option.color
-             [ngStyle]="{'opacity': option.disabled ? '0.5' : '1'}"
-             [matTooltip]="option.description"
-        >
-          {{ option.display }}
-        </div>
-      }
-    </div>
-    <div></div>
   </div>
 </div>
-
-@if (grid.length > 0) {
-  <div class="grid">
-    <app-grid
-      class="center auto-pointer-events"
-      [ngStyle]="gridStyles"
-      [cols]="cols"
-      [grid]="grid"
-      [rows]="rows"
-      [itemStyles]="itemStyles"
-      (cellClick)="onCellClick($event)"
-    ></app-grid>
-  </div>
-}

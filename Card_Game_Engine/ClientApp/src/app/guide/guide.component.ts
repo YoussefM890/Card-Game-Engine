@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
 import {MarkdownModule} from 'ngx-markdown';
-import {MatButton} from "@angular/material/button";
+import {MatIconButton} from "@angular/material/button";
 import {MatDialogClose} from "@angular/material/dialog";
 import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-guide',
   standalone: true,
-  imports: [MarkdownModule, MatButton, MatDialogClose, MatToolbar],
+  imports: [MarkdownModule, MatDialogClose, MatToolbar, MatIconButton, MatIcon],
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.scss']
 })

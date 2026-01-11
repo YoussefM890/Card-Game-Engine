@@ -8,3 +8,40 @@
   background-color: transparent;
 }
 
+/* Dialog header styling */
+.dialog-header {
+  .close-button {
+    color: white;
+    transition: all 150ms ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+/* Dark theme styling */
+:host-context(body.dark-theme) {
+  .dialog-header {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%) !important;
+    color: white !important;
+  }
+
+  .mat-mdc-table {
+    background: #242424 !important;
+  }
+
+  .mat-mdc-header-cell {
+    background: #2d2d2d !important;
+    color: #efefef !important;
+  }
+
+  .mat-mdc-cell {
+    color: #efefef !important;
+  }
+
+  .mat-mdc-row:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+}
+

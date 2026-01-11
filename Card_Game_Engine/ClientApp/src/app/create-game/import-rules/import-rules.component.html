@@ -1,5 +1,9 @@
-<mat-toolbar>
+<mat-toolbar class="dialog-header">
   <span>Import Game Setup</span>
+  <span class="flex-spacer"></span>
+  <button (click)="dialogRef.close()" class="close-button" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-dialog-content>
@@ -9,6 +13,5 @@
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button (click)="dialogRef.close()" mat-button>Cancel</button>
-  <button (click)="onSubmit()" color="primary" mat-button>Submit</button>
+  <button (click)="onSubmit()" color="accent" mat-raised-button>Submit</button>
 </mat-dialog-actions>

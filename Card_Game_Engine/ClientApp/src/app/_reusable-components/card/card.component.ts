@@ -1,6 +1,5 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {SuitEnum, suitsObject} from "../../create-game/namespace/enums/suit.enum";
-import {distinctCardsValueObject} from "./namespace/constants/distinct-cards";
 
 @Component({
   selector: 'app-card',
@@ -9,44 +8,54 @@ import {distinctCardsValueObject} from "./namespace/constants/distinct-cards";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class CardComponent implements OnInit, AfterViewInit {
+export class CardComponent {
   @ViewChild('cardElm') cardElement: ElementRef;
-  rankSpots: { [key: number]: string[] } = {
-    1: ['B3'],
-    2: ['B1', 'B5'],
-    3: ['B1', 'B3', 'B5'],
-    4: ['A1', 'A5', 'C1', 'C5'],
-    5: ['A1', 'A5', 'B3', 'C1', 'C5'],
-    6: ['A1', 'A3', 'A5', 'C1', 'C3', 'C5'],
-    7: ['A1', 'A3', 'A5', 'B2', 'C1', 'C3', 'C5'],
-    8: ['A1', 'A3', 'A5', 'B2', 'B4', 'C1', 'C3', 'C5'],
-    9: ['A1', 'A2', 'A4', 'A5', 'B3', 'C1', 'C2', 'C4', 'C5'],
-    10: ['A1', 'A2', 'A4', 'A5', 'B2', 'B4', 'C1', 'C2', 'C4', 'C5'],
-    11: ['C5'],
-    12: ['C5'],
-    13: ['C5'],
-  }
-  @Input() card: any
+  @Input() card: any;
+
   suits = suitsObject;
   suitEnum = SuitEnum;
-  distinctCardValueObject = distinctCardsValueObject;
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.adjustCardSize();
-  }
+  /**
+   * Get the image path for the current card
+   * Maps card value and suit to the correct PNG filename
+   */
+  getCardImagePath(): string {
+    // Map suit enum to card image naming convention
+    const suitMap: Record<SuitEnum, string> = {
+      [SuitEnum.HEARTS]: 'hearts',
+      [SuitEnum.DIAMONDS]: 'diamonds',
+      [SuitEnum.CLUBS]: 'clubs',
+      [SuitEnum.SPADES]: 'spades',
+      [SuitEnum.OTHER]: 'hearts', // fallback
+    };
 
-  ngOnInit() {
-  }
+    // Map card values to their names in the image files
+    const valueMap: Record<number, string> = {
+      1: 'ace',
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5',
+      6: '6',
+      7: '7',
+      8: '8',
+      9: '9',
+      10: '10',
+      11: 'jack',
+      12: 'queen',
+      13: 'king',
+      14: 'black_joker', // or red_joker based on suit
+    };
 
-  ngAfterViewInit() {
-    this.adjustCardSize();
-  }
+    const suitName = suitMap[this.card.suit] || 'hearts';
+    const valueName = valueMap[this.card.value] || 'ace';
 
-  adjustCardSize() {
-    const card = this.cardElement.nativeElement;
-    const cardWidth = card.offsetWidth;
-    const fontSize = cardWidth * 0.25;
-    card.style.fontSize = fontSize + 'px';
+    // Handle jokers specially
+    if (this.card.value === 14) {
+      return `assets/images/cards/${valueName}.png`;
+    }
+
+    // Format: ace_of_hearts.png, 2_of_clubs.png, etc.
+    return `assets/images/cards/${valueName}_of_${suitName}.png`;
   }
 }

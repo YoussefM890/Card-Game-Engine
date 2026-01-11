@@ -11,8 +11,29 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
+
+// Custom orange palette with white text contrast for all shades
+$custom-orange-palette: map-merge(mat.$orange-palette, (
+  contrast: (
+    50: white,
+    100: white,
+    200: white,
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+));
+
 $ClientApp-primary: mat.define-palette(mat.$blue-palette);
-$ClientApp-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$ClientApp-accent: mat.define-palette($custom-orange-palette, 500, 300, 700);
 
 // The warn palette is optional (defaults to red).
 $ClientApp-warn: mat.define-palette(mat.$red-palette);
@@ -34,4 +55,25 @@ $ClientApp-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($ClientApp-theme);
 
-/* You can add global styles to this file, and also import other style files */
+// ============================================
+// DARK THEME
+// ============================================
+$ClientApp-dark-primary: mat.define-palette(mat.$light-blue-palette);
+$ClientApp-dark-accent: mat.define-palette($custom-orange-palette, 500, 300, 700);
+$ClientApp-dark-warn: mat.define-palette(mat.$red-palette);
+
+$ClientApp-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $ClientApp-dark-primary,
+    accent: $ClientApp-dark-accent,
+    warn: $ClientApp-dark-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+// Apply dark theme when body has .dark-theme class
+.dark-theme {
+  @include mat.all-component-colors($ClientApp-dark-theme);
+}
+

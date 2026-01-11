@@ -1,25 +1,19 @@
 import {Component, Inject} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
-} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {FormArray, FormBuilder, FormGroup, FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {gameJson} from "./dummy-rules";
 import {MatToolbar} from "@angular/material/toolbar";
 import {SignalRService} from "../../shared/services/signalr.service";
 import {ManualTrigger} from "../namespace/classes/manual-trigger";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-import-rules',
   standalone: true,
   imports: [
-    MatDialogTitle,
     MatDialogContent,
     MatFormField,
     FormsModule,
@@ -28,6 +22,8 @@ import {ManualTrigger} from "../namespace/classes/manual-trigger";
     MatButton,
     MatLabel,
     MatToolbar,
+    MatIcon,
+    MatIconButton,
   ],
   templateUrl: './import-rules.component.html',
   styleUrls: ['./import-rules.component.scss']

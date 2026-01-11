@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
-import {MatGridList, MatGridTile} from "@angular/material/grid-list";
-import {MatButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
+import {MatButton, MatMiniFabButton} from "@angular/material/button";
 import {
   AbstractControl,
   FormArray,
@@ -11,19 +10,12 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
 import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
-import {ActionComponent} from "../_reusable-components/action/action.component";
-import {ParameterComponent} from "../_reusable-components/parameter/parameter.component";
 import {ImportRulesComponent} from "./import-rules/import-rules.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatCheckbox} from "@angular/material/checkbox";
-import {CardComponent} from "../_reusable-components/card/card.component";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
+import {Router} from "@angular/router";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
 import {
   copyToClipboard,
@@ -32,7 +24,6 @@ import {
   JsonToForm,
   recreateFormArray
 } from '../shared/functions/global';
-import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {CardNameEnum} from "../_reusable-components/card/namespace/enums/card-name.enum";
 import {SuitEnum, suitsList} from "./namespace/enums/suit.enum";
 import {Card as CreateGameCard} from "./namespace/classes/card";
@@ -67,29 +58,14 @@ import {VisibilityEnum} from "./namespace/enums/visibility.enum";
   standalone: true,
   imports: [
     GridComponent,
-    MatGridList,
-    MatGridTile,
     MatButton,
-    MatFormField,
-    MatLabel,
-    MatOption,
-    MatSelect,
     ReactiveFormsModule,
     MatIcon,
-    MatIconButton,
-    MatInput,
-    ActionComponent,
-    ParameterComponent,
     MatCheckbox,
-    CardComponent,
     CardLineComponent,
-    RouterLinkActive,
-    RouterLink,
     RuleComponent,
     FormsModule,
     MatMiniFabButton,
-    MatButtonToggleGroup,
-    MatButtonToggle,
     MatChip,
     MatChipSet,
     NgStyle,
@@ -445,7 +421,7 @@ export class CreateGameComponent implements OnInit {
     //   [CssStyleEnum.Color]: option.color
     // };
     return {
-      [CssStyleEnum.BackgroundColor]: "green",
+      [CssStyleEnum.BackgroundColor]: "#ff9800",
       [CssStyleEnum.Color]: "black"
     };
   }

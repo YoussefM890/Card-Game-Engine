@@ -1,6 +1,9 @@
-<mat-toolbar class="d-flex justify-content-between">
+<mat-toolbar class="dialog-header">
   <span>Card Game Engine Guide</span>
-  <button mat-button mat-dialog-close="">&times;</button>
+  <span class="flex-spacer"></span>
+  <button class="close-button" mat-dialog-close mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-toolbar>
 <div class="p-5 segoeUI">
   <markdown [src]="'assets/Guide.md'"></markdown>

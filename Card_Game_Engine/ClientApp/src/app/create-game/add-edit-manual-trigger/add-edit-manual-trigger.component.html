@@ -1,7 +1,9 @@
-<mat-toolbar class="d-flex justify-content-between">
+<mat-toolbar class="dialog-header">
   <span>Add Manual Triggers</span>
   <span class="flex-spacer"></span>
-  <button mat-button mat-dialog-close="">&times;</button>
+  <button class="close-button" mat-dialog-close mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-toolbar>
 
 <div [formGroup]="form">

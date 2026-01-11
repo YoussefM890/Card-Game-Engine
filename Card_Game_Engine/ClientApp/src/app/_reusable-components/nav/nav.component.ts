@@ -3,13 +3,14 @@ import {MatIcon} from "@angular/material/icon";
 import {copyToClipboard} from "../../shared/functions/global";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatToolbar} from "@angular/material/toolbar";
-import {MatButton, MatFabButton, MatMiniFabButton} from "@angular/material/button";
+import {MatButton, MatMiniFabButton} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
 import {SignalRService} from "../../shared/services/signalr.service";
 import {UserInfo} from "../../shared/models/classes/user-info";
 import {Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {GuideComponent} from "../../guide/guide.component";
+import {ThemeService} from "../../shared/services/theme.service";
 
 @Component({
   selector: 'app-nav',
@@ -20,7 +21,6 @@ import {GuideComponent} from "../../guide/guide.component";
     MatToolbar,
     MatButton,
     RouterLink,
-    MatFabButton,
     MatMiniFabButton
   ],
   templateUrl: './nav.component.html',
@@ -62,7 +62,15 @@ export class NavComponent implements OnInit, OnDestroy {
     this.service.leaveRoom();
   }
 
-  constructor(private service: SignalRService, private dialog: MatDialog) {
+  constructor(
+    private service: SignalRService,
+    private dialog: MatDialog,
+    public themeService: ThemeService
+  ) {
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   openGuide() {

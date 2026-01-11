@@ -228,7 +228,10 @@ export class SignalRService {
         if (myPlayer) {
           const rotations = RotationsNeeded[myPlayer.perspective] ?? 0;
           if (rotations > 0) {
-            gameObject.grid = rotateGrid(gameObject.grid, gameObject.height, gameObject.width, rotations);
+            const rotated = rotateGrid(gameObject.grid, gameObject.height, gameObject.width, rotations);
+            gameObject.grid = rotated.grid;
+            gameObject.height = rotated.rows;
+            gameObject.width = rotated.columns;
           }
         }
       }

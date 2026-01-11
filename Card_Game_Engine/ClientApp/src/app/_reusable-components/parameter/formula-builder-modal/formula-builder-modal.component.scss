@@ -31,3 +31,106 @@
 .formula-builder {
   padding-top: 80px; /* Make space for fixed formula */
 }
+
+/* Dark theme styling */
+:host-context(body.dark-theme) {
+  .formula-builder {
+    background: #1a1a1a !important;
+  }
+
+  .formula-output {
+    border-color: #3d3d3d;
+    background: #242424 !important;
+    color: #efefef;
+
+    code {
+      color: #64b5f6 !important;
+    }
+  }
+
+  .nested-chain {
+    border-color: #4d4d4d;
+    background: #2d2d2d !important;
+  }
+
+  .parameter {
+    border-color: #3d3d3d;
+    background: #2d2d2d !important;
+  }
+
+  .chain-step {
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d;
+  }
+
+  // Fix Bootstrap classes in dark mode
+  .bg-light {
+    background-color: #1a1a1a !important;
+  }
+
+  .bg-white {
+    background-color: #242424 !important;
+  }
+
+  .card {
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d !important;
+  }
+
+  .form-select,
+  .form-control {
+    background-color: #1a1a1a !important;
+    border-color: #3d3d3d !important;
+    color: #efefef !important;
+
+    &:focus {
+      border-color: #42a5f5 !important;
+      box-shadow: 0 0 0 0.2rem rgba(66, 165, 245, 0.25) !important;
+    }
+  }
+
+  .form-select option {
+    background-color: #1a1a1a;
+    color: #efefef;
+  }
+
+  .btn-outline-primary {
+    color: #64b5f6 !important;
+    border-color: #64b5f6 !important;
+
+    &:hover {
+      background-color: #64b5f6 !important;
+      color: #1a1a1a !important;
+    }
+  }
+
+  .btn-outline-secondary {
+    color: #b8b8b8 !important;
+    border-color: #6b6b6b !important;
+
+    &:hover {
+      background-color: #6b6b6b !important;
+      color: #1a1a1a !important;
+    }
+  }
+
+  .btn-primary {
+    background-color: #1e88e5 !important;
+    border-color: #1e88e5 !important;
+    color: white !important;
+
+    &:hover {
+      background-color: #1565c0 !important;
+      border-color: #1565c0 !important;
+    }
+  }
+
+  .badge.bg-secondary {
+    background-color: #4d4d4d !important;
+    color: #efefef !important;
+  }
+
+  .text-primary {
+    color: #64b5f6 !important;
+  }
+}

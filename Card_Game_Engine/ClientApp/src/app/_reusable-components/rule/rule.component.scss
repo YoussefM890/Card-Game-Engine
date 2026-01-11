@@ -1,9 +1,57 @@
 $color: #ffce53;
 $background: #fff8e6;
-$opacity: 1;
+
 .rule {
   border: 1px solid $color;
-  background: rgba($background, $opacity);
-  padding: 10px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba($background, 0.8) 0%, rgba(#fff, 0.9) 100%);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-2);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: darken($color, 10%);
+  }
+}
+
+// Nested rules styling
+.rule .rule {
+  margin-left: var(--space-3);
+  border-left: 3px solid $color;
+  background: rgba($background, 0.5);
+}
+
+// Button styling within rules
+.rule button {
+  margin: var(--space-1) var(--space-1) var(--space-1) 0;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .rule {
+    padding: var(--space-3);
+  }
+
+  .rule .rule {
+    margin-left: var(--space-2);
+  }
+}
+
+// Dark theme styling
+:host-context(body.dark-theme) {
+  .rule {
+    background: linear-gradient(135deg, rgba(#3d3000, 0.6) 0%, rgba(#2a2a2a, 0.9) 100%);
+    border-color: #b8860b;
+
+    &:hover {
+      border-color: #daa520;
+    }
+  }
+
+  .rule .rule {
+    background: rgba(#3d3000, 0.4);
+    border-left-color: #b8860b;
+  }
 }

@@ -1,8 +1,13 @@
 <div class="player-assignment-dialog">
-  <h2 mat-dialog-title>
-    <mat-icon>people</mat-icon>
-    Assign Players
-  </h2>
+  <div class="dialog-header">
+    <div class="header-title">
+      <mat-icon>people</mat-icon>
+      <span>Assign Players</span>
+    </div>
+    <button (click)="onCancel()" class="close-button" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
   <mat-dialog-content>
     <!-- Participants List -->
@@ -16,9 +21,11 @@
               <div class="user-info">
                 <mat-icon matListItemIcon>person</mat-icon>
                 <div matListItemTitle class="user-details">
-                  <span class="user-name">{{ participant.userName }}</span>
+                  <span [title]="participant.userName" class="user-name">
+                    {{ participant.userName }}
+                  </span>
                   @if (participant.isRoomOwner) {
-                    <mat-chip class="owner-chip">Admin</mat-chip>
+                    <mat-chip class="owner-chip">ADMIN</mat-chip>
                   }
                 </div>
               </div>
@@ -26,17 +33,17 @@
               <!-- Player Assignment -->
               <div class="assignment-controls">
                 <mat-form-field appearance="outline" class="player-select">
-                  <mat-label>Select Player</mat-label>
+                  <mat-label>Assign to Player</mat-label>
                   <mat-select [value]="getAssignment(participant.userId)"
                               (selectionChange)="onAssignmentChange(participant.userId, $event.value)">
                     <mat-option [value]="null">
                       <mat-icon>visibility</mat-icon>
-                      Spectator
+                      <span style="margin-left: 8px;">Spectator</span>
                     </mat-option>
                     @for (player of getAvailablePlayersForUser(participant.userId); track player.id) {
                       <mat-option [value]="player.id">
                         <mat-icon>sports_esports</mat-icon>
-                        {{ player.role }}
+                        <span style="margin-left: 8px;">{{ player.role }}</span>
                       </mat-option>
                     }
                   </mat-select>
@@ -59,10 +66,11 @@
     <!-- Available Players -->
     @if (allPlayers.length > 0) {
       <div class="section available-players-section">
-        <h3>All Players ({{ allPlayers.length }})</h3>
+        <h3>Available Players ({{ allPlayers.length }})</h3>
         <div class="available-players-grid">
           @for (player of allPlayers; track player.id) {
-            <div class="available-player-card">
+            <div [title]="player.description || player.role"
+                 class="available-player-card">
               <mat-icon>sports_esports</mat-icon>
               <div class="player-info">
                 <span class="player-role">{{ player.role }}</span>
@@ -79,29 +87,25 @@
     <!-- Assignment Summary -->
     <div class="section summary-section">
       <div class="summary-card">
-        <div class="summary-item">
+        <div class="summary-item" title="Total users in the room">
           <mat-icon>people</mat-icon>
-          <span>{{ participants.length }} Users</span>
+          <span>{{ participants.length }} User{{ participants.length === 1 ? '' : 's' }}</span>
         </div>
-        <div class="summary-item">
+        <div class="summary-item" title="Users assigned to play">
           <mat-icon>sports_esports</mat-icon>
-          <span>{{ getAssignedCount() }} Players Assigned</span>
+          <span>{{ getAssignedCount() }} Assigned</span>
         </div>
-        <div class="summary-item">
+        <div class="summary-item" title="Users watching as spectators">
           <mat-icon>visibility</mat-icon>
-          <span>{{ getSpectatorCount() }} Spectators</span>
+          <span>{{ getSpectatorCount() }} Spectator{{ getSpectatorCount() === 1 ? '' : 's' }}</span>
         </div>
       </div>
     </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button (click)="onCancel()" mat-button>
-      <mat-icon>close</mat-icon>
-      Cancel
-    </button>
     <button (click)="onSave()"
-            color="primary"
+            color="accent"
             mat-raised-button>
       <mat-icon>check</mat-icon>
       Save & Apply

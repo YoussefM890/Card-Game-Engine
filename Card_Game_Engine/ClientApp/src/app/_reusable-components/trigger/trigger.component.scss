@@ -1,9 +1,48 @@
 $color: #a2d752;
 $background: #ebf5dc;
-$opacity: 1;
+
 .trigger {
   border: 1px solid $color;
-  background: rgba($background, $opacity);
-  padding: 10px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, rgba($background, 0.8) 0%, rgba(#fff, 0.9) 100%);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  margin-bottom: var(--space-2);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: darken($color, 10%);
+  }
+}
+
+// Nested triggers styling
+.trigger .trigger {
+  margin-left: var(--space-3);
+  border-left: 3px solid $color;
+  background: rgba($background, 0.5);
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .trigger {
+    padding: var(--space-3);
+  }
+}
+
+// Dark theme styling
+:host-context(body.dark-theme) {
+  .trigger {
+    background: linear-gradient(135deg, rgba(#2a3d1a, 0.6) 0%, rgba(#2a2a2a, 0.9) 100%);
+    border-color: #6b8e23;
+
+    &:hover {
+      border-color: #7cba2a;
+    }
+  }
+
+  .trigger .trigger {
+    background: rgba(#2a3d1a, 0.4);
+    border-left-color: #6b8e23;
+  }
 }

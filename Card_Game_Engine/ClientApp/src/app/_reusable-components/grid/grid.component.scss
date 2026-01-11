@@ -2,39 +2,89 @@
   width: 100%;
   height: 100%;
   display: grid;
-  gap: 3px;
+  gap: 4px;
+  padding: 2px;
 }
 
-
 .grid-cell {
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  border: 1px solid var(--gray-200);
+  background-color: var(--gray-50);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .grid-item {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid whitesmoke;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  aspect-ratio: 0.75;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--bg-card);
   position: relative;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--gray-700);
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--primary-300);
+    box-shadow: var(--shadow-md);
+    z-index: 1;
+  }
+
+  span {
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9),
+    -1px -1px 2px rgba(255, 255, 255, 0.9),
+    1px -1px 2px rgba(255, 255, 255, 0.9),
+    -1px 1px 2px rgba(255, 255, 255, 0.9),
+    0 0 4px rgba(255, 255, 255, 0.8);
+    color: #1a1a1a;
+    font-weight: 700;
+  }
+
+  // Ensure card fills the cell properly
+  app-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .selected {
-  border-color: #007bff;
+  border-color: var(--primary-500) !important;
+  box-shadow: 0 0 0 2px var(--primary-200) !important;
 }
 
 .grid-container.overlap .grid-cell:nth-child(n+2) {
-  margin-left: -100px; /* Adjust the negative margin to control overlap */
+  margin-left: -100px;
 }
 
 .red-shadow {
-  box-shadow: 0 2px 12px rgba(255, 0, 0, 0.5);
+  box-shadow: 0 2px 12px rgba(244, 67, 54, 0.4) !important;
+  border-color: var(--error) !important;
 }
 
 .green-shadow {
-  box-shadow: 0 2px 4px rgba(0, 255, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3) !important;
+  border-color: var(--success) !important;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .grid-container {
+    gap: 2px;
+  }
+
+  .grid-item span {
+    font-size: 0.75rem;
+  }
 }

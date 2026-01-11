@@ -59,33 +59,42 @@ export function rotateGridRight(grid: any[], rows: number, columns: number): any
 }
 
 // Rotate grid 90° clockwise, repeated `times` times (0-3)
-export function rotateGrid(grid: any[], rows: number, columns: number, times: number = 1): any[] {
+// Returns { grid, rows, columns } with updated dimensions
+export function rotateGrid(
+  grid: any[],
+  rows: number,
+  columns: number,
+  times: number = 1
+): { grid: any[], rows: number, columns: number } {
   const rotations = ((times % 4) + 4) % 4; // Normalize to 0-3, handles negatives
 
-  if (rotations === 0) return [...grid]; // Return copy, no rotation
+  if (rotations === 0) return {grid: [...grid], rows, columns}; // Return copy, no rotation
 
   let result = grid;
   let currentRows = rows;
   let currentCols = columns;
 
   for (let r = 0; r < rotations; r++) {
-    const rotated: any[] = new Array(currentRows * currentCols);
+    // After 90° rotation, dimensions swap
+    const newRows = currentCols;
+    const newCols = currentRows;
+    const rotated: any[] = new Array(newRows * newCols);
 
     for (let i = 0; i < currentRows; i++) {
       for (let j = 0; j < currentCols; j++) {
         const oldIndex = i * currentCols + j;
-        // 90° clockwise: (i, j) -> (j, rows - 1 - i)
+        // 90° clockwise: (i, j) -> (j, currentRows - 1 - i)
         const newRow = j;
         const newCol = currentRows - 1 - i;
-        const newIndex = newRow * currentRows + newCol;
+        const newIndex = newRow * newCols + newCol;
         rotated[newIndex] = result[oldIndex];
       }
     }
 
     result = rotated;
-    // Dimensions swap after each 90° rotation
-    [currentRows, currentCols] = [currentCols, currentRows];
+    currentRows = newRows;
+    currentCols = newCols;
   }
 
-  return result;
+  return {grid: result, rows: currentRows, columns: currentCols};
 }

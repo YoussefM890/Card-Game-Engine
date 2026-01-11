@@ -1,0 +1,162 @@
+.nav-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--space-2) !important;
+  min-height: 56px;
+  background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%) !important;
+}
+
+:host-context(body.dark-theme) .nav-toolbar {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%) !important;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-2);
+  min-width: 0;
+}
+
+.nav-btn {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3) !important;
+  font-weight: 500 !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-fast) !important;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.guide-btn,
+.theme-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+    transform: scale(1.05);
+  }
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.room-icon {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.room-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.room-id {
+  color: white;
+  font-weight: 500;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.room-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.action-icon {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.leave-btn {
+  background: linear-gradient(135deg, var(--error) 0%, var(--error-light) 100%) !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #d32f2f 0%, #ef5350 100%) !important;
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .nav-toolbar {
+    padding: 0 var(--space-1) !important;
+  }
+
+  .nav-btn {
+    padding: var(--space-2) !important;
+    min-width: unset !important;
+  }
+
+  .room-info {
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .room-id {
+    max-width: 80px;
+    font-size: 0.75rem;
+  }
+
+  .action-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-id {
+    max-width: 60px;
+  }
+
+  .nav-center {
+    padding: 0;
+  }
+}

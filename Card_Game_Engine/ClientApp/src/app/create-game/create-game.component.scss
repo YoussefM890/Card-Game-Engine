@@ -1,37 +1,478 @@
-.form-container {
+// ============================================
+// CREATE GAME LAYOUT
+// ============================================
+.create-game-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  background: var(--bg-secondary);
 }
 
-.rule {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 8px;
+.create-game-content {
+  flex: 1;
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  overflow: hidden;
+  min-height: 0;
 }
 
-.button-group {
+// ============================================
+// PANELS
+// ============================================
+.panel {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rules-panel {
+  flex: 1;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.settings-panel {
+  flex: 1.5;
+  min-width: 320px;
+}
+
+.cards-panel {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+  padding: var(--space-4);
+}
+
+// ============================================
+// PANEL HEADER
+// ============================================
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.action-btn {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.85rem !important;
+}
+
+// ============================================
+// PANEL BODY
+// ============================================
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+// ============================================
+// INFO SECTIONS
+// ============================================
+.info-section {
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--gray-700);
+  font-weight: 500;
+  margin-bottom: var(--space-2);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--primary-500);
+  }
+}
+
+.chip-set {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
-  padding: 0;
-  margin: 0;
+  gap: var(--space-1);
 }
 
-.button-group button {
-  flex: 1 0 0;
-  margin: 0;
-  border-radius: 0;
+// ============================================
+// RULES LIST
+// ============================================
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.visibility-button-toggle {
-  min-width: 100px;
-  min-height: 50px;
+.rule-item {
+  position: relative;
 }
 
-button {
-  margin: 8px 0;
+.remove-btn {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.add-rule-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  margin-top: var(--space-3);
+  background: linear-gradient(135deg, #b78800 0%, #d4a017 100%) !important;
+  color: white !important;
+}
+
+// ============================================
+// SETTINGS PANEL
+// ============================================
+.settings-section {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: var(--space-2);
+
+  mat-icon {
+    color: var(--primary-500);
+  }
+}
+
+.section-subtitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  margin-bottom: var(--space-2);
+}
+
+.section-description {
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  margin: 0 0 var(--space-4);
+}
+
+// ============================================
+// DIMENSION CONTROLS
+// ============================================
+.dimension-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.dimension-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--gray-50);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.dimension-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--gray-700);
+
+  mat-icon {
+    color: var(--gray-500);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.dimension-value {
+  font-weight: 600;
+  color: var(--primary-600);
+  background: var(--primary-50);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-left: var(--space-2);
+}
+
+.dimension-buttons {
+  display: flex;
+  gap: var(--space-1);
+
+  button {
+    transform: scale(0.85);
+  }
+}
+
+// ============================================
+// VISIBILITY SECTION
+// ============================================
+.visibility-section {
+  margin-top: var(--space-3);
+}
+
+.visibility-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.visibility-btn {
+  flex: 1;
+  min-width: 80px;
+  font-size: 0.8rem !important;
+  padding: var(--space-2) var(--space-1) !important;
+  transition: all var(--transition-fast) !important;
+  border-radius: var(--radius-sm) !important;
+
+  &.selected {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 2px currentColor !important;
+  }
+}
+
+// ============================================
+// GRID PREVIEW
+// ============================================
+.grid-preview {
+  flex: 1;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.preview-grid {
+  flex: 1;
+  min-height: 150px;
+}
+
+// ============================================
+// CARDS PANEL
+// ============================================
+.selected-cards-container {
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  min-height: 110px;
+  overflow: hidden;
+}
+
+.suits-section {
+  margin-bottom: var(--space-4);
+}
+
+.suits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.suit-checkbox {
+  background: var(--gray-50);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.values-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.values-grid {
+  flex: 1;
+  min-height: 100px;
+}
+
+// ============================================
+// RESPONSIVE STYLES
+// ============================================
+@media (max-width: 1400px) {
+  .rules-panel {
+    max-width: 350px;
+  }
+
+  .cards-panel {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .create-game-content {
+    flex-wrap: wrap;
+    overflow: auto;
+  }
+
+  .rules-panel {
+    flex: 1 1 100%;
+    max-width: none;
+    max-height: 40vh;
+  }
+
+  .settings-panel {
+    flex: 1.2;
+    min-width: 300px;
+  }
+
+  .cards-panel {
+    flex: 1;
+    max-width: none;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-game-container {
+    overflow: auto;
+  }
+
+  .create-game-content {
+    flex-direction: column;
+    padding: var(--space-2);
+    gap: var(--space-2);
+    overflow: visible;
+    height: auto;
+    flex: none;
+  }
+
+  .panel {
+    flex: none;
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .rules-panel {
+    max-height: none;
+    min-height: auto;
+
+    .panel-body {
+      overflow: visible;
+    }
+  }
+
+  .settings-panel {
+    flex: none;
+    min-height: auto;
+  }
+
+  .cards-panel {
+    flex: none;
+    min-height: auto;
+  }
+
+  .panel-header {
+    padding: var(--space-2);
+  }
+
+  .action-btn {
+    padding: var(--space-2) !important;
+    min-width: unset !important;
+  }
+
+  .dimension-row {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .suits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .visibility-btn {
+    min-width: 60px;
+    font-size: 0.7rem !important;
+  }
+
+  .suits-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
+// DARK THEME OVERRIDES
+// ============================================
+:host-context(body.dark-theme) {
+  .panel-header {
+    background: #2d2d2d;
+    border-bottom-color: #3d3d3d;
+  }
+
+  .info-section {
+    background: #2d2d2d;
+  }
+
+  .dimension-row {
+    background: #2d2d2d;
+  }
+
+  .dimension-value {
+    background: rgba(33, 150, 243, 0.2);
+    color: #64b5f6;
+  }
+
+  .selected-cards-container {
+    background: #2d2d2d;
+  }
+
+  .suit-checkbox {
+    background: #2d2d2d;
+  }
+
+  .settings-section {
+    border-bottom-color: #3d3d3d;
+  }
+
+  // Keep add-rule button orange
+  .add-rule-btn {
+    background: linear-gradient(135deg, #b78800 0%, #d4a017 100%) !important;
+    color: white !important;
+  }
 }

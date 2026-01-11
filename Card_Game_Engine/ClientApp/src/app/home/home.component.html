@@ -1,18 +1,51 @@
-<div class="d-flex justify-content-center align-items-center max">
-  <mat-card [style.background-color]="'whitesmoke'" class="card">
-    <mat-card-title>
-      <mat-toolbar class="d-flex justify-content-center" [style.background-color]="'lightgray'">
-        <span>Welcome to Card Game Engine</span>
-      </mat-toolbar>
-    </mat-card-title>
-    <mat-card-content class="d-flex flex-column justify-content-center max gap-5">
-      <button mat-raised-button color="accent" (click)="createRoom()">Create Your Own Room</button>
-      <h3 class="w-100 text-center">OR</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Room Id</mat-label>
-        <input matInput placeholder="Ex. 48c48404-f92d-4ffb-9820-e7c6924af861" [(ngModel)]="roomId">
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="joinRoom()">Join an Existing Room</button>
-    </mat-card-content>
-  </mat-card>
+<div class="home-container">
+  <div class="home-background"></div>
+  <button (click)="toggleTheme()" [matTooltip]="themeService.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+          aria-label="Toggle theme" class="theme-toggle-btn"
+          mat-mini-fab>
+    <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+  <div class="home-content animate-fade-in">
+    <mat-card class="home-card">
+      <div class="card-header">
+        <div class="logo-container">
+          <mat-icon class="logo-icon">style</mat-icon>
+        </div>
+        <h1 class="app-title">Card Game Engine</h1>
+        <p class="app-subtitle">Create and play custom card games with friends</p>
+      </div>
+
+      <mat-card-content class="card-body">
+        <div class="action-section">
+          <button (click)="createRoom()" class="action-btn create-btn" color="accent" mat-raised-button>
+            <mat-icon>add_circle</mat-icon>
+            <span>Create New Room</span>
+          </button>
+        </div>
+
+        <div class="divider-container">
+          <div class="divider-line"></div>
+          <span class="divider-text">or join existing</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="join-section">
+          <mat-form-field appearance="outline" class="room-input">
+            <mat-label>Room ID</mat-label>
+            <mat-icon matPrefix>meeting_room</mat-icon>
+            <input [(ngModel)]="roomId" matInput placeholder="Enter room ID to join">
+          </mat-form-field>
+          <button (click)="joinRoom()" [disabled]="!roomId" class="action-btn join-btn" color="primary"
+                  mat-raised-button>
+            <mat-icon>login</mat-icon>
+            <span>Join Room</span>
+          </button>
+        </div>
+      </mat-card-content>
+
+      <div class="card-footer">
+        <p class="footer-text">Create custom rules, invite players, and enjoy!</p>
+      </div>
+    </mat-card>
+  </div>
 </div>

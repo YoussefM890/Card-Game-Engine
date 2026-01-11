@@ -1,28 +1,42 @@
-<div class="max d-flex flex-column">
+<div class="create-game-container">
   <app-nav [parentComponent]="'create-game'"></app-nav>
-  <mat-grid-list class="max" cols="9" rowHeight="49.9%">
-    <mat-grid-tile class="overflow-auto" colspan="4" rowspan="2">
-      <div class="form-container">
+  <div class="create-game-content">
+    <!-- Left Panel: Rules Editor -->
+    <div class="panel rules-panel">
+      <div class="panel-header sticky-top">
+        <div class="header-actions">
+          <button (click)="onSubmit()" class="submit-btn" color="accent" mat-raised-button>
+            <mat-icon>save</mat-icon>
+            <span class="hide-mobile">Submit</span>
+          </button>
+        </div>
+        <div class="header-actions">
+          <button (click)="openEditPlayers()" class="action-btn" color="primary" mat-raised-button>
+            <mat-icon>people</mat-icon>
+            <span class="hide-mobile">Players</span>
+          </button>
+          <button (click)="addManualTrigger()" class="action-btn" color="primary" mat-raised-button>
+            <mat-icon>touch_app</mat-icon>
+            <span class="hide-mobile">{{ manualTriggersArray.length === 0 ? 'Add' : 'Edit' }} Triggers</span>
+          </button>
+          <button (click)="importRules()" class="action-btn" color="primary" mat-raised-button>
+            <mat-icon>upload</mat-icon>
+            <span class="hide-mobile">Import</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-body">
         <form [formGroup]="gameForm">
-          <div class="d-flex justify-content-between w-100 sticky-top" [style.background-color]="'white'">
-            <div>
-              <button mat-raised-button color="accent" class="me-1" (click)="onSubmit()">Submit</button>
-            </div>
-            <div>
-              <button (click)="openEditPlayers()" class="me-1" color="primary" mat-raised-button>Edit Players</button>
-              <button (click)="addManualTrigger()" class="me-1" color="primary" mat-raised-button>
-                {{ manualTriggersArray.length === 0 ? 'Add' : 'Edit' }} Manual Triggers
-              </button>
-              <button (click)="importRules()" class="me-1" color="primary" mat-raised-button>Import Game Setup</button>
-            </div>
-          </div>
           @if (playersArray.controls.length > 0) {
-            <div class="d-flex align-items-center gap-3 m-2">
-              <span>Players :</span>
-              <mat-chip-set class="example-chip">
+            <div class="info-section">
+              <div class="section-label">
+                <mat-icon>people</mat-icon>
+                <span>Players</span>
+              </div>
+              <mat-chip-set class="chip-set">
                 @for (trigger of playersArray.value; track trigger.id) {
                   <mat-chip
-                    class="example-box"
                     [ngStyle]="getPlayersStyles(trigger)"
                     [matTooltip]="trigger.description"
                   >{{ trigger.role }}
@@ -31,13 +45,16 @@
               </mat-chip-set>
             </div>
           }
+
           @if (manualTriggersArray.controls.length > 0) {
-            <div class="d-flex align-items-center gap-3 m-2">
-              <span>Manual Triggers :</span>
-              <mat-chip-set class="example-chip">
+            <div class="info-section">
+              <div class="section-label">
+                <mat-icon>touch_app</mat-icon>
+                <span>Manual Triggers</span>
+              </div>
+              <mat-chip-set class="chip-set">
                 @for (trigger of manualTriggersArray.value; track trigger.id) {
                   <mat-chip
-                    class="example-box"
                     [ngStyle]="getManualTriggerStyles(trigger)"
                     [matTooltip]="trigger.description"
                   >{{ trigger.name }}
@@ -46,111 +63,139 @@
               </mat-chip-set>
             </div>
           }
-          <div formArrayName="rules">
+
+          <div class="rules-list" formArrayName="rules">
             @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
-              <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
-              <button mat-button color="warn" (click)="removeRule(i)">Remove Rule</button>
+              <div class="rule-item animate-fade-in">
+                <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
+                <button (click)="removeRule(i)" class="remove-btn" color="warn" mat-button>
+                  <mat-icon>delete</mat-icon>
+                  Remove Rule
+                </button>
+              </div>
             }
           </div>
-          <button mat-button (click)="addRule()" [style.color]="'#b78800'">Add Rule</button>
+
+          <button (click)="addRule()" class="add-rule-btn" mat-raised-button>
+            <mat-icon>add</mat-icon>
+            Add Rule
+          </button>
         </form>
       </div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="2" rowspan="2">
-      <mat-grid-list class="max" cols="1" rowHeight="33.3%">
-        <mat-grid-tile colspan="1" rowspan="1">
-          <div class="p-4">
-            Select the cards deck that you will play with -->
-          </div>
-        </mat-grid-tile>
-        <mat-grid-tile colspan="1" rowspan="2">
-          <div class="max d-flex flex-column justify-content-end">
-            <div class="p-4">
-              This is a grid reference for the card places that could be used to play.
-              You can use the numbers as a reference to the cards' position in the rules -->
+    </div>
+
+    <!-- Center Panel: Settings -->
+    <div class="panel settings-panel">
+      <div class="settings-section">
+        <div class="section-title">
+          <mat-icon>view_module</mat-icon>
+          <span>Grid Settings</span>
+        </div>
+        <p class="section-description">Configure the game board dimensions and cell visibility</p>
+
+        <div class="dimension-controls">
+          <div class="dimension-row">
+            <div class="dimension-label">
+              <mat-icon>swap_horiz</mat-icon>
+              <span>Width</span>
+              <span class="dimension-value">{{ widthControl.value }}</span>
             </div>
-            <div class="d-flex flex-column p-3 gap-1">
-              <div class="d-flex justify-content-between">
-                <div class="input-group w-50">
-                  <span class="input-group-text">Width</span>
-                  <input [value]="widthControl.value" class="form-control" readonly type="number">
-                </div>
-                <div>
-                  <button (click)="changeWidth(-1)" class="mx-1" mat-mini-fab>
-                    <mat-icon>remove</mat-icon>
-                  </button>
-                  <button (click)="changeWidth(1)" class="mx-1" mat-mini-fab>
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </div>
-              <div class="d-flex justify-content-between">
-                <div class="input-group w-50">
-                  <span class="input-group-text">Height</span>
-                  <input [value]="heightControl.value" class="form-control" readonly type="number">
-                </div>
-                <div>
-                  <button (click)="changeHeight(-1)" class="mx-1" mat-mini-fab>
-                    <mat-icon>remove</mat-icon>
-                  </button>
-                  <button (click)="changeHeight(1)" class="mx-1" mat-mini-fab>
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="button-group p-3">
-              @for (visibility of visibilityOptions; track visibility.value) {
-                <button [style.color]="visibility.color"
-                        [style.background-color]="visibility.background"
-                        mat-raised-button
-                        class="visibility-button-toggle"
-                        (click)="selectedVisibilityOption = visibility"
-                        [ngStyle]="{
-                          'box-shadow': selectedVisibilityOption.value === visibility.value ? '0 0 5px 2px' + visibility.color : 'none',
-                          'z-index': selectedVisibilityOption.value === visibility.value ? '1' : '0'
-                        }"
-                >
-                  {{ visibility.display }}
-                </button>
-              }
+            <div class="dimension-buttons">
+              <button (click)="changeWidth(-1)" color="primary" mat-mini-fab>
+                <mat-icon>remove</mat-icon>
+              </button>
+              <button (click)="changeWidth(1)" color="primary" mat-mini-fab>
+                <mat-icon>add</mat-icon>
+              </button>
             </div>
           </div>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="3" class="flex-column">
-      <div class="max d-flex flex-column">
-        <div class="h-50 w-100 d-flex flex-column">
-          <div class="h-50 w-100">
-            <app-card-line (cardSelected)="onCardSelectedFromLine($event)" [cards]="selectedCards"></app-card-line>
-          </div>
-          <div [formGroup]="suitsForm" class="h-50 w-100">
-            <div formArrayName="suits">
-              @for (suitControl of suitsFormArray.controls; track suitControl.value) {
-                <mat-checkbox color="primary" [formControlName]="$index">{{ suits[$index].display }}</mat-checkbox>
-              }
+
+          <div class="dimension-row">
+            <div class="dimension-label">
+              <mat-icon>swap_vert</mat-icon>
+              <span>Height</span>
+              <span class="dimension-value">{{ heightControl.value }}</span>
+            </div>
+            <div class="dimension-buttons">
+              <button (click)="changeHeight(-1)" color="primary" mat-mini-fab>
+                <mat-icon>remove</mat-icon>
+              </button>
+              <button (click)="changeHeight(1)" color="primary" mat-mini-fab>
+                <mat-icon>add</mat-icon>
+              </button>
             </div>
           </div>
         </div>
+
+        <div class="visibility-section">
+          <div class="section-subtitle">Cell Visibility</div>
+          <div class="visibility-buttons">
+            @for (visibility of visibilityOptions; track visibility.value) {
+              <button
+                (click)="selectedVisibilityOption = visibility"
+                [class.selected]="selectedVisibilityOption.value === visibility.value"
+                [style.background-color]="visibility.background"
+                [style.color]="visibility.color"
+                class="visibility-btn"
+                mat-raised-button
+              >
+                {{ visibility.display }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-preview">
+        <div class="section-title">
+          <mat-icon>grid_on</mat-icon>
+          <span>Grid Preview</span>
+        </div>
         <app-grid
-          (cellClick)="onValueSelected($event)"
-          [cols]="7" [displayCellIndex]="true"
-          [rows]="2"
-          [list]="distinctCardsValues"
-          class="h-50 w-100"
+          (cellClick)="changeCellVisibility($event)"
+          [cols]="widthControl.value"
+          [displayCellIndex]="true"
+          [itemStyles]="itemStyles"
+          [rows]="heightControl.value"
+          class="preview-grid"
         ></app-grid>
       </div>
-    </mat-grid-tile>
-    <mat-grid-tile class="p-1" colspan="3">
-      <app-grid
-        [cols]="widthControl.value"
-        [displayCellIndex]="true"
-        [rows]="heightControl.value"
-        (cellClick)="changeCellVisibility($event)"
-        [itemStyles]="itemStyles"
-        class="center max "
-      ></app-grid>
-    </mat-grid-tile>
-  </mat-grid-list>
+    </div>
+
+    <!-- Right Panel: Card Selection -->
+    <div class="panel cards-panel">
+      <div class="section-title">
+        <mat-icon>style</mat-icon>
+        <span>Card Selection</span>
+      </div>
+      <p class="section-description">Select cards to include in your deck</p>
+
+      <div class="selected-cards-container">
+        <app-card-line (cardSelected)="onCardSelectedFromLine($event)" [cards]="selectedCards"></app-card-line>
+      </div>
+
+      <div [formGroup]="suitsForm" class="suits-section">
+        <div class="section-subtitle">Suits</div>
+        <div class="suits-grid" formArrayName="suits">
+          @for (suitControl of suitsFormArray.controls; track suitControl.value) {
+            <mat-checkbox [formControlName]="$index" class="suit-checkbox" color="primary">
+              {{ suits[$index].display }}
+            </mat-checkbox>
+          }
+        </div>
+      </div>
+
+      <div class="values-section">
+        <div class="section-subtitle">Card Values</div>
+        <app-grid
+          (cellClick)="onValueSelected($event)"
+          [cols]="7"
+          [displayCellIndex]="true"
+          [rows]="2"
+          [list]="distinctCardsValues"
+          class="values-grid"
+        ></app-grid>
+      </div>
+    </div>
+  </div>
 </div>
