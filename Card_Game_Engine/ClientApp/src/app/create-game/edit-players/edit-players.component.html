@@ -1,10 +1,4 @@
-<mat-toolbar class="dialog-header">
-  <span>Edit Players</span>
-  <span class="flex-spacer"></span>
-  <button class="close-button" mat-dialog-close mat-icon-button>
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-toolbar>
+<app-dialog-header title="Edit Players"></app-dialog-header>
 
 <div [formGroup]="form">
   <table [dataSource]="dataSource" class="mat-elevation-z8" formArrayName="players" mat-table>

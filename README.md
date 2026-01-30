@@ -2,9 +2,9 @@
 ## Home (from v0.23)
 ![Home Light](https://github.com/user-attachments/assets/ff33df53-2cd4-4304-98f7-7d53c104277f)
 ![Home Dark](https://github.com/user-attachments/assets/8028852b-c805-4f55-90dd-a2530961b0d0)
-## Create Game (from v0.23)
-![Create Game Light](https://github.com/user-attachments/assets/ebb28183-57e3-4557-ad67-5214ee0de6fb)
-![Create Game Dark](https://github.com/user-attachments/assets/e0b973ea-438c-4d1a-8917-15e929278c84)
+## Create Game (from v0.24)
+![Create Game Light](https://github.com/user-attachments/assets/9162610e-545f-4ec3-805e-7500570c9bd6)
+![Create Game Dark](https://github.com/user-attachments/assets/429c7ad0-2353-4027-b8ae-47acb75019d8)
 ## Play Game (from v0.23)
 ![Play Game Light](https://github.com/user-attachments/assets/a72fb8cc-ec1b-4d5d-be1f-b7bc0c7ef099)
 ![Play Game Dark](https://github.com/user-attachments/assets/b9d2afa6-0488-47ea-a5cf-6379dd82fd67)
@@ -52,6 +52,7 @@ Welcome to the **Card Game Engine (CGE)**! This guide will help you navigate the
 #### Understanding Players vs Users
 
 In CGE, **players** and **users** are separate concepts:
+
 - **Players**: Game positions created by the room creator (e.g., "Dealer", "Player 1", "North", "South"). These are permanent parts of your game setup.
 - **Users**: People who connect to your room (shown as User 1, User 2, etc.). They can be assigned to players or remain as spectators.
 
@@ -60,6 +61,7 @@ In CGE, **players** and **users** are separate concepts:
 1. **Edit Players**: Click the `Edit Players` button during game setup.
 2. **Add Players**: Click `Add Player` to create a new player.
 3. **Configure Each Player**:
+
 - **Name/Role**: Enter a name or role identifier (defaults to "Player 1", "Player 2", etc.). This can describe the role (e.g., "Dealer", "Attacker") or just be a player number.
 - **Description**: Add an optional description of the player.
 - **Perspective**: Choose the viewing angle for this player:
@@ -89,16 +91,19 @@ In CGE, **players** and **users** are separate concepts:
 Define which players can see each cell by default:
 
 1. **Visibility Options**: You'll see a list of buttons representing:
+
 - **All Players (Green)**: Cell is visible to all players
 - **No Players (Red)**: Cell is hidden from all players
 - **Individual Players**: Each player you created (shown with unique gradient colors)
 
 2. **Apply Visibility to Cells**:
+
 - Click on a visibility option button to select it
 - Click on grid cells to apply that visibility setting
 - Cells use gradient conic coloring to show which players can see them
 
 3. **Multi-Player Visibility**:
+
 - You can make a cell visible to multiple specific players
 - Select a player option button (it stays selected)
 - Click on cells to toggle that player's visibility:
@@ -107,6 +112,7 @@ Define which players can see each cell by default:
 - The cell's color displays a gradient combining all assigned player colors
 
 4. **Modifying Visibility**:
+
 - To remove a player from "All Players" visibility: Select that specific player and click the green cell. It will now be visible to all players *except* that one.
 
 ### Adding Manual Triggers
@@ -115,11 +121,17 @@ Manual triggers allow you to create custom buttons that can trigger actions duri
 
 1. **Add Manual Trigger**: Click on the `Add Manual Trigger` button in the top-left bar.
 2. **Configure Manual Trigger**:
+
 - **Name**: Enter a name for the manual trigger button.
 - **Description**: Provide a brief description of what the trigger does.
 - **Visible To**: Multi-select which players can see and use the trigger. You can select multiple players, making the trigger visible only to those players.
 
-3. **Limit**: You can add up to 6 manual triggers.
+3. **Managing Manual Triggers**:
+
+- **Duplicate**: Click the copy icon next to any manual trigger to create a duplicate with the same settings.
+- **Delete**: Click the delete icon to remove a manual trigger.
+
+4. **Limit**: You can add up to 6 manual triggers.
 
 ### Using Manual Triggers in Rules
 
@@ -137,6 +149,23 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 ### Adding a Rule
 
 - Click **Add Rule** to begin creating a new rule.
+
+### Managing Rules
+
+Each rule can be managed using the buttons that appear when you hover over it:
+
+- **Duplicate**: Click the copy icon to create an exact duplicate of the rule, including all its triggers, actions, and inner rules.
+- **Delete**: Click the close/delete icon to remove the rule.
+- **Reorder**: Click and drag the drag handle (≡) to reorder rules. You can move rules up or down, and even nest them as inner rules within other rules.
+
+### Managing Triggers and Actions
+
+Within each rule, triggers and actions can also be managed:
+
+- **Add**: Click **+ Trigger** or **+ Action** to add new triggers or actions to the rule.
+- **Duplicate**: Hover over a trigger or action and click the copy icon to duplicate it with all its parameters.
+- **Delete**: Hover over a trigger or action and click the close icon to remove it.
+- **Reorder**: Drag and drop triggers and actions to reorder them within the rule or move them between different rules.
 
 ### Setting Up Triggers
 
@@ -297,10 +326,13 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 2. **Open Assignment Dialog**: In the play area, click the `Assign Players` button.
 3. **View Connected Users**: You'll see a list of all users connected to the room (shown as User 1, User 2, etc.).
 4. **Assign Users to Players**:
+
 - Each user can be assigned to one of your defined players
 - Select a player from the dropdown next to each user
 - Or leave them unassigned to remain as spectators
+
 5. **Flexible Assignment**:
+
 - Only the room creator can assign users to players
 - Assignments can be changed at any time, even during gameplay
 - If a user leaves, they'll be automatically unassigned
@@ -342,6 +374,7 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 
 1. **Select a Card**: Click on the position where the card is located (currently, you can only move the top card).
 2. **Choose Visibility**: On the left middle side of the screen, you will see five visibility options:
+
 - **Cell (Blue)**: The card will take the same visibility as the destination cell defined in the game setup. This is the default and most commonly used option.
 - **Keep (Gray)**: The card will keep its current visibility state.
 - **Visible to All (Green)**: The card will be visible to all players, regardless of cell visibility.
@@ -349,6 +382,7 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 - **Hidden (Red)**: The card will be hidden from all players.
 
 3. **Set Visibility**:
+
 - **Select Visibility**: Before moving the card, select the desired visibility option from the list on the left middle side of the screen.
 - **Visual Indicator**: When you select a card, it will have a shadow indicating the selected visibility option.
 - **Move the Card**: Click on the destination to move the card there with the selected visibility.
@@ -383,39 +417,43 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 ---
 
 Enjoy building and playing your custom multiplayer games with CGE!
+# v0.24 UI :
+## Create Game
+![Create Game Light](https://github.com/user-attachments/assets/9162610e-545f-4ec3-805e-7500570c9bd6)
+![Create Game Dark](https://github.com/user-attachments/assets/429c7ad0-2353-4027-b8ae-47acb75019d8)
 
 # v0.23 UI :
-## Home (from v0.23)
+## Home
 ![Home Light](https://github.com/user-attachments/assets/ff33df53-2cd4-4304-98f7-7d53c104277f)
 ![Home Dark](https://github.com/user-attachments/assets/8028852b-c805-4f55-90dd-a2530961b0d0)
-## Create Game (from v0.23)
+## Create Game
 ![Create Game Light](https://github.com/user-attachments/assets/ebb28183-57e3-4557-ad67-5214ee0de6fb)
 ![Create Game Dark](https://github.com/user-attachments/assets/e0b973ea-438c-4d1a-8917-15e929278c84)
-## Play Game (from v0.23)
+## Play Game
 ![Play Game Light](https://github.com/user-attachments/assets/a72fb8cc-ec1b-4d5d-be1f-b7bc0c7ef099)
 ![Play Game Dark](https://github.com/user-attachments/assets/b9d2afa6-0488-47ea-a5cf-6379dd82fd67)
-## Add Manual Triggers (from v0.23)
+## Add Manual Triggers
 ![Add Manual Triggers Light](https://github.com/user-attachments/assets/e1135745-3ebf-432f-9655-48861d6f8751)
 ![Add Manual Triggers Dark](https://github.com/user-attachments/assets/dcee1d1e-014e-45f3-80f5-40a0d70ad251)
-## Edit Players (from v0.23)
+## Edit Players
 ![Edit Players Light](https://github.com/user-attachments/assets/cddc457a-d5e1-4330-b976-fa639f7aad6f)
 ![Edit Players Dark](https://github.com/user-attachments/assets/9c9cbe92-be1d-4a93-8b5b-d83177f96a0d)
-## Assign Players (from v0.23)
+## Assign Players
 ![Assign Players Light](https://github.com/user-attachments/assets/be1a6a0a-e796-4ca2-be96-48989ff20973)
 ![Assign Players Dark](https://github.com/user-attachments/assets/48112715-6b12-46a9-986b-c9216f9cf2ca)
-## Import Game Setup (from v0.23)
+## Import Game Setup
 ![Import Game Setup Light](https://github.com/user-attachments/assets/7c47949c-5f0a-456e-87c2-a0a944906613)
 ![Import Game Setup Dark](https://github.com/user-attachments/assets/acbf30dd-acc8-4344-9679-f716021ad4e9)
-## Positions Selector (from v0.23)
+## Positions Selector
 ![Positions Selector Light](https://github.com/user-attachments/assets/5707029b-13bb-42ca-9c33-d4767757ac27)
 ![Positions Selector Dark](https://github.com/user-attachments/assets/8f64d4b0-6fbf-4d82-b89f-401d7b03451c)
-## Card Filter (from v0.23)
+## Card Filter
 ![Card Filter Light](https://github.com/user-attachments/assets/36257791-04a2-4602-b8dc-933b5b818767)
 ![Card Filter Dark](https://github.com/user-attachments/assets/6c376f9e-8843-4b70-b5e2-9f56c6c3309d)
-## Formula Builder (from v0.23)
+## Formula Builder
 ![Formula Builder Light](https://github.com/user-attachments/assets/a332cb1b-d6ff-435d-9b3a-80d097b94595)
 ![Formula Builder Dark](https://github.com/user-attachments/assets/f0d2d6b4-6d33-4945-a328-eb44c404cc15)
-## Guide (from v0.23)
+## Guide
 ![Guide Light](https://github.com/user-attachments/assets/df17826f-783d-468d-9b73-d3fd5e0784d3)
 ![Guide Dark](https://github.com/user-attachments/assets/3b734d28-6448-4c69-97a7-c8beceeadf42)
 

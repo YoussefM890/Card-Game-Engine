@@ -64,15 +64,36 @@
             </div>
           }
 
-          <div class="rules-list" formArrayName="rules">
-            @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
-              <div class="rule-item animate-fade-in">
-                <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
-                <button (click)="removeRule(i)" class="remove-btn" color="warn" mat-button>
-                  <mat-icon>delete</mat-icon>
-                  Remove Rule
-                </button>
+          <div #topLevelRuleDropList="cdkDropList"
+               (cdkDropListDropped)="onRuleDrop($event)"
+               [cdkDropListConnectedTo]="getConnectedRuleLists()"
+               [cdkDropListData]="rules"
+               cdkDropList
+               class="rules-list"
+               formArrayName="rules">
+            @for (ruleCtrl of rules.controls; let i = $index; track i) {
+              <div [cdkDragData]="ruleCtrl" cdkDrag class="rule-item animate-fade-in">
+                <div cdkDragHandle class="rule-drag-handle">
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+                <div class="rule-content">
+                  <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
+                  <div class="rule-action-buttons">
+                    <button (click)="duplicateRule(i)" class="center duplicate-btn" color="primary" mat-icon-button
+                            title="Duplicate rule">
+                      <mat-icon>content_copy</mat-icon>
+                    </button>
+                    <button (click)="removeRule(i)" class="center remove-btn" color="warn" mat-icon-button
+                            title="Delete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *cdkDragPlaceholder class="rule-drag-placeholder"></div>
               </div>
+            }
+            @if (rules.controls.length === 0) {
+              <div class="empty-rules-hint">Click "Add Rule" to create your first rule</div>
             }
           </div>
 

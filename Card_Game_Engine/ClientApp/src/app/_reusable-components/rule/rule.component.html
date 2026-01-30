@@ -1,27 +1,126 @@
 <div [formGroup]="ruleForm" class="rule">
 
-  <div formArrayName="triggers">
-    @for (triggerCtrl of triggers.controls; track triggerCtrl; let i = $index) {
-      <app-trigger [triggerForm]="convertToFormGroup(triggerCtrl)"></app-trigger>
-      <button mat-button color="warn" (click)="removeTrigger(i)">Remove Trigger</button>
-    }
-    <button (click)="addTrigger()" mat-button [style.color]="'#36a000'">Add Trigger</button>
+  <!-- Triggers Section -->
+  <div class="section-header triggers-header">
+    <mat-icon>bolt</mat-icon>
+    <span>Triggers</span>
   </div>
+  <div #triggerDropList="cdkDropList"
+       (cdkDropListDropped)="onTriggerDrop($event)"
+       [cdkDropListConnectedTo]="getConnectedTriggerLists()"
+       [cdkDropListData]="triggers"
+       cdkDropList
+       class="drop-list triggers-list"
+       formArrayName="triggers">
+    @for (triggerCtrl of triggers.controls; let i = $index; track i) {
+      <div [cdkDragData]="triggerCtrl" cdkDrag class="drag-item">
+        <div cdkDragHandle class="drag-handle">
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+        <div class="drag-content">
+          <app-trigger [triggerForm]="convertToFormGroup(triggerCtrl)"></app-trigger>
+          <div class="action-buttons">
+            <button (click)="duplicateTrigger(i)" class="center duplicate-btn" color="primary" mat-icon-button
+                    title="Duplicate trigger">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+            <button (click)="removeTrigger(i)" class="center remove-btn" color="warn" mat-icon-button title="Delete">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *cdkDragPlaceholder class="drag-placeholder"></div>
+      </div>
+    }
+    @if (triggers.controls.length === 0) {
+      <div class="empty-list-hint">No triggers</div>
+    }
+  </div>
+  <button (click)="addTrigger()" class="add-btn add-trigger-btn" mat-button>
+    <mat-icon>add</mat-icon>
+    Trigger
+  </button>
 
-  <div formArrayName="rules">
-    @for (ruleCtrl of rules.controls; track ruleCtrl; let i = $index) {
-      <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
-      <button mat-button color="warn" (click)="removeInnerRule(i)">Remove Inner Rule</button>
-    }
-    <button (click)="addInnerRule()" mat-button [style.color]="'#b78800'">Add Inner Rule</button>
+  <!-- Inner Rules Section -->
+  <div class="section-header rules-header">
+    <mat-icon>account_tree</mat-icon>
+    <span>Inner Rules</span>
   </div>
+  <div #ruleDropList="cdkDropList"
+       (cdkDropListDropped)="onRuleDrop($event)"
+       [cdkDropListConnectedTo]="getConnectedRuleLists()"
+       [cdkDropListData]="rules"
+       cdkDropList
+       class="drop-list rules-list"
+       formArrayName="rules">
+    @for (ruleCtrl of rules.controls; let i = $index; track i) {
+      <div [cdkDragData]="ruleCtrl" cdkDrag class="drag-item rule-drag-item">
+        <div cdkDragHandle class="drag-handle">
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+        <div class="drag-content">
+          <app-rule [ruleForm]="convertToFormGroup(ruleCtrl)"></app-rule>
+          <div class="action-buttons">
+            <button (click)="duplicateInnerRule(i)" class="center duplicate-btn" color="primary" mat-icon-button
+                    title="Duplicate inner rule">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+            <button (click)="removeInnerRule(i)" class="center remove-btn" color="warn" mat-icon-button title="Delete">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *cdkDragPlaceholder class="drag-placeholder rule-placeholder"></div>
+      </div>
+    }
+    @if (rules.controls.length === 0) {
+      <div class="empty-list-hint">No inner rules</div>
+    }
+  </div>
+  <button (click)="addInnerRule()" class="add-btn add-rule-btn" mat-button>
+    <mat-icon>add</mat-icon>
+    Inner Rule
+  </button>
 
-  <div formArrayName="actions">
-    @for (actionCtrl of actions.controls; track actionCtrl; let j = $index) {
-      <app-action [actionForm]="convertToFormGroup(actionCtrl)"></app-action>
-      <button mat-button color="warn" (click)="removeAction(j)">Remove Action</button>
-    }
-    <button (click)="addAction()" mat-button [style.color]="'#2e99fa'">Add Action</button>
+  <!-- Actions Section -->
+  <div class="section-header actions-header">
+    <mat-icon>play_arrow</mat-icon>
+    <span>Actions</span>
   </div>
+  <div #actionDropList="cdkDropList"
+       (cdkDropListDropped)="onActionDrop($event)"
+       [cdkDropListConnectedTo]="getConnectedActionLists()"
+       [cdkDropListData]="actions"
+       cdkDropList
+       class="drop-list actions-list"
+       formArrayName="actions">
+    @for (actionCtrl of actions.controls; let j = $index; track j) {
+      <div [cdkDragData]="actionCtrl" cdkDrag class="drag-item">
+        <div cdkDragHandle class="drag-handle">
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+        <div class="drag-content">
+          <app-action [actionForm]="convertToFormGroup(actionCtrl)"></app-action>
+          <div class="action-buttons">
+            <button (click)="duplicateAction(j)" class="center duplicate-btn" color="primary" mat-icon-button
+                    title="Duplicate action">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+            <button (click)="removeAction(j)" class="center remove-btn" color="warn" mat-icon-button title="Delete">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *cdkDragPlaceholder class="drag-placeholder"></div>
+      </div>
+    }
+    @if (actions.controls.length === 0) {
+      <div class="empty-list-hint">No actions</div>
+    }
+  </div>
+  <button (click)="addAction()" class="add-btn add-action-btn" mat-button>
+    <mat-icon>add</mat-icon>
+    Action
+  </button>
 
 </div>

@@ -1,10 +1,4 @@
-<mat-toolbar class="dialog-header">
-  <span>Add Manual Triggers</span>
-  <span class="flex-spacer"></span>
-  <button class="close-button" mat-dialog-close mat-icon-button>
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-toolbar>
+<app-dialog-header title="Add Manual Triggers"></app-dialog-header>
 
 <div [formGroup]="form">
   <table [dataSource]="dataSource" class="mat-elevation-z8" formArrayName="manualTriggers" mat-table>
@@ -48,11 +42,15 @@
     </ng-container>
 
 
-    <ng-container matColumnDef="delete">
-      <th *matHeaderCellDef mat-header-cell> Delete</th>
+    <ng-container matColumnDef="actions">
+      <th *matHeaderCellDef mat-header-cell> Actions</th>
       <td *matCellDef="let element; let i = index" mat-cell>
+        <button (click)="duplicateManualTrigger(i)" color="primary"
+                mat-icon-button title="Duplicate">
+          <mat-icon>content_copy</mat-icon>
+        </button>
         <button (click)="removeManualTrigger(i)" color="warn"
-                mat-icon-button>
+                mat-icon-button title="Delete">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

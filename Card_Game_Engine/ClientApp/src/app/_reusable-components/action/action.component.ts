@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 import {ParameterComponent} from "../parameter/parameter.component";
 import {MatIcon} from "@angular/material/icon";
 import {clearFormArray, ListToObject} from "../../shared/functions/global";
@@ -16,15 +16,12 @@ import {ActionService} from "./namespace/action.service";
   selector: 'app-action',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
-    MatFormField,
-    MatSelect,
-    MatOption,
-    MatLabel,
-    MatButton,
+    MatFormFieldModule,
+    MatSelectModule,
     ParameterComponent,
     MatIcon,
-    MatIconButton
   ],
   templateUrl: './action.component.html',
   styleUrl: './action.component.scss'

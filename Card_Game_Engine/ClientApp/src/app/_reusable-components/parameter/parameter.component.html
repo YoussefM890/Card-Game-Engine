@@ -1,7 +1,6 @@
-<div [formGroup]="parameterForm" class="row">
-  <mat-form-field appearance="fill" class="col-7">
-    <mat-label>Parameter</mat-label>
-    <mat-select (selectionChange)="onParameterChange($event.value)" formControlName="id">
+<div [formGroup]="parameterForm" class="parameter">
+  <mat-form-field appearance="outline" class="compact-field param-select">
+    <mat-select (selectionChange)="onParameterChange($event.value)" formControlName="id" placeholder="Parameter...">
       @for (parameter of availableParameters; track parameter.id) {
         <mat-option [matTooltip]="parameter.description" [value]="parameter.id">{{ parameter.display }}</mat-option>
       }
@@ -9,64 +8,49 @@
   </mat-form-field>
 
   @if (selectedParameter) {
-    @switch (selectedParameter.type) {
-      @case (types.Text) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <input matInput formControlName="value" placeholder="Value">
-        </mat-form-field>
-      }
-      @case (types.Select) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <mat-select formControlName="value">
+    <mat-form-field appearance="outline" class="compact-field value-field">
+      @switch (selectedParameter.type) {
+        @case (types.Text) {
+          <input formControlName="value" matInput placeholder="Value...">
+        }
+        @case (types.Select) {
+          <mat-select formControlName="value" placeholder="Value...">
             @if (Array.isArray(selectedParameter.args)) {
               @for (option of selectedParameter.args; track option.value) {
                 <mat-option [matTooltip]="option.description" [value]="option.value">{{ option.display }}</mat-option>
               }
             }
           </mat-select>
-        </mat-form-field>
-      }
-      @case (types.Positions) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <input matInput formControlName="value" placeholder="Value">
-          <button mat-icon-button matSuffix (click)="openPositionsSelectorModal($event)">
+        }
+        @case (types.Positions) {
+          <input formControlName="value" matInput placeholder="Positions...">
+          <button (click)="openPositionsSelectorModal($event)" class="suffix-btn" mat-icon-button matSuffix>
             <mat-icon>grid_on</mat-icon>
           </button>
-        </mat-form-field>
-      }
-      @case (types.Filter) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <input matInput formControlName="value" placeholder="Value" readonly>
-          <button mat-icon-button matSuffix (click)="openFilterSelectorModal($event)">
+        }
+        @case (types.Filter) {
+          <input formControlName="value" matInput placeholder="Filter..." readonly>
+          <button (click)="openFilterSelectorModal($event)" class="suffix-btn" mat-icon-button matSuffix>
             <mat-icon>filter_list</mat-icon>
           </button>
-        </mat-form-field>
-      }
-      @case (types.Formula) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <input matInput formControlName="value" placeholder="Value">
-          <button mat-icon-button matSuffix (click)="openFormulaBuilderModal($event)">
+        }
+        @case (types.Formula) {
+          <input formControlName="value" matInput placeholder="Formula...">
+          <button (click)="openFormulaBuilderModal($event)" class="suffix-btn" mat-icon-button matSuffix>
             <mat-icon>functions</mat-icon>
           </button>
-        </mat-form-field>
-      }
-      @case (types.MultiSelect) {
-        <mat-form-field appearance="fill" class="col-5">
-          <mat-label>Value</mat-label>
-          <mat-select [value]="displayValue" (selectionChange)="onMultiSelectChange($event.value)" multiple>
+        }
+        @case (types.MultiSelect) {
+          <mat-select (selectionChange)="onMultiSelectChange($event.value)" [value]="displayValue" multiple
+                      placeholder="Values...">
             @if (Array.isArray(selectedParameter.args)) {
               @for (option of selectedParameter.args; track option.value) {
                 <mat-option [matTooltip]="option.description" [value]="option.value">{{ option.display }}</mat-option>
               }
             }
           </mat-select>
-        </mat-form-field>
+        }
       }
-    }
+    </mat-form-field>
   }
 </div>

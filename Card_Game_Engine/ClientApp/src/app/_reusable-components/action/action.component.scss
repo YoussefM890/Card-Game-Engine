@@ -4,29 +4,137 @@ $background: #dfecf7;
 .action {
   border: 1px solid $color;
   background: linear-gradient(135deg, rgba($background, 0.8) 0%, rgba(#fff, 0.9) 100%);
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
-  margin-bottom: var(--space-2);
+  transition: box-shadow 150ms ease;
+  will-change: transform;
+  contain: layout style;
 
   &:hover {
     box-shadow: var(--shadow-md);
-    border-color: darken($color, 10%);
   }
 }
 
 // Nested actions styling
 .action .action {
-  margin-left: var(--space-3);
-  border-left: 3px solid $color;
+  margin-left: 6px;
+  border-left: 2px solid $color;
   background: rgba($background, 0.5);
+}
+
+// Compact Material form field
+.compact-field {
+  width: 100%;
+
+  ::ng-deep {
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+
+    .mdc-text-field--outlined {
+      --mdc-outlined-text-field-container-shape: 4px;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+      min-height: 28px !important;
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba($color, 0.5) !important;
+    }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-placeholder {
+      font-size: 0.75rem;
+    }
+
+    .mat-mdc-select-arrow-wrapper {
+      transform: translateY(-2px);
+    }
+
+    input.mat-mdc-input-element {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.action-select {
+  margin-bottom: 0;
+}
+
+// Parameters section
+.parameters {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 3px;
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.flex-grow-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+// Remove parameter button
+.remove-param-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border: none;
+  background: transparent;
+  color: var(--gray-400);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+
+  &:hover {
+    color: #f44336;
+    background: rgba(244, 67, 54, 0.1);
+  }
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// Add parameter button
+.add-param-btn {
+  font-size: 0.65rem;
+  padding: 1px 5px;
+  border: 1px dashed var(--gray-300);
+  background: transparent;
+  color: var(--gray-600);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: 2px;
+
+  &:hover {
+    border-color: $color;
+    color: darken($color, 10%);
+    background: rgba($color, 0.1);
+  }
 }
 
 // Responsive
 @media (max-width: 768px) {
   .action {
-    padding: var(--space-3);
+    padding: var(--space-1);
   }
 }
 
@@ -44,5 +152,47 @@ $background: #dfecf7;
   .action .action {
     background: rgba(#1a3a5c, 0.4);
     border-left-color: #2e99fa;
+  }
+
+  .compact-field ::ng-deep {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(#2e99fa, 0.6) !important;
+    }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-placeholder {
+      color: #e0e0e0 !important;
+    }
+
+    input.mat-mdc-input-element {
+      color: #ffffff !important;
+      caret-color: #ffffff;
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+      color: #ffffff !important;
+    }
+  }
+
+  .remove-param-btn {
+    color: var(--gray-500);
+
+    &:hover {
+      color: #ef5350;
+      background: rgba(239, 83, 80, 0.15);
+    }
+  }
+
+  .add-param-btn {
+    border-color: var(--gray-600);
+    color: var(--gray-400);
+
+    &:hover {
+      border-color: #2e99fa;
+      color: #5cb3fc;
+      background: rgba(#2e99fa, 0.15);
+    }
   }
 }

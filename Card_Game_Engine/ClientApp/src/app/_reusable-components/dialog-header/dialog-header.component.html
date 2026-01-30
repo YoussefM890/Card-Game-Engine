@@ -1,0 +1,12 @@
+<mat-toolbar class="dialog-header">
+  <div class="header-title">
+    @if (icon) {
+      <mat-icon>{{ icon }}</mat-icon>
+    }
+    <span>{{ title }}</span>
+  </div>
+  <span class="flex-spacer"></span>
+  <button class="close-button" mat-dialog-close mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>

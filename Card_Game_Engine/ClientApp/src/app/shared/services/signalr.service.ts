@@ -170,15 +170,16 @@ export class SignalRService {
   }
 
   private buildCreateGameForm() {
-    this.createGameForm = this.fb.group({
-      rules: this.fb.array([]),
-      width: 9,
-      height: 5,
-      startingDeck: this.fb.array([]),
-      grid: {},
-      manualTriggers: this.fb.array([]),
-      players: this.fb.array([this.buildDefaultPlayer()]),
-    });
+    this.createGameForm = this.fb.group(
+      {
+        rules: this.fb.array([]),
+        width: 9,
+        height: 5,
+        startingDeck: this.fb.array([]),
+        grid: {},
+        manualTriggers: this.fb.array([]),
+        players: this.fb.array([this.buildDefaultPlayer()]),
+      });
     // this.createGameForm = JsonToForm(defaultGameObject);
     this.listenToPlayers();
     this.listenToManualTriggers();

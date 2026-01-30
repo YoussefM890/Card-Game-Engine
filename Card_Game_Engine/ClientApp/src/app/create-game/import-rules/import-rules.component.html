@@ -1,17 +1,11 @@
-<mat-toolbar class="dialog-header">
-  <span>Import Game Setup</span>
-  <span class="flex-spacer"></span>
-  <button (click)="dialogRef.close()" class="close-button" mat-icon-button>
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-toolbar>
+<app-dialog-header title="Import Game Setup"></app-dialog-header>
 
 <mat-dialog-content>
   <mat-form-field appearance="fill" class="w-100 h-100">
-    <mat-label>Rules</mat-label>
+    <mat-label>Game Setup JSON</mat-label>
     <textarea [(ngModel)]="gameJson" matInput placeholder="Paste your JSON here" rows="6"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button (click)="onSubmit()" color="accent" mat-raised-button>Submit</button>
+  <button (click)="onSubmit()" color="accent" mat-raised-button>Import</button>
 </mat-dialog-actions>

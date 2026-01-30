@@ -1,6 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatToolbar} from "@angular/material/toolbar";
-import {MatList, MatListItem} from "@angular/material/list";
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
   MatCell,
@@ -21,11 +19,12 @@ import {VisibilityEnum} from "../namespace/enums/visibility.enum";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {visibilityOptions} from '../namespace/constants/visibility-options';
 import {MatIcon} from "@angular/material/icon";
-import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {recreateFormArray, validateForm} from "../../shared/functions/global";
 import {ManualTrigger} from "../namespace/classes/manual-trigger";
 import {Player} from "../namespace/classes/player";
 import {SignalRService} from "../../shared/services/signalr.service";
+import {DialogHeaderComponent} from "../../_reusable-components/dialog-header/dialog-header.component";
 
 export interface Data {
   manualTriggers: ManualTrigger[];
@@ -35,9 +34,6 @@ export interface Data {
   selector: 'app-add-edit-button',
   standalone: true,
   imports: [
-    MatToolbar,
-    MatList,
-    MatListItem,
     MatTable,
     ReactiveFormsModule,
     MatFormField,
@@ -57,14 +53,14 @@ export interface Data {
     MatOption,
     MatIcon,
     MatIconButton,
-    MatDialogClose,
+    DialogHeaderComponent,
   ],
   templateUrl: './add-edit-manual-trigger.component.html',
   styleUrl: './add-edit-manual-trigger.component.scss'
 })
 export class AddEditManualTriggerComponent implements OnInit {
   form: FormGroup;
-  displayedColumns: string[] = ['name', 'description', 'visibleTo', 'delete'];
+  displayedColumns: string[] = ['name', 'description', 'visibleTo', 'actions'];
   dataSource = []
   visibilityOptions = visibilityOptions.filter(option => option.value !== VisibilityEnum.None)
   players: Player[] = [];
@@ -119,6 +115,18 @@ export class AddEditManualTriggerComponent implements OnInit {
 
   removeManualTrigger(index: number) {
     this.manualTriggersArray.removeAt(index);
+    this.dataSource = [...this.manualTriggersArray.controls];
+  }
+
+  duplicateManualTrigger(index: number) {
+    const triggerToDuplicate = this.manualTriggersArray.at(index);
+    const newTrigger = this.fb.group({
+      id: [-(this.manualTriggersArray.length + 1), Validators.required],
+      name: [triggerToDuplicate.value.name, Validators.required],
+      description: [triggerToDuplicate.value.description],
+      visibleTo: [[...(triggerToDuplicate.value.visibleTo || [])]],
+    });
+    this.manualTriggersArray.insert(index + 1, newTrigger);
     this.dataSource = [...this.manualTriggersArray.controls];
   }
 

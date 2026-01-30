@@ -1,6 +1,158 @@
 .parameter {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 3px;
+  width: 100%;
+  // Ensure the container itself doesn't force height issues
+  min-height: 28px;
+}
+
+// Compact Material form field
+.compact-field {
+  width: 100%; // Ensure it fills the flex container
+
+  ::ng-deep {
+    // 1. Hide the subscript (hint/error) wrapper
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+
+    // 2. Adjust the container shape
+    .mdc-text-field--outlined {
+      --mdc-outlined-text-field-container-shape: 4px;
+      // Force the flex container height
+      height: 28px !important;
+    }
+
+    // 3. Fix the Infix (Input container)
+    .mat-mdc-form-field-infix {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      min-height: 28px !important;
+      height: 28px !important;
+      display: flex; // Helps align input vertically
+      align-items: center;
+    }
+
+    // 4. CRITICAL FIX: Reset the Suffix Container
+    // The suffix container has padding that breaks the 28px height
+    .mat-mdc-form-field-icon-suffix {
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 28px !important;
+    }
+
+    // 5. Border Colors
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--gray-300) !important;
+    }
+
+    // 6. Font Sizes
+    .mat-mdc-select-value,
+    .mat-mdc-select-placeholder,
+    input.mat-mdc-input-element {
+      font-size: 0.75rem;
+      // Ensure input doesn't add extra line-height
+      line-height: 1.5;
+      margin-top: 2px; // Micro-adjustment to align text with icon
+    }
+
+    // 7. Fix Select Arrow alignment
+    .mat-mdc-select-arrow-wrapper {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      transform: none !important; // Reset your transform, use flex instead
+    }
+  }
+}
+
+// Parameter select (left side)
+.param-select {
+  flex: 1.2;
+  min-width: 0;
+}
+
+// Value field (right side)
+.value-field {
+  flex: 1;
+  min-width: 0;
+}
+
+// Suffix button in input
+.suffix-btn {
+  // Use strictly defined dimensions
+  width: 24px !important; // 24px fits inside 28px better than 28px does (padding breathing room)
+  height: 24px !important;
+  padding: 0 !important;
+
+  // Center the icon inside the button
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  // Reset margins to prevent pushing
+  margin: 0 2px 0 0 !important;
+
+  mat-icon {
+    font-size: 16px; // Slightly smaller icon for the compact look
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .parameter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .param-select,
+  .value-field {
+    flex: none;
+    width: 100%;
+  }
+}
+
+// Dark theme styling
+:host-context(body.dark-theme) {
+  .compact-field ::ng-deep {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--gray-500) !important;
+    }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-placeholder {
+      color: #e0e0e0 !important;
+    }
+
+    input.mat-mdc-input-element {
+      color: #ffffff !important;
+      caret-color: #ffffff;
+    }
+
+    // Fix suffix icon color in dark mode
+    .mat-mdc-form-field-icon-suffix .mat-icon {
+      color: #e0e0e0;
+    }
+
+    input.mat-mdc-input-element::placeholder {
+      color: #9e9e9e !important;
+    }
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+      color: #ffffff !important;
+    }
+  }
 }

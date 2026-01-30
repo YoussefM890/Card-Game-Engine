@@ -31,14 +31,14 @@
 }
 
 .rules-panel {
-  flex: 1;
-  min-width: 400px;
-  max-width: 600px;
+  flex: 1.2;
+  min-width: 450px;
+  max-width: 700px;
 }
 
 .settings-panel {
-  flex: 1.5;
-  min-width: 320px;
+  flex: 1;
+  min-width: 280px;
 }
 
 .cards-panel {
@@ -93,35 +93,57 @@
 }
 
 // ============================================
-// INFO SECTIONS
+// INFO SECTIONS (Compact Players & Manual Triggers)
 // ============================================
 .info-section {
   background: var(--gray-50);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  margin-bottom: var(--space-3);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .section-label {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  color: var(--gray-700);
+  gap: 4px;
+  color: var(--gray-600);
   font-weight: 500;
-  margin-bottom: var(--space-2);
+  font-size: 0.75rem;
+  white-space: nowrap;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
     color: var(--primary-500);
+  }
+
+  span {
+    display: none; // Hide text label, just show icon
   }
 }
 
 .chip-set {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
+  gap: 4px;
+  flex: 1;
+
+  // Make Material chips smaller
+  ::ng-deep {
+    .mdc-evolution-chip {
+      height: 24px !important;
+      font-size: 0.75rem !important;
+    }
+
+    .mdc-evolution-chip__text-label {
+      padding: 0 8px !important;
+    }
+  }
 }
 
 // ============================================
@@ -130,18 +152,158 @@
 .rules-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 6px;
+  min-height: 50px;
+  padding: 4px;
+  border: 2px dashed transparent;
+  border-radius: var(--radius-md);
+  transition: border-color 100ms ease, background 100ms ease;
+
+  &.cdk-drop-list-dragging {
+    border-color: var(--primary-400);
+    background: rgba(33, 150, 243, 0.05);
+  }
+
+  &.cdk-drop-list-receiving {
+    border-color: #ffce53;
+    background: rgba(255, 206, 83, 0.1);
+  }
 }
 
 .rule-item {
+  display: flex;
+  align-items: flex-start;
+  will-change: transform;
   position: relative;
+
+  &.cdk-drag-preview {
+    box-shadow: var(--shadow-xl);
+    opacity: 0.95;
+    border-radius: var(--radius-md);
+    z-index: 1000;
+  }
+
+  &.cdk-drag-animating {
+    transition: transform 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Always show action buttons for better UX
+  .rule-action-buttons {
+    opacity: 1;
+    transition: opacity 100ms ease;
+  }
+
+  .rule-drag-handle {
+    opacity: 0.4;
+    transition: opacity 100ms ease;
+  }
+
+  &:hover {
+    .rule-drag-handle {
+      opacity: 1;
+    }
+
+    .rule-action-buttons {
+      opacity: 1;
+    }
+  }
+}
+
+.rule-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: grab;
+  color: var(--gray-400);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  margin-right: 4px;
+
+  &:hover {
+    color: var(--gray-600);
+    background: var(--gray-100);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.rule-content {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+
+  > app-rule {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.rule-action-buttons {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  display: flex;
+  gap: 2px;
+  z-index: 2;
+}
+
+.duplicate-btn,
+.remove-btn {
+  transform: scale(0.65);
+  background: var(--bg-card) !important;
+  box-shadow: var(--shadow-sm);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.duplicate-btn {
+  &:hover {
+    opacity: 1 !important;
+    background: #e3f2fd !important;
+  }
 }
 
 .remove-btn {
-  display: flex !important;
+  &:hover {
+    opacity: 1 !important;
+    background: #ffebee !important;
+  }
+}
+
+.rule-drag-placeholder {
+  background: var(--gray-200);
+  border: 2px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  min-height: 60px;
+  transition: transform 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.empty-rules-hint {
+  display: flex;
   align-items: center;
-  gap: var(--space-1);
-  margin-top: var(--space-2);
+  justify-content: center;
+  padding: var(--space-3);
+  color: var(--gray-500);
+  font-size: 0.8rem;
+  font-style: italic;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-md);
+  background: var(--gray-50);
 }
 
 .add-rule-btn {
@@ -474,5 +636,47 @@
   .add-rule-btn {
     background: linear-gradient(135deg, #b78800 0%, #d4a017 100%) !important;
     color: white !important;
+  }
+
+  // Drag-drop dark theme
+  .rules-list {
+    &.cdk-drop-list-dragging {
+      background: rgba(33, 150, 243, 0.1);
+    }
+
+    &.cdk-drop-list-receiving {
+      background: rgba(255, 206, 83, 0.15);
+    }
+  }
+
+  .rule-drag-handle {
+    color: var(--gray-400);
+
+    &:hover {
+      color: var(--gray-200);
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .rule-drag-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--gray-500);
+  }
+
+  .empty-rules-hint {
+    color: var(--gray-400);
+    border-color: var(--gray-600);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .duplicate-btn,
+  .remove-btn {
+    background: #2a2a2a !important;
+  }
+
+  .duplicate-btn {
+    &:hover {
+      background: rgba(33, 150, 243, 0.2) !important;
+    }
   }
 }

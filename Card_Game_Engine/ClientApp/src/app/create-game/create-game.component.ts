@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GridComponent} from "../_reusable-components/grid/grid.component";
-import {MatButton, MatMiniFabButton} from "@angular/material/button";
+import {MatButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
 import {
   AbstractControl,
   FormArray,
@@ -17,6 +17,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {CardLineComponent} from "../_reusable-components/card-line/card-line.component";
 import {Router} from "@angular/router";
 import {RuleComponent} from "../_reusable-components/rule/rule.component";
+import {CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
+import {RuleDragDropService} from "../_reusable-components/rule/rule-drag-drop.service";
 import {
   copyToClipboard,
   filterDictBySize,
@@ -38,7 +40,7 @@ import {VisibilityOption} from "./namespace/classes/visibility-option";
 import {MatChip, MatChipSet} from "@angular/material/chips";
 import {ManualTrigger} from "./namespace/classes/manual-trigger";
 import {AddEditManualTriggerComponent} from "./add-edit-manual-trigger/add-edit-manual-trigger.component";
-import {NgStyle} from "@angular/common";
+import {CommonModule, NgStyle} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
 import {CssStyle} from "../shared/models/classes/css-style";
 import {CssStyleEnum} from "../shared/models/enums/css-style.enum";
@@ -57,8 +59,10 @@ import {VisibilityEnum} from "./namespace/enums/visibility.enum";
   selector: 'app-create-game',
   standalone: true,
   imports: [
+    CommonModule,
     GridComponent,
     MatButton,
+    MatIconButton,
     ReactiveFormsModule,
     MatIcon,
     MatCheckbox,
@@ -71,11 +75,12 @@ import {VisibilityEnum} from "./namespace/enums/visibility.enum";
     NgStyle,
     MatTooltip,
     NavComponent,
+    DragDropModule,
   ],
   templateUrl: './create-game.component.html',
   styleUrl: './create-game.component.scss'
 })
-export class CreateGameComponent implements OnInit {
+export class CreateGameComponent implements OnInit, AfterViewInit, OnDestroy {
   gameForm: FormGroup;
   visibilityOptions: VisibilityOption[] = visibilityOptions;
   perspectiveOptions: PerspectiveOption[] = perspectiveOptions
@@ -89,10 +94,15 @@ export class CreateGameComponent implements OnInit {
   showRoomId = false;
   players: Player[] = [];
 
+  @ViewChild('topLevelRuleDropList') topLevelRuleDropList: CdkDropList;
+  private cachedConnectedLists: CdkDropList[] = [];
+
   constructor(private fb: FormBuilder,
               private signalrService: SignalRService,
               private dialog: MatDialog,
               private router: Router,
+              public dragDropService: RuleDragDropService,
+              private cdr: ChangeDetectorRef,
   ) {
     this.gameForm = this.signalrService.createGameForm;
   }
@@ -173,6 +183,53 @@ export class CreateGameComponent implements OnInit {
     console.log(this.gameForm.value);
   }
 
+  ngAfterViewInit(): void {
+    if (this.topLevelRuleDropList) {
+      this.dragDropService.registerRuleList(this.topLevelRuleDropList);
+    }
+    // Subscribe to list changes to update cached connected lists
+    this.dragDropService.listsChanged$.subscribe(() => {
+      this.updateConnectedLists();
+      this.cdr.detectChanges();
+    });
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.updateConnectedLists();
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.topLevelRuleDropList) {
+      this.dragDropService.unregisterRuleList(this.topLevelRuleDropList);
+    }
+  }
+
+  onRuleDrop(event: CdkDragDrop<FormArray>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(
+        event.container.data.controls,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      const item = event.previousContainer.data.at(event.previousIndex);
+      event.previousContainer.data.removeAt(event.previousIndex);
+      event.container.data.insert(event.currentIndex, item);
+    }
+    event.container.data.updateValueAndValidity();
+    if (event.previousContainer !== event.container) {
+      event.previousContainer.data.updateValueAndValidity();
+    }
+  }
+
+  updateConnectedLists(): void {
+    this.cachedConnectedLists = this.dragDropService.getRuleLists().filter(list => list !== this.topLevelRuleDropList);
+  }
+
+  getConnectedRuleLists(): CdkDropList[] {
+    return this.cachedConnectedLists;
+  }
 
   addRule() {
     const ruleForm = this.fb.group({
@@ -187,6 +244,49 @@ export class CreateGameComponent implements OnInit {
     this.rules.removeAt(index);
   }
 
+  duplicateRule(index: number) {
+    const ruleToDuplicate = this.rules.at(index);
+    const duplicatedRule = this.duplicateRuleRecursive(ruleToDuplicate.value);
+    this.rules.insert(index + 1, duplicatedRule);
+  }
+
+  private duplicateRuleRecursive(ruleValue: any): FormGroup {
+    return this.fb.group({
+      triggers: this.fb.array(
+        (ruleValue.triggers || []).map((trigger: any) =>
+          this.fb.group({
+            id: [trigger.id],
+            parameters: this.fb.array(
+              (trigger.parameters || []).map((param: any) =>
+                this.fb.group({
+                  id: [param.id],
+                  value: [param.value]
+                })
+              )
+            )
+          })
+        )
+      ),
+      rules: this.fb.array(
+        (ruleValue.rules || []).map((rule: any) => this.duplicateRuleRecursive(rule))
+      ),
+      actions: this.fb.array(
+        (ruleValue.actions || []).map((action: any) =>
+          this.fb.group({
+            id: [action.id],
+            parameters: this.fb.array(
+              (action.parameters || []).map((param: any) =>
+                this.fb.group({
+                  id: [param.id],
+                  value: [param.value]
+                })
+              )
+            )
+          })
+        )
+      )
+    });
+  }
 
   convertToFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;

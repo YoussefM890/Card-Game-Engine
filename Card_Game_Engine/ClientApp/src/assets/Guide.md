@@ -91,7 +91,12 @@ Manual triggers allow you to create custom buttons that can trigger actions duri
 - **Description**: Provide a brief description of what the trigger does.
 - **Visible To**: Multi-select which players can see and use the trigger. You can select multiple players, making the trigger visible only to those players.
 
-3. **Limit**: You can add up to 6 manual triggers.
+3. **Managing Manual Triggers**:
+
+- **Duplicate**: Click the copy icon next to any manual trigger to create a duplicate with the same settings.
+- **Delete**: Click the delete icon to remove a manual trigger.
+
+4. **Limit**: You can add up to 6 manual triggers.
 
 ### Using Manual Triggers in Rules
 
@@ -109,6 +114,23 @@ Rules in CGE consist of **Triggers**, **Actions**, and optional **Inner Rules**.
 ### Adding a Rule
 
 - Click **Add Rule** to begin creating a new rule.
+
+### Managing Rules
+
+Each rule can be managed using the buttons that appear when you hover over it:
+
+- **Duplicate**: Click the copy icon to create an exact duplicate of the rule, including all its triggers, actions, and inner rules.
+- **Delete**: Click the close/delete icon to remove the rule.
+- **Reorder**: Click and drag the drag handle (≡) to reorder rules. You can move rules up or down, and even nest them as inner rules within other rules.
+
+### Managing Triggers and Actions
+
+Within each rule, triggers and actions can also be managed:
+
+- **Add**: Click **+ Trigger** or **+ Action** to add new triggers or actions to the rule.
+- **Duplicate**: Hover over a trigger or action and click the copy icon to duplicate it with all its parameters.
+- **Delete**: Hover over a trigger or action and click the close icon to remove it.
+- **Reorder**: Drag and drop triggers and actions to reorder them within the rule or move them between different rules.
 
 ### Setting Up Triggers
 

@@ -12,6 +12,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatListModule} from "@angular/material/list";
 import {MatDividerModule} from "@angular/material/divider";
+import {DialogHeaderComponent} from "../../../_reusable-components/dialog-header/dialog-header.component";
 
 @Component({
   selector: 'app-player-assignment-dialog',
@@ -25,7 +26,8 @@ import {MatDividerModule} from "@angular/material/divider";
     MatIconModule,
     MatChipsModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    DialogHeaderComponent
   ],
   templateUrl: './player-assignment-dialog.component.html',
   styleUrl: './player-assignment-dialog.component.scss'

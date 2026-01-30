@@ -1,41 +1,370 @@
+// ============================================
+// VARIABLES
+// ============================================
 $color: #ffce53;
 $background: #fff8e6;
+$trigger-color: #a2d752;
+$action-color: #2e99fa;
 
+// ============================================
+// BASE RULE CARD
+// ============================================
 .rule {
   border: 1px solid $color;
   background: linear-gradient(135deg, rgba($background, 0.8) 0%, rgba(#fff, 0.9) 100%);
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
-  margin-bottom: var(--space-2);
+  transition: box-shadow 150ms ease;
+  margin-bottom: 4px;
+  will-change: transform;
+  contain: layout style;
+
+  // IMPORTANT: Set position relative so z-index works locally
+  position: relative;
+  z-index: 1;
 
   &:hover {
     box-shadow: var(--shadow-md);
-    border-color: darken($color, 10%);
   }
 }
 
 // Nested rules styling
 .rule .rule {
-  margin-left: var(--space-3);
+  margin-left: 8px;
   border-left: 3px solid $color;
   background: rgba($background, 0.5);
 }
 
-// Button styling within rules
-.rule button {
-  margin: var(--space-1) var(--space-1) var(--space-1) 0;
+// ============================================
+// SECTION HEADERS
+// ============================================
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  margin-top: 6px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+
+  // FIX: Ensure header sits ABOVE the expanded list padding so it's clickable
+  position: relative;
+  z-index: 10;
+
+  mat-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.triggers-header {
+  color: darken($trigger-color, 20%);
+  background: rgba($trigger-color, 0.15);
+}
+
+.rules-header {
+  color: darken($color, 20%);
+  background: rgba($color, 0.15);
+}
+
+.actions-header {
+  color: darken($action-color, 10%);
+  background: rgba($action-color, 0.15);
+}
+
+// ============================================
+// DROP LISTS (Generic)
+// ============================================
+.drop-list {
+  min-height: 40px;
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  transition: border-color 0.2s, background 0.2s;
+
+  &.cdk-drop-list-dragging {
+    border-color: var(--primary-400);
+    background: rgba(33, 150, 243, 0.08);
+  }
+}
+
+// Visual cues for receiving lists
+.triggers-list.cdk-drop-list-receiving {
+  border-color: $trigger-color;
+  background: rgba($trigger-color, 0.1);
+  border-width: 2px;
+  border-style: solid;
+}
+
+.actions-list.cdk-drop-list-receiving {
+  border-color: $action-color;
+  background: rgba($action-color, 0.1);
+  border-width: 2px;
+  border-style: solid;
+}
+
+// ============================================
+// INNER RULES LIST (IMPROVED TARGETING)
+// ============================================
+.rules-list {
+  // 1. PHYSICAL DIMENSIONS (Expanded Hit Area)
+  // Increased from 25px to 30px for better targeting
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  // 2. LAYOUT COMPENSATION (Compact Visuals)
+  // Increased from -18px to -22px to match larger padding
+  margin-top: -22px;
+  margin-bottom: -22px;
+
+  // 3. BASE STYLES
+  border: none;
+  background: transparent;
+
+  position: relative;
+  z-index: 5; // Sit above the parent card background
+
+  // 4. THE FAKE VISUAL LIST (Pseudo-element)
+  &::before {
+    content: '';
+    position: absolute;
+
+    // Position adjusted to match new padding values
+    top: 22px;
+    bottom: 22px;
+    left: 0;
+    right: 0;
+
+    // The Visual Border
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+
+  &.cdk-drop-list-dragging {
+    &::before {
+      border-color: var(--primary-400);
+      background: rgba(33, 150, 243, 0.08);
+    }
+  }
+
+  &.cdk-drop-list-receiving {
+    &::before {
+      border-color: $color;
+      background: rgba($color, 0.1);
+      border-width: 2px;
+      border-style: solid;
+    }
+  }
+}
+
+// ============================================
+// DRAG ITEMS
+// ============================================
+.drag-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 3px;
+  will-change: transform;
+  position: relative;
+  background: inherit;
+  z-index: 6; // Ensure items sit above the list container
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.cdk-drag-preview {
+    box-shadow: var(--shadow-xl);
+    opacity: 0.95;
+    border-radius: var(--radius-md);
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  &.cdk-drag-animating {
+    transition: transform 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .drag-handle {
+    opacity: 0.4;
+    transition: opacity 100ms ease;
+  }
+
+  .action-buttons {
+    opacity: 1;
+    transition: opacity 100ms ease;
+  }
+
+  &:hover {
+    .drag-handle,
+    .action-buttons {
+      opacity: 1;
+    }
+  }
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: grab;
+  color: var(--gray-400);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  margin-right: 2px;
+  align-self: center;
+
+  &:hover {
+    color: var(--gray-600);
+    background: var(--gray-100);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.drag-content {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+
+  > app-trigger,
+  > app-action,
+  > app-rule {
+    display: block;
+  }
+}
+
+.action-buttons {
+  position: absolute;
+  right: 6px;
+  top: -3px;
+  display: flex;
+  gap: 2px;
+  z-index: 2;
+}
+
+.duplicate-btn,
+.remove-btn {
+  transform: scale(0.55);
+  background: var(--bg-card) !important;
+  box-shadow: var(--shadow-sm);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.duplicate-btn {
+  &:hover {
+    background: rgba(39, 115, 180, 0.29) !important;
+  }
+}
+
+.remove-btn {
+  &:hover {
+    background: #ffebee !important;
+  }
+}
+
+// Placeholder styling
+.drag-placeholder {
+  background: var(--gray-200);
+  border: 2px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  min-height: 36px;
+  transition: transform 100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rule-placeholder {
+  min-height: 50px;
+}
+
+// Empty list hint
+.empty-list-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  color: var(--gray-400);
+  font-size: 0.7rem;
+  font-style: italic;
+  min-height: 30px;
+}
+
+// ============================================
+// ADD BUTTONS
+// ============================================
+.add-btn {
+  margin-top: 3px;
+  font-size: 0.7rem !important;
+  padding: 1px 6px !important;
+  min-height: 22px !important;
+  line-height: 1 !important;
+
+  // FIX: Ensure button sits ABOVE the expanded list padding so it's clickable
+  position: relative;
+  z-index: 10;
+
+  mat-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    margin-right: 2px;
+  }
+}
+
+.add-trigger-btn {
+  color: darken($trigger-color, 15%) !important;
+}
+
+.add-rule-btn {
+  color: darken($color, 15%) !important;
+}
+
+.add-action-btn {
+  color: $action-color !important;
 }
 
 // Responsive
 @media (max-width: 768px) {
   .rule {
-    padding: var(--space-3);
+    padding: var(--space-2);
   }
 
   .rule .rule {
-    margin-left: var(--space-2);
+    margin-left: var(--space-1);
+  }
+
+  .drag-item {
+    .drag-handle,
+    .action-buttons {
+      opacity: 1;
+    }
   }
 }
 
@@ -53,5 +382,84 @@ $background: #fff8e6;
   .rule .rule {
     background: rgba(#3d3000, 0.4);
     border-left-color: #b8860b;
+  }
+
+  .section-header {
+    &.triggers-header {
+      color: lighten($trigger-color, 10%);
+      background: rgba($trigger-color, 0.2);
+    }
+
+    &.rules-header {
+      color: lighten($color, 10%);
+      background: rgba($color, 0.2);
+    }
+
+    &.actions-header {
+      color: lighten($action-color, 10%);
+      background: rgba($action-color, 0.2);
+    }
+  }
+
+  .rules-list::before {
+    border-color: var(--gray-500);
+  }
+
+  .drop-list {
+    &.cdk-drop-list-dragging {
+      background: rgba(33, 150, 243, 0.1);
+    }
+  }
+
+  .triggers-list.cdk-drop-list-receiving {
+    background: rgba($trigger-color, 0.15);
+    border-color: $trigger-color;
+  }
+
+  .actions-list.cdk-drop-list-receiving {
+    background: rgba($action-color, 0.15);
+    border-color: $action-color;
+  }
+
+  .rules-list.cdk-drop-list-receiving::before {
+    background: rgba($color, 0.15);
+    border-color: $color;
+  }
+
+  .drag-handle {
+    color: var(--gray-500);
+
+    &:hover {
+      color: var(--gray-300);
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .duplicate-btn,
+  .remove-btn {
+    background: #2a2a2a !important;
+  }
+
+  .drag-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--gray-500);
+  }
+
+  .empty-list-hint {
+    color: var(--gray-500);
+    border-color: var(--gray-600);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .add-trigger-btn {
+    color: lighten($trigger-color, 5%) !important;
+  }
+
+  .add-rule-btn {
+    color: lighten($color, 5%) !important;
+  }
+
+  .add-action-btn {
+    color: lighten($action-color, 10%) !important;
   }
 }

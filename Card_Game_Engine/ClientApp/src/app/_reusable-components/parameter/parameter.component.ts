@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
@@ -31,7 +31,7 @@ import {FormulaBuilderModalComponent} from "./formula-builder-modal/formula-buil
   templateUrl: './parameter.component.html',
   styleUrl: './parameter.component.scss',
 })
-export class ParameterComponent implements OnInit {
+export class ParameterComponent implements OnInit, OnChanges {
   protected readonly Array = Array;
   @Input() parameterForm: FormGroup;
   @Input() availableParameters: Parameter[] = [];
@@ -59,11 +59,25 @@ export class ParameterComponent implements OnInit {
   // TODO: this issue will have to be fixed in another way this is just a workaround
 
   ngOnInit(): void {
+    this.initParameter()
+  }
+
+  //this method  handles updates when Drag & Drop swaps inputs
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['parameterForm'] || changes['availableParameters']) {
+      this.initParameter();
+    }
+  }
+
+  private initParameter() {
+    if (!this.availableParameters || !this.parameterForm) {
+      return;
+    }
+
     this.selectedParameter = this.availableParameters.find(p => p.id === this.parameterForm.value.id);
 
-    // REMOVED: Don't modify the form value
-    // Just ensure it's a string (empty string if null/undefined)
-    if (this.selectedParameter?.type === ParameterValueTypeEnum.MultiSelect) {
+    // Ensure value control exists before accessing
+    if (this.selectedParameter?.type === ParameterValueTypeEnum.MultiSelect && this.valueControl) {
       const currentValue = this.valueControl.value;
       if (currentValue === null || currentValue === undefined) {
         this.valueControl.setValue('', {emitEvent: false});
@@ -131,4 +145,3 @@ export class ParameterComponent implements OnInit {
     });
   }
 }
-

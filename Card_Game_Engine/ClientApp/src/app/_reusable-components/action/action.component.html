@@ -1,25 +1,24 @@
 <div [formGroup]="actionForm" class="action">
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Action</mat-label>
-    <mat-select (selectionChange)="onActionChange()" formControlName="id">
+  <mat-form-field appearance="outline" class="compact-field action-select">
+    <mat-select (selectionChange)="onActionChange()" formControlName="id" placeholder="Select action...">
       @for (action of actions; track action.id) {
         <mat-option [value]="action.id">{{ action.display }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
-  <div formArrayName="parameters">
-    @for (paramCtrl of parametersArray.controls; track paramCtrl.value.id) {
-      <div class="d-flex">
+  <div class="parameters" formArrayName="parameters">
+    @for (paramCtrl of parametersArray.controls; track paramCtrl.value.id; let i = $index) {
+      <div class="param-row">
         <app-parameter class="flex-grow-1"
                        [parameterForm]="convertToFormGroup(paramCtrl)"
-                       [availableParameters]="parameters[$index]"
+                       [availableParameters]="parameters[i]"
                        (parameterChange)="updateParameters()"
         ></app-parameter>
-        <button mat-icon-button color="warn" (click)="removeParameter($index)" class="col-1">
-          <mat-icon>remove_circle_outline</mat-icon>
+        <button (click)="removeParameter(i)" class="remove-param-btn" title="Remove">
+          <mat-icon>close</mat-icon>
         </button>
       </div>
     }
   </div>
-  <button mat-button (click)="addParameter()">Add Parameter</button>
+  <button (click)="addParameter()" class="add-param-btn">+ Param</button>
 </div>

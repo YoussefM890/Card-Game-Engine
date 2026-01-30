@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
+import {CommonModule} from '@angular/common';
 import {ParameterComponent} from "../parameter/parameter.component";
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 import {Trigger} from "./namespace/classes/trigger";
 import {Parameter} from "../parameter/namespace/classes/parameter";
 import {TriggerParameterEnum} from "../parameter/namespace/enums/parameter.enums";
@@ -16,15 +16,12 @@ import {TriggerService} from "./namespace/trigger.service";
   selector: 'app-trigger',
   standalone: true,
   imports: [
-    MatFormField,
-    MatSelect,
+    CommonModule,
     ParameterComponent,
     ReactiveFormsModule,
-    MatOption,
-    MatButton,
-    MatLabel,
     MatIcon,
-    MatIconButton,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   templateUrl: './trigger.component.html',
   styleUrl: './trigger.component.scss'

@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {recreateFormArray, validateForm} from "../../shared/functions/global";
 import {AddEditManualTriggerComponent} from "../add-edit-manual-trigger/add-edit-manual-trigger.component";
 import {PerspectiveEnum} from "../namespace/enums/perspective.enum";
@@ -22,8 +22,8 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
-import {MatToolbar} from "@angular/material/toolbar";
 import {perspectiveOptions} from "../namespace/constants/perspective-options";
+import {DialogHeaderComponent} from "../../_reusable-components/dialog-header/dialog-header.component";
 
 @Component({
   selector: 'app-edit-players',
@@ -34,7 +34,6 @@ import {perspectiveOptions} from "../namespace/constants/perspective-options";
     MatCell,
     MatCellDef,
     MatColumnDef,
-    MatDialogClose,
     MatFormField,
     MatHeaderCell,
     MatHeaderRow,
@@ -48,9 +47,9 @@ import {perspectiveOptions} from "../namespace/constants/perspective-options";
     MatRowDef,
     MatSelect,
     MatTable,
-    MatToolbar,
     ReactiveFormsModule,
-    MatHeaderCellDef
+    MatHeaderCellDef,
+    DialogHeaderComponent
   ],
   templateUrl: './edit-players.component.html',
   styleUrl: './edit-players.component.scss'
